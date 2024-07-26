@@ -1,0 +1,15 @@
+name: lectorium
+
+services:
+  database:
+    image: ghcr.io/akdasa-studios/lectorium-database:latest
+    restart: always
+
+  database-bootstrap:
+    image: ghcr.io/akdasa-studios/lectorium-database-bootstrap:latest
+    restart: no
+
+  gateway:
+    image: ghcr.io/akdasa-studios/lectorium-gateway:latest
+    restart: always
+

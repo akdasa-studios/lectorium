@@ -1,0 +1,22 @@
+name: lectorium
+
+services:
+  database:
+    build:
+      context: ../modules/services/database/modules/database/
+      dockerfile: Dockerfile
+    environment:
+      - COUCHDB_USER=lectorium
+      - COUCHDB_PASSWORD=lectorium
+
+
+  database-bootstrap:
+    build:
+      context: ../modules/services/database/modules/bootstrap
+      dockerfile: Dockerfile
+
+  gateway:
+    build:
+      context: ../modules/services/gateway
+      dockerfile: Dockerfile
+

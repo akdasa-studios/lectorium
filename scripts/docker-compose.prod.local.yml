@@ -1,0 +1,7 @@
+name: lectorium
+
+services:
+  database:
+    environment:
+      - COUCHDB_USER=lectorium
+      - COUCHDB_PASSWORD=lectorium

@@ -1,0 +1,35 @@
+name: lectorium
+
+services:
+  database:
+    expose:
+      - 5984
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984/"]
+    volumes:
+      - ../_data/db:/opt/couchdb/data
+    networks:
+      - lectorium
+
+  database-bootstrap:
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - CONNECTION_STRING=http://lectorium:lectorium@database:5984
+    networks:
+      - lectorium
+
+  gateway:
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - lectorium
+
+networks:
+  lectorium:
+    name: lectorium
