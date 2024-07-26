@@ -7,3 +7,6 @@
 [submodule "servaices-gateway"]
 	path = modules/services/gateway
 	url = git@github.com:akdasa-studios/lectorium-gateway.git
+[submodule "tools-generic"]
+	path = modules/modules/tools/generic
+	url = git@github.com:akdasa-studios/lectorium-tools.git
