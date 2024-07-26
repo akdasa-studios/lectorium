@@ -1,0 +1,9 @@
+[submodule "services-database"]
+	path = modules/services/database
+	url = git@github.com:akdasa-studios/lectorium-database.git
+[submodule "apps-mobile"]
+	path = modules/apps/mobile
+	url = git@github.com:akdasa-studios/lectorium-mobile.git
+[submodule "servaices-gateway"]
+	path = modules/services/gateway
+	url = git@github.com:akdasa-studios/lectorium-gateway.git
