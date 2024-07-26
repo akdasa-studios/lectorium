@@ -1,0 +1,12 @@
+{
+  "name": "Lectorium :: Database Bootstrap",
+  "dockerComposeFile": [
+    "./docker-compose.yml",
+    "./docker-compose.local.yml"
+  ],
+  "service": "database-bootstrap",
+  "runServices": [
+    "database"
+  ],
+  "workspaceFolder": "/akd-studios/lectorium/services/database-bootstrap"
+}

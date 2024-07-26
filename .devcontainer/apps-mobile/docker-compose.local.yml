@@ -1,0 +1,6 @@
+name: lectorium
+
+services:
+  app-mobile:
+    volumes:
+      - ~/.ssh/id_rsa:/home/dev/.ssh/id_rsa:ro

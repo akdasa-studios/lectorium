@@ -1,0 +1,18 @@
+{
+  "name": "Lectorium :: App Mobile",
+  "dockerComposeFile": [
+    "./docker-compose.yml",
+    "./docker-compose.local.yml"
+  ],
+  "service": "app-mobile",
+  "workspaceFolder": "/akd-studios/lectorium/apps/mobile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "stackbreak.comment-divider"
+      ]
+    }
+  }
+}
