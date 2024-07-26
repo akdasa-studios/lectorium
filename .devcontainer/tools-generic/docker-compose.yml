@@ -1,0 +1,19 @@
+name: lectorium
+
+services:
+  tools-generic:
+    user: "${DEVCONTAINER_USER_ID:-1000}:${DEVCONTAINER_USER_GID:-100}"
+    build:
+      context: ../..
+      dockerfile: .devcontainer/tools-generic/Dockerfile
+      args:
+        - USER_ID=${DEVCONTAINER_USER_ID:-1000}
+        - USER_NAME=${DEVCONTAINER_USER_NAME:-dev}
+        - GROUP_ID=${DEVCONTAINER_USER_GID:-100}
+    volumes:
+      - ../../modules/tools/generic:/akd-studios/lectorium/tools/generic
+    networks:
+      - lectorium
+
+networks:
+  lectorium:
