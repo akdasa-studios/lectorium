@@ -1,5 +1,5 @@
 {
-  "name": "Lectorium :: Database Bootstrap",
+  "name": "Lectorium :: Services :: Database :: Bootstrap",
   "dockerComposeFile": [
     "./docker-compose.yml",
     "./docker-compose.local.yml"

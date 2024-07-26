@@ -1,5 +1,5 @@
 {
-  "name": "Lectorium :: App Mobile",
+  "name": "Lectorium :: Apps :: Mobile",
   "dockerComposeFile": [
     "./docker-compose.yml",
     "./docker-compose.local.yml"
