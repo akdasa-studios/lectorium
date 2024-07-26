@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "Dev Containers",
+			"path": ".devcontainer"
+		},
+		{
+			"name": "Scripts",
+			"path": "scripts"
+		},
+		{
+			"name": "App :: Mobile",
+			"path": "modules/apps/mobile"
+		},
+		{
+			"name": "Services :: Gateway",
+			"path": "modules/services/gateway"
+		},
+		{
+			"name": "Services :: Database",
+			"path": "modules/services/database"
+		},
+	]
+}
