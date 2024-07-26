@@ -4,7 +4,7 @@
 [submodule "apps-mobile"]
 	path = modules/apps/mobile
 	url = git@github.com:akdasa-studios/lectorium-mobile.git
-[submodule "servaices-gateway"]
+[submodule "services-gateway"]
 	path = modules/services/gateway
 	url = git@github.com:akdasa-studios/lectorium-gateway.git
 [submodule "tools-generic"]
