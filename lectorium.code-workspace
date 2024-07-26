@@ -20,5 +20,9 @@
 			"name": "Services :: Database",
 			"path": "modules/services/database"
 		},
+		{
+			"name": "Tools :: Generic",
+			"path": "modules/tools/generic"
+		},
 	]
 }
