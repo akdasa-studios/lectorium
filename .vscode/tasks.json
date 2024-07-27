@@ -3,13 +3,15 @@
 	"tasks": [
     {
       "type": "shell",
-      "label": "Start Database",
+      "label": "Database :: Start",
       "detail": "Starts the database",
       "command": "docker",
       "args": [
         "compose",
-        "-f", "docker-compose.yml",
-        "-f", "docker-compose.dev.yml",
+        "-f",
+        "docker-compose.yml",
+        "-f",
+        "docker-compose.dev.yml",
         "up",
         "-d",
         "database"
@@ -19,17 +21,22 @@
       },
       "icon": {
         "id": "database",
+        "color": "terminal.ansiBlue"
       },
+      "problemMatcher": [],
+      "isBackground": true,
     },
     {
       "type": "shell",
-      "label": "Migrate Database",
+      "label": "Database :: Migrate",
       "detail": "Start migration container",
       "command": "docker",
       "args": [
         "compose",
-        "-f", "docker-compose.yml",
-        "-f", "docker-compose.dev.yml",
+        "-f",
+        "docker-compose.yml",
+        "-f",
+        "docker-compose.dev.yml",
         "up",
         "database-bootstrap"
       ],
@@ -38,7 +45,12 @@
       },
       "icon": {
         "id": "arrow-circle-right",
+        "color": "terminal.ansiGreen"
       },
+      "problemMatcher": [],
+      "dependsOn": [
+        "Database :: Start"
+      ],
     }
   ]
 }
