@@ -12,8 +12,11 @@ services:
         - GROUP_ID=${DEVCONTAINER_USER_GID:-100}
     volumes:
       - ../../modules/tools/generic:/akd-studios/lectorium/tools/generic
+    # external_links:
+    #   - lectorium:database
     networks:
       - lectorium
 
 networks:
   lectorium:
+    name: lectorium

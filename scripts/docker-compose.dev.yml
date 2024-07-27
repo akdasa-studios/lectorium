@@ -8,11 +8,12 @@ services:
     environment:
       - COUCHDB_USER=lectorium
       - COUCHDB_PASSWORD=lectorium
-
+    ports:
+      - "5984:5984"
 
   database-bootstrap:
     build:
-      context: ../modules/services/database/modules/bootstrap
+      context: ../modules/services/database/modules/bootstrap/
       dockerfile: Dockerfile
 
   gateway:
