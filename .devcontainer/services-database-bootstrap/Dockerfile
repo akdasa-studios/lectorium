@@ -8,7 +8,7 @@ ARG GROUP_NAME=dev
 
 # Install necessary apps
 RUN apt-get update \
-    && apt-get install -y git fish sudo nodejs npm
+    && apt-get install -y git fish sudo nodejs npm curl
 
 # Create user
 RUN    getent group ${GROUP_ID} || groupadd --gid ${GROUP_ID} ${GROUP_NAME} \
