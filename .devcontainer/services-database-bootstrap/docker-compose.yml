@@ -13,22 +13,12 @@ services:
     volumes:
       - ../../modules/services/database/modules/bootstrap:/akd-studios/lectorium/services/database-bootstrap
       - ../../.vscode:/akd-studios/lectorium/.vscode
+    external_links:
+      - lectorium:database
     networks:
       - lectorium
 
-  database:
-    build:
-      context: ../..
-      dockerfile: modules/services/database/modules/database/Dockerfile
-    environment:
-      - COUCHDB_USER=lectorium
-      - COUCHDB_PASSWORD=lectorium
-    ports:
-      - "5984:5984"
-    expose:
-      - "5984"
-    networks:
-      - lectorium
 
 networks:
   lectorium:
+    name: lectorium
