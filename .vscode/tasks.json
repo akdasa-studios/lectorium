@@ -1,0 +1,44 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "type": "shell",
+      "label": "Start Database",
+      "detail": "Starts the database",
+      "command": "docker",
+      "args": [
+        "compose",
+        "-f", "docker-compose.yml",
+        "-f", "docker-compose.dev.yml",
+        "up",
+        "-d",
+        "database"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/scripts"
+      },
+      "icon": {
+        "id": "database",
+      },
+    },
+    {
+      "type": "shell",
+      "label": "Migrate Database",
+      "detail": "Start migration container",
+      "command": "docker",
+      "args": [
+        "compose",
+        "-f", "docker-compose.yml",
+        "-f", "docker-compose.dev.yml",
+        "up",
+        "database-bootstrap"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/scripts"
+      },
+      "icon": {
+        "id": "arrow-circle-right",
+      },
+    }
+  ]
+}
