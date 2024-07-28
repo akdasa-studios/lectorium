@@ -13,8 +13,8 @@ services:
     volumes:
       - ../../modules/services/database/modules/bootstrap:/akd-studios/lectorium/services/database-bootstrap
       - ../../.vscode:/akd-studios/lectorium/.vscode
-    external_links:
-      - lectorium:database
+    # external_links:
+    #   - lectorium:database
     networks:
       - lectorium
 
