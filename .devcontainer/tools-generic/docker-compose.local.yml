@@ -4,6 +4,6 @@ services:
   tools-generic:
     user: "${DEVCONTAINER_USER_ID:-1000}:${DEVCONTAINER_USER_GID:-100}"
     volumes:
-      - ~/Downloads/Бхагавад-гита/:/akd-studios/lectorium/tools/generic/input
-      - ../../_output:/akd-studios/lectorium/tools/generic/output
+      - ../../_data/tools/generic/input:/akd-studios/lectorium/tools/generic/input
+      - ../../_data/tools/generic/output:/akd-studios/lectorium/tools/generic/output
       - ~/.ssh/id_rsa:/home/dev/.ssh/id_rsa:ro
