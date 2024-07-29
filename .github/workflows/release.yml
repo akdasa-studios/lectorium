@@ -1,13 +1,11 @@
 on:
-  push:
-    # branches:
-    #   - main
+  release:
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
   ORGANIZATION: akdasa-studios
-  VERSION: v0.1.0
-  # VERSION: ${{ github.event.release.tag_name }}
+  VERSION: ${{ github.event.release.tag_name }}
 
 jobs:
   #
