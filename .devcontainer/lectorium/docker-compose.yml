@@ -1,0 +1,17 @@
+name: lectorium
+
+services:
+  lectorium:
+    user: "${DEVCONTAINER_USER_ID:-1000}:${DEVCONTAINER_USER_GID:-100}"
+    build:
+      context: ../..
+      dockerfile: .devcontainer/lectorium/Dockerfile
+      args:
+        - USER_ID=${DEVCONTAINER_USER_ID:-1000}
+        - USER_NAME=${DEVCONTAINER_USER_NAME:-dev}
+        - GROUP_ID=${DEVCONTAINER_USER_GID:-100}
+    ports:
+      - 5173
+      - 5984
+    volumes:
+      - ../..:/akd-studios/lectorium

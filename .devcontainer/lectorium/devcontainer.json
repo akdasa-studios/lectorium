@@ -1,0 +1,18 @@
+{
+  "name": "Lectorium",
+  "dockerComposeFile": [
+    "./docker-compose.yml",
+    "./docker-compose.local.yml"
+  ],
+  "service": "lectorium",
+  "workspaceFolder": "/akd-studios/lectorium",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "stackbreak.comment-divider"
+      ]
+    }
+  }
+}
