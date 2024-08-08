@@ -10,3 +10,6 @@
 [submodule "tools-generic"]
 	path = modules/tools/generic
 	url = git@github.com:akdasa-studios/lectorium-tools.git
+[submodule "content"]
+	path = content
+	url = git@github.com:akdasa-studios/lectorium-content.git
