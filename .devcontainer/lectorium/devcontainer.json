@@ -14,7 +14,9 @@
         "stackbreak.comment-divider",
         "ms-python.python",
         "ms-python.debugpy",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "actboy168.tasks",
+        "jeff-hykin.better-dockerfile-syntax"
       ]
     }
   }
