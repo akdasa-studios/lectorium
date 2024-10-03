@@ -4,12 +4,12 @@
 [submodule "apps-mobile"]
 	path = modules/apps/mobile
 	url = git@github.com:akdasa-studios/lectorium-mobile.git
+[submodule "apps-brahma"]
+	path = modules/apps/brahma
+	url = git@github.com:akdasa-studios/lectorium-brahma.git
 [submodule "services-gateway"]
 	path = modules/services/gateway
 	url = git@github.com:akdasa-studios/lectorium-gateway.git
-[submodule "services-brahma"]
-	path = modules/services/brahma
-	url = git@github.com:akdasa-studios/lectorium-brahma.git
 [submodule "services-vayu"]
 	path = modules/services/vayu
 	url = git@github.com:akdasa-studios/lectorium-vayu.git

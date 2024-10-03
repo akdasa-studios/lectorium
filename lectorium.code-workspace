@@ -2,23 +2,27 @@
 	"folders": [
 		{
 			"name": "Dev Containers",
-			"path": ".devcontainer"
+			"path": ".devcontainer",
 		},
 		{
 			"name": "Scripts",
 			"path": "scripts"
 		},
 		{
-			"name": "App :: Mobile",
+			"name": "Apps :: Mobile",
 			"path": "modules/apps/mobile"
 		},
 		{
 			"name": "Services :: Brahma",
-			"path": "modules/services/Brahma"
+			"path": "modules/services/brahma"
+		},
+		{
+			"name": "Services :: Vakshuddhi",
+			"path": "modules/services/vakshuddhi"
 		},
 		{
 			"name": "Services :: Vayu",
-			"path": "modules/services/Vayu"
+			"path": "modules/services/vayu"
 		},
 		{
 			"name": "Services :: Gateway",
@@ -27,10 +31,6 @@
 		{
 			"name": "Services :: Database",
 			"path": "modules/services/database"
-		},
-		{
-			"name": "Tools :: Generic",
-			"path": "modules/tools/generic"
 		},
 	]
 }
