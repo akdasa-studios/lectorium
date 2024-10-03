@@ -1,9 +1,0 @@
-name: lectorium
-
-services:
-  tools-generic:
-    user: "${DEVCONTAINER_USER_ID:-1000}:${DEVCONTAINER_USER_GID:-100}"
-    volumes:
-      - ../../_data/tools/generic/input:/akd-studios/lectorium/tools/generic/input
-      - ../../content/library:/akd-studios/lectorium/tools/generic/output
-      - ~/.ssh/id_rsa:/home/dev/.ssh/id_rsa:ro

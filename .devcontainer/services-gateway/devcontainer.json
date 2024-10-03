@@ -1,9 +1,0 @@
-{
-  "name": "Lectorium :: Services :: Gateway",
-  "dockerComposeFile": [
-    "./docker-compose.yml",
-    "./docker-compose.local.yml"
-  ],
-  "service": "gateway",
-  "workspaceFolder": "/akd-studios/lectorium/services/gateway"
-}

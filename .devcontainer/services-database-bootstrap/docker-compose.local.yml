@@ -1,6 +1,0 @@
-name: lectorium
-
-services:
-  database-bootstrap:
-    volumes:
-      - ~/.ssh/id_rsa:/home/dev/.ssh/id_rsa:ro
