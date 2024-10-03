@@ -13,3 +13,6 @@
 [submodule "services-vayu"]
 	path = modules/services/vayu
 	url = git@github.com:akdasa-studios/lectorium-vayu.git
+[submodule "services-vakshuddhi"]
+	path = modules/services/vakshuddhi
+	url = git@github.com:akdasa-studios/lectorium-vakshuddhi.git
