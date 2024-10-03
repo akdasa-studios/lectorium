@@ -16,7 +16,9 @@
         "ms-python.debugpy",
         "github.vscode-github-actions",
         "actboy168.tasks",
-        "jeff-hykin.better-dockerfile-syntax"
+        "jeff-hykin.better-dockerfile-syntax",
+        "ms-python.isort",
+        "ms-python.black-formatter"
       ]
     }
   }
