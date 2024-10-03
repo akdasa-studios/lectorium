@@ -7,9 +7,9 @@
 [submodule "services-gateway"]
 	path = modules/services/gateway
 	url = git@github.com:akdasa-studios/lectorium-gateway.git
-[submodule "tools-generic"]
-	path = modules/tools/generic
-	url = git@github.com:akdasa-studios/lectorium-tools.git
-[submodule "content"]
-	path = content
-	url = git@github.com:akdasa-studios/lectorium-content.git
+[submodule "services-brahma"]
+	path = modules/services/brahma
+	url = git@github.com:akdasa-studios/lectorium-brahma.git
+[submodule "services-vayu"]
+	path = modules/services/vayu
+	url = git@github.com:akdasa-studios/lectorium-vayu.git

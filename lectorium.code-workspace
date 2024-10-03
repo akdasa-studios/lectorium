@@ -13,6 +13,14 @@
 			"path": "modules/apps/mobile"
 		},
 		{
+			"name": "Services :: Brahma",
+			"path": "modules/services/Brahma"
+		},
+		{
+			"name": "Services :: Vayu",
+			"path": "modules/services/Vayu"
+		},
+		{
 			"name": "Services :: Gateway",
 			"path": "modules/services/gateway"
 		},

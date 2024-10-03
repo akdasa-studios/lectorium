@@ -1,4 +1,5 @@
-FROM debian:trixie-20240701
+# FROM debian:trixie-20240701
+FROM debian:bookworm-20240926
 
 # Build arguments
 ARG USER_ID=1000
@@ -8,7 +9,8 @@ ARG GROUP_NAME=dev
 
 # Install necessary apps
 RUN apt-get update \
-    && apt-get install -y git fish sudo nodejs npm curl \
+    && apt-get install -y git fish sudo nodejs npm curl python3-pip python3-venv \
+                          g++ protobuf-compiler libprotobuf-dev libpq-dev ffmpeg \
     && npm install -g @vue/language-server typescript
 
 # Create user

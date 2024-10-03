@@ -11,7 +11,10 @@
       "extensions": [
         "Vue.volar",
         "dbaeumer.vscode-eslint",
-        "stackbreak.comment-divider"
+        "stackbreak.comment-divider",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "github.vscode-github-actions"
       ]
     }
   }
