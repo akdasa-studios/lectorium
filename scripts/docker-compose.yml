@@ -43,6 +43,14 @@ services:
     networks:
       - lectorium
 
+  signed-url-generator:
+    networks:
+      - lectorium
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+
 networks:
   lectorium:
     name: lectorium

@@ -21,3 +21,9 @@ services:
       context: ../modules/services/gateway
       dockerfile: Dockerfile
 
+  signed-url-generator:
+    build:
+      context: ../modules/services/signed-url-generator
+      dockerfile: Dockerfile
+
+

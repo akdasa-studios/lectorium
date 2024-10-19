@@ -13,3 +13,8 @@ services:
     image: ghcr.io/akdasa-studios/lectorium-gateway:latest
     restart: always
 
+  signed-url-generator:
+    image: ghcr.io/akdasa-studios/lectorium-signed-url-generator:latest
+    restart: always
+
+
