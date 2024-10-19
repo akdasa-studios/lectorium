@@ -16,3 +16,9 @@
 [submodule "services-vakshuddhi"]
 	path = modules/services/vakshuddhi
 	url = git@github.com:akdasa-studios/lectorium-vakshuddhi.git
+[submodule "libs-dal"]
+	path = modules/libs/dal
+	url = git@github.com:akdasa-studios/lectorium-dal.git
+[submodule "services-signed-url-generator"]
+	path = modules/services/signed-url-generator
+	url = git@github.com:akdasa-studios/lectorium-signed-url-generator.git

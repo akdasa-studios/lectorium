@@ -15,7 +15,6 @@
 		"black-formatter.interpreter": [
 			"python3"
 		],
-		"editor.formatOnSave": true,
 	},
 	"folders": [
 		{
@@ -27,12 +26,16 @@
 			"path": "scripts"
 		},
 		{
+			"name": "Libs :: DAL",
+			"path": "modules/libs/dal"
+		},
+		{
 			"name": "Apps :: Mobile",
 			"path": "modules/apps/mobile"
 		},
 		{
-			"name": "Services :: Brahma",
-			"path": "modules/services/brahma"
+			"name": "Apps :: Brahma",
+			"path": "modules/apps/brahma"
 		},
 		{
 			"name": "Services :: Vakshuddhi",
@@ -49,6 +52,10 @@
 		{
 			"name": "Services :: Database",
 			"path": "modules/services/database"
+		},
+		{
+			"name": "Services :: Signed URL Generator",
+			"path": "modules/services/signed-url-generator"
 		},
 	]
 }
