@@ -1,0 +1,21 @@
+{
+  "name": "Lectorium :: Services :: Vayu (dev)",
+  "dockerComposeFile": [
+    "../../scripts/docker-compose.yml",
+    "../../scripts/docker-compose.dev.yml",
+    "../../scripts/docker-compose.dev.container.yml",
+    "../../scripts/docker-compose.local.yml"
+  ],
+  "service": "vayu-dev",
+  "runServices": [
+    "vayu-dev"
+  ],
+  "workspaceFolder": "/akd-studios/lectorium/services/vayu",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}

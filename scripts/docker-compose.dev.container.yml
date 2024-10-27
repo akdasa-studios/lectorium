@@ -1,0 +1,26 @@
+name: lectorium
+
+services:
+  mobile:
+    command: sleep 365d
+
+  brahma:
+    command: sleep 365d
+
+  database-bootstrap:
+    command: sleep 365d
+
+  gateway:
+    command: sleep 365d
+
+  signed-url-generator:
+    command: sleep 365d
+
+  vayu-dev:
+    user: airflow
+    build:
+      context: ../modules/services/vayu/
+      dockerfile: Dockerfile
+    volumes:
+      - ../modules/services/vayu:/akd-studios/lectorium/services/vayu
+    entrypoint: /akd-studios/lectorium/services/vayu/entrypoint-dev.sh

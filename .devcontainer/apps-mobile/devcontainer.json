@@ -1,0 +1,24 @@
+{
+  "name": "Lectorium :: Apps :: Mobile",
+  "dockerComposeFile": [
+    "../../scripts/docker-compose.yml",
+    "../../scripts/docker-compose.dev.yml",
+    "../../scripts/docker-compose.dev.container.yml",
+    "../../scripts/docker-compose.local.yml"
+  ],
+  "service": "apps-mobile",
+  "runServices": [
+    "apps-mobile"
+  ],
+  "workspaceFolder": "/akd-stidios/lectorium/apps/mobile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "stackbreak.comment-divider",
+        "actboy168.tasks"
+      ]
+    }
+  }
+}

@@ -1,6 +1,41 @@
 name: lectorium
 
 services:
+
+  # -------------------------------------------------------------------------- #
+  #                                Applications                                #
+  # -------------------------------------------------------------------------- #
+
+  mobile:
+    build:
+      context: ../modules/apps/mobile/
+      dockerfile: Dockerfile
+    command: npm run dev
+    environment:
+      - BASE_URL=/app/
+    networks:
+      - lectorium
+
+  brahma:
+    build:
+      context: ../modules/apps/brahma/
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    expose:
+      - 5173
+    command: npm run dev
+    environment:
+      - BASE_URL=/brahma/
+    volumes:
+      - ../modules/apps/brahma:/akd-stidios/lectorium/apps/brahma
+    networks:
+      - lectorium
+
+  # -------------------------------------------------------------------------- #
+  #                                  Services                                  #
+  # -------------------------------------------------------------------------- #
+
   database:
     build:
       context: ../modules/services/database/modules/database/
@@ -20,10 +55,29 @@ services:
     build:
       context: ../modules/services/gateway
       dockerfile: Dockerfile
+    volumes:
+      - ../modules/services/gateway:/akd-studios/lectorium/services/gateway
 
   signed-url-generator:
     build:
       context: ../modules/services/signed-url-generator
       dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
 
+  # -------------------------------------------------------------------------- #
+  #                                    Vayu                                    #
+  # -------------------------------------------------------------------------- #
 
+  vayu-postgres:
+    environment:
+      POSTGRES_USER: lectorium
+      POSTGRES_PASSWORD: lectorium
+      POSTGRES_DB: lectorium
+
+  vayu-init:
+    environment:
+      _AIRFLOW_DB_MIGRATE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: lectorium
+      _AIRFLOW_WWW_USER_PASSWORD: lectorium

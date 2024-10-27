@@ -12,6 +12,11 @@ services:
   gateway:
     image: ghcr.io/akdasa-studios/lectorium-gateway:latest
     restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+      signed-url-generator:
+        condition: service_started
 
   signed-url-generator:
     image: ghcr.io/akdasa-studios/lectorium-signed-url-generator:latest

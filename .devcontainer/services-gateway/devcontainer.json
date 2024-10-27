@@ -1,0 +1,24 @@
+{
+  "name": "Lectorium :: Services :: Gateway",
+  "dockerComposeFile": [
+    "../../scripts/docker-compose.yml",
+    "../../scripts/docker-compose.dev.yml",
+    "../../scripts/docker-compose.dev.container.yml",
+    "../../scripts/docker-compose.local.yml"
+  ],
+  "service": "gateway",
+  "runServices": [
+    "gateway"
+  ],
+  "workspaceFolder": "/akd-studios/lectorium/services/gateway/",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "raynigon.nginx-formatter",
+        "william-voyek.vscode-nginx",
+        "actboy168.tasks",
+        "ahmadalli.vscode-nginx-conf"
+      ]
+    }
+  }
+}

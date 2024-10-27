@@ -1,21 +1,4 @@
 {
-	"settings": {
-		"[python]": {
-			"editor.codeActionsOnSave": {
-				"source.organizeImports": "always"
-			}
-		},
-		"isort.args": [
-			"--profile",
-			"black"
-		],
-		"isort.interpreter": [
-			"python3"
-		],
-		"black-formatter.interpreter": [
-			"python3"
-		],
-	},
 	"folders": [
 		{
 			"name": "Dev Containers",

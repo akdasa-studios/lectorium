@@ -1,0 +1,24 @@
+{
+  "name": "Lectorium :: Apps :: Brahma",
+  "dockerComposeFile": [
+    "../../scripts/docker-compose.yml",
+    "../../scripts/docker-compose.dev.yml",
+    "../../scripts/docker-compose.dev.container.yml",
+    "../../scripts/docker-compose.local.yml"
+  ],
+  "service": "brahma",
+  "runServices": [
+    "brahma"
+  ],
+  "workspaceFolder": "/akd-stidios/lectorium/apps/brahma",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "stackbreak.comment-divider",
+        "actboy168.tasks"
+      ]
+    }
+  }
+}
