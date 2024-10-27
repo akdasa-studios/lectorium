@@ -11,6 +11,7 @@ services:
 
   gateway:
     image: ghcr.io/akdasa-studios/lectorium-gateway:latest
+    command: ["nginx", "-c", "/akd-studios/lectorium/services/gateway/envs/prod/_root.conf", "-g", "daemon off;"]
     restart: always
     depends_on:
       database:
