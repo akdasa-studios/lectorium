@@ -6,9 +6,9 @@
     "../../scripts/docker-compose.dev.container.yml",
     "../../scripts/docker-compose.local.yml"
   ],
-  "service": "apps-mobile",
+  "service": "mobile",
   "runServices": [
-    "apps-mobile"
+    "mobile"
   ],
   "workspaceFolder": "/akd-stidios/lectorium/apps/mobile",
   "customizations": {
