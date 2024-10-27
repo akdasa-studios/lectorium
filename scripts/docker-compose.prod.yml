@@ -25,7 +25,6 @@ services:
 
   vayu-init:
     image: ghcr.io/akdasa-studios/lectorium-vayu:latest
-    restart: always
 
   vayu-webserver:
     image: ghcr.io/akdasa-studios/lectorium-vayu:latest
