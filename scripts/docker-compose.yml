@@ -245,7 +245,7 @@ services:
       <<: *airflow-common-env
     user: "0:0"
     volumes:
-      - ../modiles/services/vayu:/sources
+      - ../modules/services/vayu:/sources
     networks:
       - lectorium
 
