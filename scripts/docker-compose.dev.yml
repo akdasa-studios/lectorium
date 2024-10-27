@@ -13,6 +13,8 @@ services:
     command: npm run dev
     environment:
       - BASE_URL=/app/
+    volumes:
+      - ../modules/apps/mobile:/akd-stidios/lectorium/apps/mobile
     networks:
       - lectorium
 
