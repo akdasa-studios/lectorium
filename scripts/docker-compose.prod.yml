@@ -23,3 +23,22 @@ services:
     restart: always
 
 
+  vayu-init:
+    image: ghcr.io/akdasa-studios/lectorium-vayu:latest
+    restart: always
+
+  vayu-webserver:
+    image: ghcr.io/akdasa-studios/lectorium-vayu:latest
+    restart: always
+
+  vayu-scheduler:
+    image: ghcr.io/akdasa-studios/lectorium-vayu:latest
+    restart: always
+
+  vayu-worker:
+    image: ghcr.io/akdasa-studios/lectorium-vayu:latest
+    restart: always
+
+  vayu-triggerer:
+    image: ghcr.io/akdasa-studios/lectorium-vayu:latest
+    restart: always
