@@ -22,3 +22,6 @@
 [submodule "services-signed-url-generator"]
 	path = modules/services/signed-url-generator
 	url = git@github.com:akdasa-studios/lectorium-signed-url-generator.git
+[submodule "tools"]
+	path = modules/tools
+	url = git@github.com:akdasa-studios/lectorium-tools.git
