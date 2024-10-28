@@ -28,6 +28,8 @@ x-airflow-common:
     - ../modules/services/vayu/dags:/opt/airflow/dags
     - ../modules/services/vayu/config:/opt/airflow/config
     - ../modules/services/vayu/plugins:/opt/airflow/plugins
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /tmp/lectorium:/tmp/lectorium
     # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
