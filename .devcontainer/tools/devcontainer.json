@@ -1,0 +1,16 @@
+{
+  "name": "Lectorium :: Tools",
+  "dockerComposeFile": [
+    "../../scripts/docker-compose.yml",
+    "../../scripts/docker-compose.dev.yml",
+    "../../scripts/docker-compose.dev.container.yml",
+    "../../scripts/docker-compose.local.yml"
+  ],
+  "service": "tools",
+  "runServices": [
+    "tools"
+  ],
+  "workspaceFolder": "/akd-studios/lectorium/tools",
+  "customizations": {
+  }
+}
