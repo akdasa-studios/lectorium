@@ -25,3 +25,6 @@
 [submodule "tools"]
 	path = modules/tools
 	url = git@github.com:akdasa-studios/lectorium-tools.git
+[submodule "services-auth"]
+	path = modules/services/auth
+	url = git@github.com:akdasa-studios/lectorium-auth.git

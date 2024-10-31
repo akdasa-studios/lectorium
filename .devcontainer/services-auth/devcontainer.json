@@ -1,0 +1,21 @@
+{
+  "name": "Lectorium :: Services :: Auth",
+  "dockerComposeFile": [
+    "../../scripts/docker-compose.yml",
+    "../../scripts/docker-compose.dev.yml",
+    "../../scripts/docker-compose.dev.container.yml",
+    "../../scripts/docker-compose.local.yml"
+  ],
+  "service": "auth",
+  "runServices": [
+    "auth"
+  ],
+  "workspaceFolder": "/akd-studios/lectorium/services/auth",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}
