@@ -38,6 +38,15 @@ services:
   #                                  Services                                  #
   # -------------------------------------------------------------------------- #
 
+  auth:
+    build:
+      context: ../modules/services/auth/
+      dockerfile: Dockerfile
+    volumes:
+      - ../modules/services/auth:/akd-studios/lectorium/services/auth
+    ports:
+      - "8001:8001"
+
   database:
     build:
       context: ../modules/services/database/modules/database/

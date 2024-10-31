@@ -1,6 +1,9 @@
 name: lectorium
 
 services:
+  auth:
+    command: sleep 365d
+
   mobile:
     command: sleep 365d
 
@@ -24,3 +27,11 @@ services:
     volumes:
       - ../modules/services/vayu:/akd-studios/lectorium/services/vayu
     entrypoint: /akd-studios/lectorium/services/vayu/entrypoint-dev.sh
+
+  tools:
+    build:
+      context: ../modules/tools/
+      dockerfile: Dockerfile
+    volumes:
+      - ../modules/tools:/akd-studios/lectorium/tools
+    command: sleep 365d

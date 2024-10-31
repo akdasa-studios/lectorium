@@ -50,6 +50,12 @@ services:
   #                                     App                                    #
   # -------------------------------------------------------------------------- #
 
+  auth:
+    expose:
+      - 8001
+    networks:
+      - lectorium
+
   database:
     expose:
       - 5984

@@ -1,6 +1,11 @@
 name: lectorium
 
 services:
+
+  auth:
+    image: ghcr.io/akdasa-studios/lectorium-auth:latest
+    restart: always
+
   database:
     image: ghcr.io/akdasa-studios/lectorium-database:latest
     restart: always
