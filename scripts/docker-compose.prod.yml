@@ -7,10 +7,8 @@ services:
     restart: always
 
   brahma:
-    build:
-      context: ../modules/apps/brahma/
-      dockerfile: Dockerfile
-      target: release
+    image: ghcr.io/akdasa-studios/lectorium-brahma:latest
+    restart: always
 
   database:
     image: ghcr.io/akdasa-studios/lectorium-database:latest

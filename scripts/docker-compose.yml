@@ -57,9 +57,6 @@ services:
       - lectorium
 
   brahma:
-    build:
-      context: ../modules/apps/brahma/
-      dockerfile: Dockerfile
     environment:
       - BASE_URL=/brahma/
     networks:
