@@ -56,6 +56,15 @@ services:
     networks:
       - lectorium
 
+  brahma:
+    build:
+      context: ../modules/apps/brahma/
+      dockerfile: Dockerfile
+    environment:
+      - BASE_URL=/brahma/
+    networks:
+      - lectorium
+
   database:
     expose:
       - 5984

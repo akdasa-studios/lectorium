@@ -22,17 +22,14 @@ services:
     build:
       context: ../modules/apps/brahma/
       dockerfile: Dockerfile
+      target: base
     ports:
       - "5173:5173"
     expose:
       - 5173
     command: npm run dev
-    environment:
-      - BASE_URL=/brahma/
     volumes:
       - ../modules/apps/brahma:/akd-stidios/lectorium/apps/brahma
-    networks:
-      - lectorium
 
   # -------------------------------------------------------------------------- #
   #                                  Services                                  #
@@ -61,6 +58,9 @@ services:
     build:
       context: ../modules/services/database/modules/bootstrap/
       dockerfile: Dockerfile
+    volumes:
+      - ../modules/services/database/modules/bootstrap:/akd-studios/lectorium/database/bootstrap
+
 
   gateway:
     build:

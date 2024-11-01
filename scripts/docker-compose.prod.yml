@@ -6,6 +6,12 @@ services:
     image: ghcr.io/akdasa-studios/lectorium-auth:latest
     restart: always
 
+  brahma:
+    build:
+      context: ../modules/apps/brahma/
+      dockerfile: Dockerfile
+      target: release
+
   database:
     image: ghcr.io/akdasa-studios/lectorium-database:latest
     restart: always
