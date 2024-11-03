@@ -68,7 +68,8 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5984/"]
     volumes:
-      - ../_data/database:/opt/couchdb/data
+      - ../_data/database/data:/opt/couchdb/data
+      - ../_data/database/config:/opt/couchdb/etc/local.d
     networks:
       - lectorium
 
