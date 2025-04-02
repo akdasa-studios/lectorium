@@ -21,6 +21,10 @@
       "path": "./modules/services/database"
     },
     {
+      "name": "🔨 Apps :: Admin",
+      "path": "./modules/apps/admin"
+    },
+    {
       "name": "👋 Apps :: Landing",
       "path": "./modules/apps/landing"
     },
@@ -166,6 +170,11 @@
     "jest.jestCommandLine": "npx jest",
     "jest.runMode": "on-demand",
     "jestrunner.jestCommand": "npx jest",
+    /* -------------------------------------------------------------------------- */
+    /*                                    Volar                                   */
+    /* -------------------------------------------------------------------------- */
+    "volar.takeOverMode.enabled": true,
+    "vue.language-server.runtime": "node",
     /* -------------------------------------------------------------------------- */
     /*                                 file types                                 */
     /* -------------------------------------------------------------------------- */
