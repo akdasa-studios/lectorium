@@ -1,1 +1,0 @@
-# lectorium-dal

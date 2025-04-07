@@ -1,5 +1,5 @@
-import type { Reference } from "@brahma/dal/models"
-import { useAuthorsService, useLocationsService, useSourcesService } from "@brahma/shared"
+import type { Reference } from "@lectorium/admin/dal/models"
+import { useAuthorsService, useLocationsService, useSourcesService } from "@lectorium/admin/shared"
 
 export function normalizeTitle(value: string | undefined): string {
   if (value === undefined) {

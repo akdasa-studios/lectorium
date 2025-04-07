@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { InboxTrackEditor, InboxTrackTableIsle } from "@brahma/library/inbox"
-import { Menubar, useSync, } from "@brahma/shared"
+import { InboxTrackEditor, InboxTrackTableIsle } from "@lectorium/admin/library/inbox"
+import { Menubar, useSync, } from "@lectorium/admin/shared"
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */

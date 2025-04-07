@@ -1,5 +1,5 @@
-import type { InboxTrack } from "@brahma/dal/models";
-import type { EditInboxTrack } from "@brahma/library/inbox";
+import type { InboxTrack } from "@lectorium/admin/dal/models";
+import type { EditInboxTrack } from "@lectorium/admin/library/inbox";
 
 export function mapEditInboxTrackToInboxTrack(
   editInboxTrack: EditInboxTrack,

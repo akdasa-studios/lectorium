@@ -14,8 +14,8 @@ import {
   InboxTracksTable, annotateTitle, normalizeTitle, 
   normalizeDate, annotateDate, normalizeAuthor, annotateAuthor,
   annotateLocation, normalizeLocation, normalizeReference, annotateReference
-} from "@brahma/library/inbox"
-import { useInboxTracksService, useSync } from "@brahma/shared"
+} from "@lectorium/admin/library/inbox"
+import { useInboxTracksService, useSync } from "@lectorium/admin/shared"
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */

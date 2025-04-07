@@ -1,4 +1,4 @@
-import { useDatabase } from "@brahma/shared"
+import { useDatabase } from "@lectorium/admin/shared"
 
 export function useSync() {
   const database = useDatabase()

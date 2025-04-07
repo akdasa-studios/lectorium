@@ -4,6 +4,7 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
+    "../../libs/dal/**/*",
   ],
   "exclude": [
     "src/**/__tests__/*"
@@ -12,8 +13,8 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@brahma/*": [ "./src/*" ],
-      "@lectorium/dal/*": [ "./src/dal/*" ],
+      "@lectorium/admin/*": [ "./src/*" ],
+      "@lectorium/dal/*": [ "../../libs/dal/*" ],
     }
   }
 }

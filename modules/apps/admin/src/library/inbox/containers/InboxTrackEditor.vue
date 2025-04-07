@@ -15,13 +15,13 @@ import { ref, toRefs, watch } from "vue"
 import { useAsyncState } from "@vueuse/core"
 import {
   useAuthorsService, useInboxTracksService, useLocationsService,
-} from "@brahma/shared"
+} from "@lectorium/admin/shared"
 import { 
   type EditInboxTrack, type EditInboxTrackAnnotation, 
   InboxTrackDrawer, annotateAuthor, annotateDate, annotateInboxTrack,
   annotateLocation, annotateReference, annotateTitle, 
   normalizeReference, mapEditInboxTrackToInboxTrack 
-} from "@brahma/library/inbox"
+} from "@lectorium/admin/library/inbox"
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */

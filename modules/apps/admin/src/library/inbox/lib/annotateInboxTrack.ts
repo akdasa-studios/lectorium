@@ -1,5 +1,5 @@
-import type { InboxTrack, Reference } from "@brahma/dal/models"
-import { useAuthorsService, useLocationsService, useSourcesService } from "@brahma/shared"
+import type { InboxTrack, Reference } from "@lectorium/admin/dal/models"
+import { useAuthorsService, useLocationsService, useSourcesService } from "@lectorium/admin/shared"
 
 export type Annotation = {
   text: string;

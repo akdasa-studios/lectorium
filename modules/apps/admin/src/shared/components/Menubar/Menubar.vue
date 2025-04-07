@@ -37,7 +37,7 @@
 import { ref } from "vue"
 import Badge from "primevue/badge"
 import Menubar from "primevue/menubar"
-import { LectoriumLogo } from "@brahma/shared"
+import { LectoriumLogo } from "@lectorium/admin/shared"
 
 const items = ref([
   {

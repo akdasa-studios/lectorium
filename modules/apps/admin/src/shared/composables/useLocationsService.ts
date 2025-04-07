@@ -1,5 +1,5 @@
 import { createSharedComposable } from "@vueuse/core"
-import { useDatabase } from "@brahma/shared"
+import { useDatabase } from "@lectorium/admin/shared"
 import { LocationsService } from "@lectorium/dal/index"
 
 export const useLocationsService = createSharedComposable(() =>{
