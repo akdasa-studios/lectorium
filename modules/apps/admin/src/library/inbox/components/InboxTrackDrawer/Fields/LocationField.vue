@@ -1,9 +1,5 @@
 <template>
-  <InputField
-    id="location"
-    label="Location"
-    :errors="errors"
-  >
+  <InputField id="location" label="Location" :errors="errors">
     <template #default="{ hasErrors }">
       <Select
         id="location"
@@ -19,7 +15,6 @@
   </InputField>
 </template>
 
-
 <script setup lang="ts">
 import Select from 'primevue/select'
 import { default as InputField, type Error } from './InputField.vue'
@@ -29,9 +24,9 @@ import { default as InputField, type Error } from './InputField.vue'
 /* -------------------------------------------------------------------------- */
 
 defineProps<{
-  errors?: Error[],
-  locations: { label: string, value: string }[]
+  errors?: Error[]
+  locations: { label: string; value: string }[]
 }>()
 
-const location = defineModel<string>("location", { default: '' })
+const location = defineModel<string>('location', { default: '' })
 </script>

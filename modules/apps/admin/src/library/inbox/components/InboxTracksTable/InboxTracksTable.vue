@@ -1,9 +1,8 @@
 <template>
   <DataTable
-    table-style="min-width: 50rem"
+    data-key="id"
     paginator
     striped-rows
-    data-key="code"
     show-gridlines
     removable-sort
     :value="rows"
@@ -12,24 +11,14 @@
   >
     <template #header>
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <span class="text-xl font-bold">Tracks</span>
-        <Button
-          icon="pi pi-refresh"
-          rounded
-          raised
-          @click="emit('refresh')"
-        />
+        <span class="text-xl font-bold">Inbox Tracks</span>
+        <Button icon="pi pi-refresh" rounded @click="emit('refresh')" />
       </div>
     </template>
 
     <!-- Title Column -->
-    <Column
-      field="title.value"
-      header="Title"
-      sortable
-      style="width: 50%"
-    >
-      <template #body="{ data } : { data: InboxTrackTableRow }">
+    <Column field="title.value" header="Title" sortable style="width: 50%">
+      <template #body="{ data }: { data: InboxTrackTableRow }">
         <AnnotatedCell :annotations="data.title.annotations">
           {{ data.title.value }}
         </AnnotatedCell>
@@ -37,12 +26,7 @@
     </Column>
 
     <!-- Date Column -->
-    <Column
-      field="date.value"
-      header="Date"
-      sortable
-      style="width: 10%"
-    >
+    <Column field="date.value" header="Date" sortable style="width: 10%">
       <template #body="{ data }: { data: InboxTrackTableRow }">
         <AnnotatedCell :annotations="data.date.annotations">
           {{ data.date.value }}
@@ -51,13 +35,8 @@
     </Column>
 
     <!-- Author Column -->
-    <Column
-      field="author.value"
-      header="Author"
-      sortable
-      style="width: 10%"
-    >
-      <template #body="{ data } : { data: InboxTrackTableRow }">
+    <Column field="author.value" header="Author" sortable style="width: 10%">
+      <template #body="{ data }: { data: InboxTrackTableRow }">
         <AnnotatedCell :annotations="data.author.annotations">
           {{ data.author.value }}
         </AnnotatedCell>
@@ -71,7 +50,7 @@
       sortable
       style="width: 10%"
     >
-      <template #body="{ data } : { data: InboxTrackTableRow }">
+      <template #body="{ data }: { data: InboxTrackTableRow }">
         <AnnotatedCell :annotations="data.location.annotations">
           {{ data.location.value }}
         </AnnotatedCell>
@@ -79,21 +58,27 @@
     </Column>
 
     <!-- References Column -->
-    <Column
-      field="references"
-      header="References"
-      style="width: 10%"
-    >
-      <template #body="{ data } : { data: InboxTrackTableRow }">
+    <Column field="references" header="References" style="width: 10%">
+      <template #body="{ data }: { data: InboxTrackTableRow }">
         <AnnotatedCell
-          v-for="(reference, idx) of data.references"
-          :key="idx"
+          v-for="reference of data.references"
+          :key="reference.value"
           :value="reference"
           :annotations="reference?.annotations"
         >
           <Tag
             class="m-1"
-            :severity="reference.annotations?.map(annotation => annotation.severity).includes('error') ? 'danger' : reference.annotations?.map(annotation => annotation.severity).includes('warn') ? 'warn': 'info'"
+            :severity="
+              reference.annotations
+                ?.map((annotation) => annotation.severity)
+                .includes('error')
+                ? 'danger'
+                : reference.annotations
+                      ?.map((annotation) => annotation.severity)
+                      .includes('warn')
+                  ? 'warn'
+                  : 'info'
+            "
           >
             {{ reference.value }}
           </Tag>
@@ -102,16 +87,9 @@
     </Column>
 
     <!-- Status Column -->
-    <Column
-      field="status"
-      header="Status"
-      sortable
-      style="width: 10%"
-    >
-      <template #body="{ data } : { data: InboxTrackTableRow }">
-        <Tag
-          :severity="getStatusSeverity(data.status)"
-        >
+    <Column field="status" header="Status" sortable style="width: 10%">
+      <template #body="{ data }: { data: InboxTrackTableRow }">
+        <Tag :severity="getStatusSeverity(data.status)">
           {{ data.status }}
         </Tag>
       </template>
@@ -119,7 +97,7 @@
 
     <!-- Action Buttons Column -->
     <Column class="w-24 !text-end">
-      <template #body="{ data } : { data: InboxTrackTableRow }">
+      <template #body="{ data }: { data: InboxTrackTableRow }">
         <Button
           icon="pi pi-pencil"
           severity="secondary"
@@ -132,17 +110,14 @@
 </template>
 
 <script setup lang="ts">
-import Button from "primevue/button"
-import DataTable from "primevue/datatable"
-import Column from "primevue/column"
-import Tag from 'primevue/tag'
-import { default as AnnotatedCell, type Annotation } from "./AnnotatedCell.vue"
+import { Button, DataTable, Column, Tag } from 'primevue'
+import { default as AnnotatedCell, type Annotation } from './AnnotatedCell.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
-export type Reference = (string|number)[]
+export type Reference = (string | number)[]
 
 export type AnnotatedValue<TValue> = {
   value: TValue
@@ -174,10 +149,20 @@ const emit = defineEmits<{
 
 function getStatusSeverity(status: string): string {
   switch (status) {
-  case 'error': return 'danger'
-  case 'ready': return 'success'
-  case 'processing': return 'warning'
-  default: return 'info'
+    case 'error':
+      return 'danger'
+    case 'ready':
+      return 'success'
+    case 'processing':
+      return 'warning'
+    default:
+      return 'info'
   }
 }
 </script>
+
+<style>
+.p-datatable-header {
+  border-radius: 5px 5px 0px 0px;
+}
+</style>

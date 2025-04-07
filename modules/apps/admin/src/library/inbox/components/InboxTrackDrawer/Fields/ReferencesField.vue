@@ -1,9 +1,5 @@
 <template>
-  <InputField
-    id="refs"
-    label="References"
-    :errors="errors"
-  >
+  <InputField id="refs" label="References" :errors="errors">
     <template #default="{ hasErrors }">
       <AutoComplete
         id="refs"
@@ -15,7 +11,6 @@
     </template>
   </InputField>
 </template>
-
 
 <script setup lang="ts">
 import AutoComplete from 'primevue/autocomplete'
@@ -29,10 +24,9 @@ defineProps<{
   errors?: Error[]
 }>()
 
-
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const references = defineModel<string[]>("references", { default: () => [] })
+const references = defineModel<string[]>('references', { default: () => [] })
 </script>

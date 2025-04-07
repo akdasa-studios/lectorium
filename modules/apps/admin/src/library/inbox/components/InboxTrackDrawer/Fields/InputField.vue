@@ -1,15 +1,10 @@
 <template>
   <div class="flex flex-col gap-2">
-    <label
-      :for="id"
-      class="font-bold"
-    >
+    <label :for="id" class="font-bold">
       {{ label }}
     </label>
     <slot :has-errors="hasErrors" />
-    <TransitionGroup
-      name="list"
-    >
+    <TransitionGroup name="list">
       <Message
         v-for="(error, index) in errors"
         :key="error.text"
@@ -22,30 +17,27 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { computed, defineProps } from "vue"
-import Message from "primevue/message"
+import { computed, defineProps } from 'vue'
+import Message from 'primevue/message'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
-export type Error = { text: string, severity: 'error' | 'warn' }
+export type Error = { text: string; severity: 'error' | 'warn' }
 
 const props = defineProps<{
-  label: string,
-  id: string,
+  label: string
+  id: string
   errors?: Error[] | undefined
 }>()
-
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
 const hasErrors = computed(() => fieldHasErrors(props.errors))
-
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
@@ -56,7 +48,6 @@ function fieldHasErrors(obj: Error[] | undefined) {
   return obj.filter((error) => error.severity === 'error').length > 0
 }
 </script>
-
 
 <style scoped>
 .list-move,

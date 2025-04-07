@@ -1,9 +1,5 @@
 <template>
-  <InputField
-    id="author"
-    label="Author"
-    :errors="errors"
-  >
+  <InputField id="author" label="Author" :errors="errors">
     <template #default="{ hasErrors }">
       <Select
         id="author"
@@ -19,7 +15,6 @@
   </InputField>
 </template>
 
-
 <script setup lang="ts">
 import Select from 'primevue/select'
 import { default as InputField, type Error } from './InputField.vue'
@@ -29,9 +24,9 @@ import { default as InputField, type Error } from './InputField.vue'
 /* -------------------------------------------------------------------------- */
 
 defineProps<{
-  errors?: Error[],
-  authors: { label: string, value: string }[]
+  errors?: Error[]
+  authors: { label: string; value: string }[]
 }>()
 
-const author = defineModel<string>("author", { default: '' })
+const author = defineModel<string>('author', { default: '' })
 </script>

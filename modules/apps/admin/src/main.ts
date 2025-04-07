@@ -11,18 +11,17 @@ import Tooltip from 'primevue/tooltip'
 import Aura from '@primevue/themes/aura'
 import 'primeicons/primeicons.css'
 
-
 const app = createApp(App)
 
 app.use(router)
 app.use(PrimeVue, {
   theme: {
-    preset: Aura
+    preset: Aura,
   },
-  ripple: true
-});
+  ripple: true,
+})
 
-app.directive('ripple', Ripple);
+app.directive('ripple', Ripple)
 app.directive('styleclass', StyleClass)
 app.directive('tooltip', Tooltip)
 

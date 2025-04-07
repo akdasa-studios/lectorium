@@ -1,13 +1,7 @@
 <template>
-  <InputField
-    id="title"
-    label="Date"
-    :errors="errors"
-  >
+  <InputField id="title" label="Date" :errors="errors">
     <template #default>
-      <div
-        class="flex flex-row gap-2"
-      >
+      <div class="flex flex-row gap-2">
         <InputNumber
           v-model="date[0]"
           :use-grouping="false"
@@ -37,7 +31,6 @@
   </InputField>
 </template>
 
-
 <script setup lang="ts">
 import InputNumber from 'primevue/inputnumber'
 import { default as InputField, type Error } from './InputField.vue'
@@ -50,5 +43,7 @@ defineProps<{
   errors?: Error[]
 }>()
 
-const date = defineModel<number[]>("date", { default: [undefined, undefined, undefined] })
+const date = defineModel<number[]>('date', {
+  default: [undefined, undefined, undefined],
+})
 </script>

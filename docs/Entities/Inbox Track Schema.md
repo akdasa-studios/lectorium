@@ -1,9 +1,13 @@
-## Entities :: Track Inbox
+# Entities :: Inbox Track Schema
 
+## Version 1
+Initial schema
 
 ```json
 {
-  "_id": "{track_id}::inbox",
+  "_id": "{hash(path)}",
+  "version": 1,
+  "trackId": "cm974coif00030clb1mri4fb6",
   "path": "BCaitanyaS_CC_Adi_Lila_01-36_-_Initiating_Guru_Instructing_Gurus_and_Disciples_-_2011-11-20_Bon_Accueil.mp3",
   "author": {
     "extracted": "BCaitanyaS",

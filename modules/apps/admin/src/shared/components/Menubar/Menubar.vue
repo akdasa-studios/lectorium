@@ -4,7 +4,7 @@
       <LectoriumLogo />
     </template>
 
-    <template #item="{ item, props, hasSubmenu, root }">
+    <!-- <template #item="{ item, props, hasSubmenu, root }">
       <a
         v-ripple
         class="flex items-center"
@@ -28,70 +28,32 @@
           :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"
         />
       </a>
-    </template>
+    </template> -->
   </Menubar>
 </template>
 
-
 <script setup lang="ts">
-import { ref } from "vue"
-import Badge from "primevue/badge"
-import Menubar from "primevue/menubar"
-import { LectoriumLogo } from "@lectorium/admin/shared"
+import { ref } from 'vue'
+import Menubar from 'primevue/menubar'
+import { LectoriumLogo } from '@lectorium/admin/shared'
+import { useRouter } from 'vue-router'
+
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+
+const router = useRouter()
+
+/* -------------------------------------------------------------------------- */
+/*                                    State                                   */
+/* -------------------------------------------------------------------------- */
 
 const items = ref([
   {
-    label: 'Home',
-    icon: 'pi pi-home'
+    label: 'Inbox',
+    icon: 'pi pi-inbox',
+    path: 'inbox',
+    command: () => router.push({ name: 'inbox' }),
   },
-  {
-    label: 'Features',
-    icon: 'pi pi-star'
-  },
-  {
-    label: 'Projects',
-    icon: 'pi pi-search',
-    items: [
-      {
-        label: 'Core',
-        icon: 'pi pi-bolt',
-        shortcut: '⌘+S'
-      },
-      {
-        label: 'Blocks',
-        icon: 'pi pi-server',
-        shortcut: '⌘+B'
-      },
-      {
-        label: 'UI Kit',
-        icon: 'pi pi-pencil',
-        shortcut: '⌘+U'
-      },
-      {
-        separator: true
-      },
-      {
-        label: 'Templates',
-        icon: 'pi pi-palette',
-        items: [
-          {
-            label: 'Apollo',
-            icon: 'pi pi-palette',
-            badge: 2
-          },
-          {
-            label: 'Ultima',
-            icon: 'pi pi-palette',
-            badge: 3
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Contact',
-    icon: 'pi pi-envelope',
-    badge: 3
-  }
-]);
+])
 </script>

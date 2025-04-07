@@ -7,7 +7,6 @@
   </span>
 </template>
 
-
 <script setup lang="ts" generic="T">
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -22,21 +21,22 @@ defineProps<{
   annotations?: Annotation[] | undefined
 }>()
 
-
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
 
 function getAnnotationsText(annotations: Annotation[] | undefined) {
   if (!annotations) return undefined
-  return annotations.map(annotation => annotation.text).join(', ')
+  return annotations.map((annotation) => annotation.text).join(', ')
 }
 
 function getAnnotationsSeverity(annotations: Annotation[] | undefined) {
   if (!annotations) return ''
-  if (annotations.some(annotation => annotation.severity === 'warn')) {
+  if (annotations.some((annotation) => annotation.severity === 'warn')) {
     return 'text-yellow-700'
-  } else if (annotations.some(annotation => annotation.severity === 'error')) {
+  } else if (
+    annotations.some((annotation) => annotation.severity === 'error')
+  ) {
     return 'text-red-700'
   }
 }

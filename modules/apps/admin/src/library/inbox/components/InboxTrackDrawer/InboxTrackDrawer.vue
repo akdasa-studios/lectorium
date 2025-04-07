@@ -28,10 +28,7 @@
 
       <Divider />
 
-      <TitleField
-        v-model:title="track.title"
-        :errors="annotations.title"
-      />
+      <TitleField v-model:title="track.title" :errors="annotations.title" />
 
       <AuthorField
         v-model:author="track.author"
@@ -45,10 +42,7 @@
         :locations="locations"
       />
 
-      <DateField
-        v-model:date="track.date"
-        :errors="annotations.date"
-      />
+      <DateField v-model:date="track.date" :errors="annotations.date" />
 
       <ReferencesField
         v-model:references="track.references"
@@ -79,41 +73,47 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, computed } from "vue"
-import Button from "primevue/button"
-import Drawer from "primevue/drawer"
-import Divider from "primevue/divider"
-import TitleField from "./Fields/TitleField.vue"
-import AuthorField from "./Fields/AuthorField.vue"
-import LocationField from "./Fields/LocationField.vue"
-import ReferencesField from "./Fields/ReferencesField.vue"
-import DateField from "./Fields/DateField.vue"
-import LanguageField from "./Fields/LanguageField.vue"
+import { defineModel, computed } from 'vue'
+import Button from 'primevue/button'
+import Drawer from 'primevue/drawer'
+import Divider from 'primevue/divider'
+import TitleField from './Fields/TitleField.vue'
+import AuthorField from './Fields/AuthorField.vue'
+import LocationField from './Fields/LocationField.vue'
+import ReferencesField from './Fields/ReferencesField.vue'
+import DateField from './Fields/DateField.vue'
+import LanguageField from './Fields/LanguageField.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 export type EditInboxTrack = {
-  path: string;
-  status: "new" | "verification" | "pending" | "processing" | "processed" | "error";
-  date: number[];
-  references: string[];
-  title: string;
-  author: string;
-  location: string;
-  languagesExtract: string[];
-  languagesTranslateInto: string[];
-};
+  path: string
+  status:
+    | 'new'
+    | 'verification'
+    | 'pending'
+    | 'processing'
+    | 'processed'
+    | 'error'
+  date: number[]
+  references: string[]
+  title: string
+  author: string
+  location: string
+  languagesExtract: string[]
+  languagesTranslateInto: string[]
+}
 
 export type EditInboxTrackAnnotation = {
-  text: string;
-  severity: "error" | "warn";
+  text: string
+  severity: 'error' | 'warn'
 }
 
 const props = defineProps<{
-  authors:     { label: string; value: string }[]
-  locations:   { label: string; value: string }[]
+  authors: { label: string; value: string }[]
+  locations: { label: string; value: string }[]
   annotations: Record<string, EditInboxTrackAnnotation[]>
 }>()
 
@@ -122,8 +122,11 @@ const emit = defineEmits<{
   startProcessing: []
 }>()
 
-const visible = defineModel<boolean>("visible", { default: false, required: true })
-const track = defineModel<EditInboxTrack>("track", { default: () => ({}) })
+const visible = defineModel<boolean>('visible', {
+  default: false,
+  required: true,
+})
+const track = defineModel<EditInboxTrack>('track', { default: () => ({}) })
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -131,8 +134,8 @@ const track = defineModel<EditInboxTrack>("track", { default: () => ({}) })
 
 const hasErrors = computed(() =>
   Object.keys(props.annotations)
-    .map(x => props.annotations[x])
-    .some((x) => x.some((y) => y.severity === "error"))
+    .map((x) => props.annotations[x])
+    .some((x) => x.some((y) => y.severity === 'error')),
 )
 
 /* -------------------------------------------------------------------------- */
@@ -147,5 +150,3 @@ function onStartProcessingClicked() {
   emit('startProcessing')
 }
 </script>
-
-

@@ -1,5 +1,5 @@
 {
-  "name": "vidya",
+  "name": "lectorium",
   "private": true,
   "workspaces": [
     "apps/*",

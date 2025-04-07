@@ -1,6 +1,13 @@
 // components:
-export { default as InboxTrackDrawer, type EditInboxTrack, type EditInboxTrackAnnotation } from './components/InboxTrackDrawer/InboxTrackDrawer.vue'
-export { default as InboxTracksTable, type InboxTrackTableRow } from './components/InboxTracksTable/InboxTracksTable.vue'
+export {
+  default as InboxTrackDrawer,
+  type EditInboxTrack,
+  type EditInboxTrackAnnotation,
+} from './components/InboxTrackDrawer/InboxTrackDrawer.vue'
+export {
+  default as InboxTracksTable,
+  type InboxTrackTableRow,
+} from './components/InboxTracksTable/InboxTracksTable.vue'
 export { EmptyInboxTrackRow } from './components/models'
 
 // containers:
@@ -11,3 +18,6 @@ export { default as InboxTrackTableIsle } from './containers/InboxTrackTableIsle
 export * from './lib/normalizeInboxTrack'
 export * from './lib/annotateInboxTrack'
 export * from './lib/mapInboxTrack'
+
+// routes
+export * from './routes'

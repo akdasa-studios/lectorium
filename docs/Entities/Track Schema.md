@@ -1,8 +1,11 @@
 # Entities :: Track Schema
 
+## Version 1
+Initial schema with support for multilingual titles, basic metadata, references, and language details.
+
 ```json
 {
-  "_id": "{track_id}::track",
+  "_id": "{trackId}::track",
   "@type": "track",
   "version": 1,
   "location": "mayapur",
@@ -13,12 +16,13 @@
     "en": "Title in English",
   },
   "references": [
-    ["sb", 1, 8, 40]
+    ["sb", 1, 8, 40],
+    ["sb", 1, 8, 41]
   ],
   "audio": {
     "original": {
-      "path": "library/tracks/{track_id}/audio/original.mp3",
-      "file_size": 12345,
+      "path": "library/tracks/{trackId}/audio/original.mp3",
+      "fileSize": 12345,
       "duration": 12345,
     }
   },
@@ -36,6 +40,3 @@
   ],
 }
 ```
-
-## Version History
-**Version 1**: Initial schema with support for multilingual titles, basic metadata, references, and language details.
