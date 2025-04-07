@@ -58,7 +58,12 @@
     </Column>
 
     <!-- References Column -->
-    <Column field="references" header="References" style="width: 10%">
+    <Column
+      field="references"
+      header="References"
+      class="whitespace-nowrap"
+      style="width: 10%"
+    >
       <template #body="{ data }: { data: InboxTrackTableRow }">
         <AnnotatedCell
           v-for="reference of data.references"
@@ -68,17 +73,7 @@
         >
           <Tag
             class="m-1"
-            :severity="
-              reference.annotations
-                ?.map((annotation) => annotation.severity)
-                .includes('error')
-                ? 'danger'
-                : reference.annotations
-                      ?.map((annotation) => annotation.severity)
-                      .includes('warn')
-                  ? 'warn'
-                  : 'info'
-            "
+            :severity="getReferenceSeverity(reference.annotations)"
           >
             {{ reference.value }}
           </Tag>
@@ -158,6 +153,14 @@ function getStatusSeverity(status: string): string {
     default:
       return 'info'
   }
+}
+
+function getReferenceSeverity(annotations: Annotation[]): string {
+  return annotations?.map((annotation) => annotation.severity).includes('error')
+    ? 'danger'
+    : annotations?.map((annotation) => annotation.severity).includes('warn')
+      ? 'warn'
+      : 'info'
 }
 </script>
 
