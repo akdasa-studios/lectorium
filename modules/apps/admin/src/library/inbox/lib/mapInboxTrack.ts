@@ -1,4 +1,4 @@
-import type { InboxTrack } from '@lectorium/admin/dal/models'
+import type { InboxTrack } from '@lectorium/dal/models'
 import type { EditInboxTrack } from '@lectorium/admin/library/inbox'
 
 export function mapEditInboxTrackToInboxTrack(

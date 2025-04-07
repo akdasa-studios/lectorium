@@ -1,4 +1,4 @@
-import type { InboxTrack, Reference } from '@lectorium/admin/dal/models'
+import type { InboxTrack, Reference } from '@lectorium/dal/models'
 import {
   useAuthorsService,
   useLocationsService,

@@ -1,4 +1,4 @@
-import type { Reference } from '@lectorium/admin/dal/models'
+import type { Reference } from '@lectorium/dal/models'
 import {
   useAuthorsService,
   useLocationsService,
