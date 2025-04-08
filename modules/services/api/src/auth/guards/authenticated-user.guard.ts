@@ -37,7 +37,7 @@ export class AuthenticatedUserGuard implements CanActivate {
       const accessToken = await this.jwtService.verifyAsync<AccessToken>(
         token,
         {
-          secret: this.jwtConfig.secret,
+          publicKey: this.jwtConfig.publicKey,
         },
       );
 

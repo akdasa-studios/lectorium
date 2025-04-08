@@ -92,18 +92,3 @@ export interface SignOutRequest {
 
 export interface SignOutResponse {
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                 Permissions                                */
-/* -------------------------------------------------------------------------- */
-
-export interface GetProfileResponse {
-  /** User's ID */
-  userId: string;
-
-  /** User's email */
-  email: string;
-
-  /** User's name */
-  name: string;
-}

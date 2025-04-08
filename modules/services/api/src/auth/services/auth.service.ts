@@ -33,7 +33,7 @@ export class AuthService {
       },
       {
         expiresIn: this.jwtConfig.accessTokenExpiresIn,
-        secret: this.jwtConfig.secret,
+        privateKey: this.jwtConfig.privateKey,
       },
     );
     const refreshToken = await this.jwtService.signAsync(
@@ -43,7 +43,7 @@ export class AuthService {
       },
       {
         expiresIn: this.jwtConfig.refreshTokenExpiresIn,
-        secret: this.jwtConfig.secret,
+        privateKey: this.jwtConfig.privateKey,
       },
     );
 
@@ -61,7 +61,7 @@ export class AuthService {
   async verifyToken(token: string): Promise<RefreshToken | undefined> {
     try {
       const payload = await this.jwtService.verifyAsync<RefreshToken>(token, {
-        secret: this.jwtConfig.secret,
+        publicKey: this.jwtConfig.publicKey,
       });
       return payload;
     } catch {

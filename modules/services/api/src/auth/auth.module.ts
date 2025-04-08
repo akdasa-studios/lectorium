@@ -17,7 +17,10 @@ import { IsDestinationCorrectConstraint } from './validations/destination.valida
 
 @Module({
   imports: [
-    JwtModule.register({ global: true }),
+    JwtModule.register({
+      global: true,
+      signOptions: { algorithm: 'RS256' },
+    }),
     MailerModule.forRootAsync({
       useFactory: (config: ConfigType<typeof MailerConfig>) => ({
         transport: {
