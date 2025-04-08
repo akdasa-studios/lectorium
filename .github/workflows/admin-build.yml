@@ -21,4 +21,12 @@ jobs:
         with:
           submodules: true
       
-      - uses: ./admin-build-steps.yml
+      - uses: .github/actions/build-container
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          file: modules/apps/admin/Dockerfile
+          # tags: |
+          #   ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
+          #   ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:latest
