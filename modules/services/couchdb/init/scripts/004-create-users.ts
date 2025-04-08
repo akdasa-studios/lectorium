@@ -36,4 +36,3 @@ export class CreateContentManagerUser extends CreateUserMigration {
   password = "contentManager";
   roles = ["contentManager"];
 }
-

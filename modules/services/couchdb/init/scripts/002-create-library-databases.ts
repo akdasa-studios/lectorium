@@ -1,6 +1,6 @@
-import { LibraryMigration } from './Migration'
+import { Migration } from './Migration'
 
-export abstract class CreateLibraryDatabase extends LibraryMigration {
+export abstract class CreateLibraryDatabase extends Migration {
   abstract get dbName(): string
 
   get name(): string { return `Create ${this.dbName} database` }
@@ -53,11 +53,11 @@ export abstract class CreateLibraryDatabase extends LibraryMigration {
 }
 
 export class CreateLibraryTracksDatabase extends CreateLibraryDatabase {
-  get dbName(): string { return `library-tracks-${this.version}` }
+  get dbName(): string { return `tracks` }
 }
 
 export class CreateLibraryTranscriptsDatabase extends CreateLibraryDatabase {
-  get dbName(): string { return `library-transcripts-${this.version}` }
+  get dbName(): string { return `transcripts` }
 
   override async migrate(): Promise<void> {
     await super.migrate()
@@ -89,12 +89,9 @@ export class CreateLibraryTranscriptsDatabase extends CreateLibraryDatabase {
 }
 
 export class CreateLibraryDictionaryDatabase extends CreateLibraryDatabase {
-  get dbName(): string { return `library-dictionary-${this.version}` }
+  get dbName(): string { return `dictionary` }
 }
 
 export class CreateLibraryIndexDatabase extends CreateLibraryDatabase {
-  get dbName(): string { return `library-index-${this.version}` }
+  get dbName(): string { return `index` }
 }
-
-
-

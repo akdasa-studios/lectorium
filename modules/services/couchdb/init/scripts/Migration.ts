@@ -14,7 +14,3 @@ export abstract class Migration implements IMigration {
   abstract migrate(): Promise<void>
   abstract revert(): Promise<void>
 }
-
-export abstract class LibraryMigration extends Migration {
-  protected readonly version: string = "v0001"
-}

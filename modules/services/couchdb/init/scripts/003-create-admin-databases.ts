@@ -42,9 +42,9 @@ export abstract class CreateAdminDatabase extends Migration {
 }
 
 export class CreateTracksInboxDatabase extends CreateAdminDatabase {
-  get dbName(): string { return `tracks-inbox` }
+  get dbName(): string { return `inbox` }
 }
 
 export class CreateTracksSourcesDatabase extends CreateAdminDatabase {
-  get dbName(): string { return `tracks-sources` }
+  get dbName(): string { return `sources` }
 }
