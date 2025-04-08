@@ -3,11 +3,6 @@ name: 'My Shared Steps'
 runs:
   using: 'composite'
   steps:
-    - name: 📥 Checkout
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-
     - name: 🐳 Setup Docker
       uses: docker/setup-buildx-action@v2
 
