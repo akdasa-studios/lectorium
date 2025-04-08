@@ -9,7 +9,7 @@ export class ConfigureDatabase extends Migration {
   }
 
   async migrate(): Promise<void> {
-    const jwtPublicKeyPath = '/etc/lectorium/jwt_public_key.pem';
+    const jwtPublicKeyPath = '/etc/lectorium/keys/jwt_public_key.pem';
     const jwtPublicKey     = fs.readFileSync(jwtPublicKeyPath, 'utf8');
 
     const keys = [
