@@ -3,17 +3,20 @@ description: 'Builds a Docker container'
 inputs:
   registry:
     description: 'Docker registry to log into'
-    required: true
     default: 'ghcr.io'
+    required: true
   username:
     description: 'Username for Docker registry'
-    required: true
     default: ${{ github.actor }}
+    required: true
   password:
     description: 'Password for Docker registry'
     required: true
   file:
     description: 'Path to Dockerfile'
+    required: true
+  tags:
+    description: 'Tags to apply to the image'
     required: true
 
 runs:
@@ -34,4 +37,5 @@ runs:
       with:
         context: ./modules
         file: ${{ inputs.file }}
+        tags: ${{ inputs.tags}}
         load: true
