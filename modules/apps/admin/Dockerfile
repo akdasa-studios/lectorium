@@ -29,7 +29,7 @@ LABEL org.opencontainers.image.description="Admin service for Lectorium"
 LABEL org.opencontainers.image.source="https://github.com/akdasa-studios/lectorium"
 LABEL org.opencontainers.image.authors="AKd Studios"
 
-COPY --from=build /akd-stidios/lectorium/apps/admin/dist /usr/share/nginx/html/admin
+COPY --from=build /akd-stidios/lectorium/apps/admin/dist /usr/share/nginx/html
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
