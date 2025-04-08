@@ -12,6 +12,9 @@ inputs:
   password:
     description: 'Password for Docker registry'
     required: true
+  file:
+    description: 'Path to Dockerfile'
+    required: true
 
 runs:
   using: 'composite'
