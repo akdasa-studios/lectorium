@@ -1,7 +1,3 @@
-# Builds the admin app to check if the Dockerfile is correct
-# and the image can be built successfully. This is a prerequisite
-# for deploying the app to staging.
-
 name: Admin
 
 on:
@@ -25,7 +21,8 @@ jobs:
         with:
           submodules: true
       
-      - uses: ./.github/actions/build-container
+      - name: 👷‍♂️ Build Container
+        uses: ./.github/actions/build-container
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}

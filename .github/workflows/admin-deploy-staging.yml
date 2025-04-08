@@ -24,7 +24,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: ./.github/workflows/admin-build-steps.yml
+      
+      - name: 👷‍♂️ Build Container
+        uses: ./.github/workflows/admin-build-steps.yml
+      
       - name: ⬆️ Push staging Image
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
