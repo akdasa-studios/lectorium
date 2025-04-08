@@ -75,11 +75,13 @@ export class UserAuthenticationController {
     }
 
     // get or create user by login and start new session
-    const user = await this.usersService.findById(request.login);
+    const user = await this.usersService.findByEmail(request.login);
     if (!user) {
       throw new UnauthorizedException(['user not found']);
     }
-    const tokens = await this.authService.generateTokens(user.id);
+    const tokens = await this.authService.generateTokens(user.name, {
+      '_couchdb.roles': user.roles,
+    });
 
     return new dto.OtpSignInResponse({
       accessToken: tokens.accessToken,

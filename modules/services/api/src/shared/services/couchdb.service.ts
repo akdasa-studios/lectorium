@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { CouchDbConfig } from '@lectorium/api/configs';
-import nano from 'nano';
+import * as nano from 'nano';
 
 @Injectable()
 export class CouchDbService {
@@ -13,8 +13,8 @@ export class CouchDbService {
     @Inject(CouchDbConfig.KEY)
     config: ConfigType<typeof CouchDbConfig>,
   ) {
-    // @ts-ignore
-    this.couchDbClient = nano(config.host + ':' + config.port.toString());
+    const { username, password, host, port } = config;
+    this.couchDbClient = nano(`http://${username}:${password}@${host}:${port}`);
   }
 
   async getById<TEntity>(
@@ -31,6 +31,23 @@ export class CouchDbService {
         return null;
       }
       this.logger.error(`Error fetching document with ID ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async find<TEntity>(
+    collection: string,
+    query: nano.MangoQuery,
+  ): Promise<TEntity[]> {
+    try {
+      const database = this.couchDbClient.use(collection);
+      const result = await database.find(query);
+      return result.docs as TEntity[];
+    } catch (error) {
+      this.logger.error(
+        `Error executing find query in collection ${collection}:`,
+        error,
+      );
       throw error;
     }
   }

@@ -24,11 +24,12 @@ export class AuthService {
    * @param permissions Permissions to save in the token (optional)
    * @returns Access and refresh tokens
    */
-  async generateTokens(userId: string): Promise<Tokens> {
+  async generateTokens(userId: string, payload: object): Promise<Tokens> {
     const accessToken = await this.jwtService.signAsync(
       {
         jti: uuidv4(),
         sub: userId,
+        ...payload,
       },
       {
         expiresIn: this.jwtConfig.accessTokenExpiresIn,

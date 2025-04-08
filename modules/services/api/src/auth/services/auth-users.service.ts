@@ -1,9 +1,12 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import { AuthConfig } from '@lectorium/api/configs';
-import { RedisService } from '@lectorium/api/shared/services';
+import { Injectable, Logger } from '@nestjs/common';
+import { CouchDbService } from '@lectorium/api/shared/services';
 
 export type LoginField = 'email' | 'phone';
+export type User = {
+  name: string;
+  email: string;
+  roles: string[];
+};
 
 @Injectable()
 export class AuthUsersService {
@@ -11,24 +14,23 @@ export class AuthUsersService {
 
   /**
    * Creates an instance of AuthUsersService.
-   * @param users Users repository
-   * @param roles Rples repository
-   * @param mapper Mapper instance
    */
-  constructor(
-    private readonly redis: RedisService,
-    @Inject(AuthConfig.KEY)
-    private readonly authConfig: ConfigType<typeof AuthConfig>,
-  ) {}
+  constructor(private readonly couchDbService: CouchDbService) {}
 
   /**
-   * Finds a user by id.
-   * @param id Id of the user
-   * @returns User with the given id or null if not found
+   * Finds a user by their email.
+   * @param email Email of the user to find.
+   * @returns User object if found, null otherwise.
    */
-  async findById(id: string): Promise<{ id: string } | null> {
-    // TODO: get user by id from database
-    return await Promise.resolve({ id });
-    // return await this.users.findOne({ where: { id }, relations: ['roles'] });
+  async findByEmail(email: string): Promise<User | null> {
+    const documents = await this.couchDbService.find<User>('_users', {
+      selector: { email },
+      limit: 1,
+    });
+    if (documents.length === 1) {
+      return documents[0];
+    } else {
+      return null;
+    }
   }
 }

@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { RedisService } from '@lectorium/api/shared/services';
+import { CouchDbService, RedisService } from '@lectorium/api/shared/services';
 
 import { MailerConfig } from '../configs';
 import { OtpController } from './controllers/otp.controller';
@@ -48,6 +48,7 @@ import { IsDestinationCorrectConstraint } from './validations/destination.valida
     AuthService,
     RevokedTokensService,
     RedisService,
+    CouchDbService,
     IsDestinationCorrectConstraint,
   ],
 })
