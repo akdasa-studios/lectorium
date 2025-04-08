@@ -1,5 +1,18 @@
 name: '👷‍♂️ Build Container'
 description: 'Builds a Docker container'
+inputs:
+  registry:
+    description: 'Docker registry to log into'
+    required: true
+    default: 'ghcr.io'
+  username:
+    description: 'Username for Docker registry'
+    required: true
+    default: ${{ github.actor }}
+  password:
+    description: 'Password for Docker registry'
+    required: true
+    default: ${{ secrets.GITHUB_TOKEN }}
 
 runs:
   using: 'composite'

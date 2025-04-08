@@ -7,10 +7,6 @@ on:
       - ".github/workflows/admin-build.yml"
       - ".github/workflows/admin-deploy-staging.yml"
   
-env:
-  REGISTRY: ghcr.io
-  ORGANIZATION: akdasa-studios
-
 jobs:
   build:
     name: 👷‍♂️ Build
@@ -24,7 +20,4 @@ jobs:
       - name: 👷‍♂️ Build Container
         uses: ./.github/actions/build-container
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
           file: modules/apps/admin/Dockerfile
