@@ -18,5 +18,5 @@ runs:
       uses: docker/build-push-action@v6
       with:
         context: ./modules
-        file: {{ inputs.file }}
+        file: ${{ inputs.file }}
         load: true

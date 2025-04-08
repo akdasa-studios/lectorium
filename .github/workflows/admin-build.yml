@@ -1,3 +1,7 @@
+# Builds the admin app to check if the Dockerfile is correct
+# and the image can be built successfully. This is a prerequisite
+# for deploying the app to staging.
+
 name: Admin
 
 on:
