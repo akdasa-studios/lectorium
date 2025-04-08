@@ -45,7 +45,7 @@ async function onOtpRequested(login: string) {
       type: OtpType.Email,
       destination: login,
     })
-    emit('otp-requested', login.value)
+    emit('otp-requested', login)
   } catch {
     isDestinationInvalid.value = true
   } finally {

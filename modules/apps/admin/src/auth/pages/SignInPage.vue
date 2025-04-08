@@ -49,16 +49,10 @@ async function onOtpRequested() {
 
 async function onAuthenticated(accessToken: string, refreshToken: string) {
   authTokens.value = { accessToken, refreshToken }
-  auth.signIn(
-    {
-      id: 'test',
-      email: login.value,
-    },
-    {
-      accessToken,
-      refreshToken,
-    },
-  )
+  auth.signIn({
+    id: 'test',
+    email: login.value,
+  })
   router.replace({ name: 'home' })
 }
 </script>

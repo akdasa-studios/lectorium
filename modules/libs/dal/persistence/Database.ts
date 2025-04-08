@@ -38,12 +38,13 @@ export class Database {
       adapter: this._config.adapter,
       // @ts-ignore
       location: 'default',
-      fetch: (url, opts) => {
+      fetch: (url: string | Request, opts: RequestInit | undefined) => {
         // Add Authorization header to the request options
         const token = this._config.authToken ? this._config.authToken() : null
         if (opts && token) {
-          opts.headers = opts.headers || new Headers();
-          opts.headers.set('Authorization', `Bearer ${token}`);
+          const headers = new Headers(opts.headers);
+          headers.set('Authorization', `Bearer ${token}`);
+          opts.headers = headers;
         }
         
         // You could also use Basic Auth like this:
