@@ -27,6 +27,3 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           file: modules/apps/admin/Dockerfile
-          # tags: |
-          #   ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
-          #   ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:latest
