@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./modules
-          file: ./apps/admin/Dockerfile
+          file: ./modules/apps/admin/Dockerfile
           load: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
