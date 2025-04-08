@@ -1,4 +1,3 @@
-import path from 'path'
 import fs from 'fs'
 import { Migration } from './Migration'
 
@@ -10,8 +9,8 @@ export class ConfigureDatabase extends Migration {
   }
 
   async migrate(): Promise<void> {
-    const jwtPublicKeyPath = path.resolve(__dirname, '../../keys/jwt_public_key.pem');
-    const jwtPublicKey = fs.readFileSync(jwtPublicKeyPath, 'utf8');
+    const jwtPublicKeyPath = '/etc/lectorium/jwt_public_key.pem';
+    const jwtPublicKey     = fs.readFileSync(jwtPublicKeyPath, 'utf8');
 
     const keys = [
       { key: 'httpd/enable_cors', value: 'true' },
