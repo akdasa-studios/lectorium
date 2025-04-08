@@ -3,8 +3,8 @@
 # ---------------------------------------------------------------------------- #
 
 FROM node:22-alpine3.19 AS builder
-WORKDIR /akd-studios/lectorium/database/bootstrap
-COPY . .
+WORKDIR /akd-studios/lectorium/couchdb/init
+COPY ./services/couchdb/init .
 RUN npm install && npm run build
 
 # ---------------------------------------------------------------------------- #
@@ -15,6 +15,6 @@ FROM node:22-alpine3.19 AS release
 LABEL org.opencontainers.image.description="Database Boootstrap for the Lectorium project"
 LABEL org.opencontainers.image.source="https://github.com/akdasa-studios/lectorium"
 
-WORKDIR /akd-studios/lectorium/database/bootstrap
-COPY --from=builder /akd-studios/lectorium/database/bootstrap .
+WORKDIR /akd-studios/lectorium/couchdb/init
+COPY --from=builder /akd-studios/lectorium/couchdb/init .
 CMD ["npm", "run", "migrate"]
