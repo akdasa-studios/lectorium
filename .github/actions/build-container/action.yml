@@ -12,7 +12,6 @@ inputs:
   password:
     description: 'Password for Docker registry'
     required: true
-    default: ${{ secrets.GITHUB_TOKEN }}
 
 runs:
   using: 'composite'
