@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "modules/apps/admin/**"
+      - ".github/workflows/build-admin.yml"
 
 env:
   REGISTRY: ghcr.io
