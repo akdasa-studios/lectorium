@@ -31,7 +31,8 @@ jobs:
       - name: 🛠️ Build Image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./modules
+          file: ./apps/admin/Dockerfile
           load: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
