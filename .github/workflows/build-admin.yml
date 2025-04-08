@@ -12,6 +12,9 @@ env:
 
 jobs:
   build:
+    environment:
+      name: staging
+    name: 👷‍♂️ Build
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout
@@ -29,7 +32,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🛠️ Build Image
+      - name: 👷‍♂️ Build Image
         uses: docker/build-push-action@v6
         with:
           context: ./modules
@@ -38,6 +41,6 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
 
-      - name: ⬆️ Push `staging` Image
+      - name: ⬆️ Push staging Image
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
