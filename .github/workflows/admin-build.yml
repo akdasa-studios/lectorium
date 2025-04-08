@@ -1,0 +1,19 @@
+name: Admin
+
+on:
+  push:
+    paths:
+      - "modules/apps/admin/**"
+      - ".github/workflows/admin-build.yml"
+      - ".github/workflows/admin-deploy-staging.yml"
+  
+env:
+  REGISTRY: ghcr.io
+  ORGANIZATION: akdasa-studios
+
+jobs:
+  build:
+    name: 👷‍♂️ Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/admin-build-steps.yml
