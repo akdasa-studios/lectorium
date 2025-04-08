@@ -5,7 +5,7 @@ on:
     # branches:
     #   - main
     paths:
-      - "modules/apps/airflow/**"
+      - "modules/services/airflow/**"
       - ".github/workflows/airflow-build.yml"
       - ".github/workflows/airflow-deploy-staging.yml"
 
@@ -31,7 +31,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          file: modules/apps/airflow/Dockerfile
+          file: modules/services/airflow/Dockerfile
           tags: |
             ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-airflow:staging
 

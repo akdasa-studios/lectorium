@@ -3,7 +3,7 @@ name: Airflow
 on:
   push:
     paths:
-      - "modules/apps/airflow/**"
+      - "modules/services/airflow/**"
       - ".github/workflows/airflow-build.yml"
       - ".github/workflows/airflow-deploy-staging.yml"
   
