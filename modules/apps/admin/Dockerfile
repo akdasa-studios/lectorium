@@ -4,10 +4,12 @@
 
 FROM node:22.10.0-bookworm AS base
 
-WORKDIR /akd-stidios/lectorium/apps/admin
-COPY package*.json ./
-RUN npm install
-
+WORKDIR /akd-stidios/lectorium/
+COPY package*.json ./ 
+COPY apps/admin/package*.json apps/admin/
+RUN npm install \
+    && cd ./apps/admin \
+    && npm i
 COPY . .
 
 # ---------------------------------------------------------------------------- #
@@ -15,7 +17,7 @@ COPY . .
 # ---------------------------------------------------------------------------- #
 
 FROM base AS build
-RUN npm run build-only -- --base=/admin/
+RUN cd ./apps/admin && npm run build-only
 
 # ---------------------------------------------------------------------------- #
 #                                    Release                                   #
@@ -25,6 +27,7 @@ FROM nginx:latest AS release
 
 LABEL org.opencontainers.image.description="Admin service for Lectorium"
 LABEL org.opencontainers.image.source="https://github.com/akdasa-studios/lectorium"
+LABEL org.opencontainers.image.authors="AKd Studios"
 
 COPY --from=build /akd-stidios/lectorium/apps/admin/dist /usr/share/nginx/html/admin
 EXPOSE 80

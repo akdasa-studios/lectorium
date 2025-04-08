@@ -1,4 +1,4 @@
-name: Api / Tests
+name: Admin / Build
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
       - name: 🛠️ Build Image
         uses: docker/build-push-action@v6
         with:
-          context: ./modules/apps/admin
+          context: .
           load: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-admin:staging
