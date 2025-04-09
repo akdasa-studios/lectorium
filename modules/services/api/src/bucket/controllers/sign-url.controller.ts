@@ -78,7 +78,7 @@ export class SignUrlController {
     } catch (error) {
       throw new HttpException(
         new dtoShared.ErrorResponse({
-          error: 'Bad request.',
+          error: 'Internal server error.',
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           message: error.message || 'Failed to generate signed URL.',
         }),
