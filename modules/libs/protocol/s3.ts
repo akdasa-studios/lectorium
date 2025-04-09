@@ -8,15 +8,6 @@ export enum S3Operation {
 }
 
 /**
- * Generates the key for storing metadata or logs related to S3 operations.
- * @param bucketName Name of the S3 bucket.
- * @param key Object key in the bucket.
- * @returns Key for storing metadata or logs.
- */
-export const S3StorageKey = (bucketName: string, key: string) =>
-  `s3:${bucketName}:${key}`;
-
-/**
  * Type representing the details of an S3 signed URL request.
  */
 export type S3SignedUrlRequest = {

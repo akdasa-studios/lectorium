@@ -13,7 +13,8 @@ import {
   ApiTags,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import * as dto from '@lectorium/api/bucket/dto/sign-url.dto';
+import * as dto from '@lectorium/api/bucket/dto';
+import * as dtoShared from '@lectorium/api/shared/dto';
 import { S3Service } from '@lectorium/api/bucket/services/s3.service';
 import { Routes } from '@lectorium/protocol';
 
@@ -41,19 +42,21 @@ export class SignUrlController {
     description: 'Signed URL has been generated successfully.',
   })
   @ApiBadRequestResponse({
-    type: dto.ErrorResponse,
+    type: dtoShared.ErrorResponse,
     description: 'Invalid request parameters.',
   })
   async generateSignedUrl(
     @Body() request: dto.SignUrlRequest,
-  ): Promise<dto.SignUrlResponse> {
+  ): Promise<dto.SignUrlResponse | dtoShared.ErrorResponse> {
     try {
       // Validate the request
+      // TODO: extract validation logic to a validators
       if (!request.bucketName || !request.key || !request.operation) {
         throw new HttpException(
-          new dto.ErrorResponse({
-            success: false,
-            message: 'Invalid request parameters.',
+          new dtoShared.ErrorResponse({
+            error: 'Bad request.',
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: ['bucketName, key, and operation are required fields.'],
           }),
           HttpStatus.BAD_REQUEST,
         );
@@ -74,8 +77,9 @@ export class SignUrlController {
       });
     } catch (error) {
       throw new HttpException(
-        new dto.ErrorResponse({
-          success: false,
+        new dtoShared.ErrorResponse({
+          error: 'Bad request.',
+          statusCode: HttpStatus.BAD_REQUEST,
           message: error.message || 'Failed to generate signed URL.',
         }),
         HttpStatus.INTERNAL_SERVER_ERROR,

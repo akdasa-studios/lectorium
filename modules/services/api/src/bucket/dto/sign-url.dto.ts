@@ -44,17 +44,3 @@ export class SignUrlResponse implements protocol.S3SignedUrlResponse {
   @ApiProperty({ example: 'https://example.com/signed-url' })
   signedUrl: string;
 }
-
-export class ErrorResponse implements protocol.S3SignedUrlResponse {
-  constructor(options?: { success?: boolean; message?: string }) {
-    this.success = options?.success ?? false;
-    this.message = options?.message ?? 'An error occurred.';
-  }
-  signedUrl: string;
-
-  @ApiProperty({ example: false })
-  success: boolean;
-
-  @ApiProperty({ example: 'An error occurred.' })
-  message: string;
-}
