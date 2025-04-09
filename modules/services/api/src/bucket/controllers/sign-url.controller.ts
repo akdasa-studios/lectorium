@@ -79,7 +79,7 @@ export class SignUrlController {
       throw new HttpException(
         new dtoShared.ErrorResponse({
           error: 'Bad request.',
-          statusCode: HttpStatus.BAD_REQUEST,
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           message: error.message || 'Failed to generate signed URL.',
         }),
         HttpStatus.INTERNAL_SERVER_ERROR,
