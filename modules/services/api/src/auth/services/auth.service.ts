@@ -21,7 +21,7 @@ export class AuthService {
   /**
    * Generates access and refresh tokens for the user.
    * @param userId User ID
-   * @param permissions Permissions to save in the token (optional)
+   * @param roles User roles
    * @returns Access and refresh tokens
    */
   async generateTokens(userId: string, roles: string[]): Promise<Tokens> {
