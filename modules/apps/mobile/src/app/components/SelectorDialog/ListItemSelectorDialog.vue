@@ -10,7 +10,7 @@
       class="ion-no-margin ion-no-padding"
     >
       <IonRadioGroup
-        v-model="modelValue"
+        v-model="value"
         :allow-empty-selection="true"
       >
         <IonItem
@@ -28,6 +28,7 @@
 
 
 <script setup lang="ts" generic="T extends Item">
+import { ref } from 'vue'
 import { IonList, IonRadioGroup, IonRadio, IonItem } from '@ionic/vue'
 import SelectorDialog from './SelectorDialog.vue'
 
@@ -56,7 +57,7 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const modelValue = defineModel<ItemId>({ required: true, default: undefined })
+const value = ref<ItemId>(undefined)
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
@@ -67,6 +68,6 @@ function onClose() {
 }
 
 function onSelect() {
-  emit('select', '')
+  emit('select', value.value)
 }
 </script>

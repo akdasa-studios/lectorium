@@ -6,16 +6,17 @@
     {{ title }}
   </TracksFilterChip> 
   <ListItemsSelectorDialog
-    v-model:items="items"
+    :items="items"
     :title="title"
     :open="isDialogOpen"
     @close="setDialogOpen(false)"
+    @select="modelValue = $event"
   />
 </template>
 
 
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue'
+import { computed, ref, toRefs } from 'vue'
 import { ListItemsSelectorDialog, type SelectorDialogItem } from '@/app'
 import { TracksFilterChip } from '@/library'
 
@@ -37,17 +38,6 @@ const modelValue = defineModel<string[]>({ required: true, default: [] })
 const isDialogOpen = ref(false)
 const isApplied = computed(() => modelValue.value.length > 0)
 const { items } = toRefs(props)
-
-/* -------------------------------------------------------------------------- */
-/*                                    Hooks                                   */
-/* -------------------------------------------------------------------------- */
-
-watch(items, (items) => {
-  modelValue.value = items
-    .filter((item) => item.checked)
-    .map((item) => item.id)
-}, { deep: true })
-
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */

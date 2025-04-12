@@ -6,11 +6,11 @@
     {{ title }}
   </TracksFilterChip> 
   <ListItemSelectorDialog
-    v-model="modelValue"
     :title="title"
     :items="items"
     :open="isDialogOpen"
     @close="setDialogOpen(false)"
+    @select="modelValue = $event"
   />
 </template>
 

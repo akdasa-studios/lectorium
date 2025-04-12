@@ -2,6 +2,8 @@
   <SelectorDialog
     :open="open"
     :title="title"
+    @select="onSelect"
+    @close="onClose"
   >
     <IonItem>
       <IonLabel>{{ $t('filter-date-start') }}</IonLabel>
@@ -43,28 +45,31 @@
 
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { IonButton, IonDatetime, IonPopover, IonItem, IonLabel } from '@ionic/vue'
 import SelectorDialog from './SelectorDialog.vue'
-import { PropType } from 'vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 export type DateRange = { from: string, to: string }
-defineProps<{
+const props = defineProps<{
   open: boolean,
   title: string,
+  value: DateRange
+}>()
+
+const emit = defineEmits<{
+  close: [],
+  select: [value: DateRange]
 }>()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const value = defineModel({
-  type: Object as PropType<DateRange>,
-  required: true
-})
+const value = ref<DateRange>({ from: props.value.from, to: props.value.to })
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
@@ -78,6 +83,14 @@ function onStartDateChanged(v: string | string[] | undefined | null) {
 function onEndDateChanged(v: string | string[] | undefined | null) {
   if (typeof v !== 'string') return
   value.value.to = getLastDayOfMonth(new Date(v))
+}
+
+function onClose() {
+  emit('close')
+}
+
+function onSelect() {
+  emit('select', value.value)
 }
 
 /* -------------------------------------------------------------------------- */

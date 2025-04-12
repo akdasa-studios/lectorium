@@ -48,9 +48,10 @@ export type Item = {
   checked: boolean
 }
 
-defineProps<{
+const props = defineProps<{
   title: string,
   open: boolean,
+  items: Item[],
 }>()
 
 const emit = defineEmits<{
@@ -58,7 +59,6 @@ const emit = defineEmits<{
   select: [items: ItemId[]]
 }>()
 
-const items = defineModel<Item[]>('items', { type: Array<Item>, default: () => [] as Item[] })
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -67,7 +67,7 @@ const items = defineModel<Item[]>('items', { type: Array<Item>, default: () => [
 const query = ref('')
 
 const filteredItems = computed(() =>
-  items.value.filter((item) => compareStrings(item.title, query.value) || item.checked,
+  props.items.filter((item) => compareStrings(item.title, query.value) || item.checked,
 ))
 
 /* -------------------------------------------------------------------------- */
@@ -79,7 +79,7 @@ function onClose() {
 }
 
 function onSelect() {
-  const itemIds = items.value
+  const itemIds = props.items
     .filter((item) => item.checked)
     .map((item) => item.id)
   emit('select', itemIds)

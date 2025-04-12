@@ -6,10 +6,11 @@
     {{ title }}
   </TracksFilterChip> 
   <DateRangeSelectorDialog
-    v-model="modelValue"
     :title="title"
     :open="isDialogOpen"
+    :value="modelValue"
     @close="setDialogOpen(false)"
+    @select="modelValue = $event"
   />
 </template>
 

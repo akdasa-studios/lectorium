@@ -30,7 +30,6 @@ const modelValue = defineModel<string[]>({ required: true, default: [] })
 
 const { state } = useAsyncState(loadItems, [], { immediate: true, shallow: false })
 
-
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
