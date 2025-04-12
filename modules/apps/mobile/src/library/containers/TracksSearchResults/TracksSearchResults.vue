@@ -26,7 +26,7 @@ import { useDAL, TracksListItem, TracksListItemData } from '@/app'
 import { mapTrackToPlaylistItem } from '@/home'
 import { IonList, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/vue'
 import { watchDebounced } from '@vueuse/core'
-import { ref, toRefs } from 'vue'
+import { ref, toRefs, onMounted } from 'vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -53,6 +53,7 @@ const props = defineProps<{
 
 const { filters } = toRefs(props)
 
+
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
@@ -62,6 +63,7 @@ const tracks = ref<TracksListItemData[]>([])
 const isLoading = ref<boolean>(false)
 const infiniteScrollEnabled = ref<boolean>(true)
 
+
 /* -------------------------------------------------------------------------- */
 /*                                    Hooks                                   */
 /* -------------------------------------------------------------------------- */
@@ -69,6 +71,11 @@ const infiniteScrollEnabled = ref<boolean>(true)
 watchDebounced(filters, async (v) => {
   await loadTracks(0, v)
 }, { debounce: 500, maxWait: 1000, deep: true })
+
+onMounted(async () => {
+  await loadTracks(0, filters.value)
+})
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
