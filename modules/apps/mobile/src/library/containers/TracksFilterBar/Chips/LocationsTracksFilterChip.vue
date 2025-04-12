@@ -39,7 +39,7 @@ async function loadItems() {
   const allItems = await dal.locations.getAll()
   return allItems
     .map((item) => ({
-      id: item._id,
+      id: item._id.replace('location::', ''),
       title: item.fullName['en'],
       checked: false,
     }))

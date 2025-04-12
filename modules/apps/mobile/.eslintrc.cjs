@@ -18,5 +18,9 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'semi': ['error', 'never'],
     'quotes': ['error', 'single', { 'allowTemplateLiterals': true }],
+    'vue/component-name-in-template-casing': ['error', 'PascalCase', {
+      'registeredComponentsOnly': true,
+      'ignores': []
+    }]
   }
 }

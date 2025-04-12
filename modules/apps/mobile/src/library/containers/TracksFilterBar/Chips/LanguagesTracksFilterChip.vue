@@ -39,7 +39,7 @@ async function loadItems() {
   const allItems = await dal.languages.getAll()
   return allItems
     .map((item) => ({
-      id: item._id,
+      id: item._id.replace('language::', ''),
       title: item.fullName + ' ' + item.icon,
       checked: false,
     }))

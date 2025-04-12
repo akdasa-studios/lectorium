@@ -73,7 +73,6 @@ const value = defineModel({
 function onStartDateChanged(v: string | string[] | undefined | null) {
   if (typeof v !== 'string') return
   value.value.from = getFirstDayOfMonth(new Date(v))
-  console.log('value.value.from', value.value.from)
 }
 
 function onEndDateChanged(v: string | string[] | undefined | null) {
