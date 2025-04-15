@@ -31,7 +31,7 @@ export async function initSafeAreaFeature() {
   function applyInsets(data: SafeAreaInsets) {
     const webViewVersion = device.webViewVersion.split('.').map(x => parseInt(x))
     
-    // Starting from somve version of WebView, the safe area insets are applied
+    // Starting from some version of WebView, the safe area insets are applied
     // automatically. We need to check the version and skip applying insets if
     // the version is earlier than the one that supports it.
     // TODO: find the exact version
