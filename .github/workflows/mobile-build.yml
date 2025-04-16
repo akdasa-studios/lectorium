@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
@@ -57,7 +57,7 @@ jobs:
       - name: 🏗️ Build Android App
         working-directory: modules/apps/mobile
         run: npx cap build android
-        
+
       # - name: 📤 Upload Build Artifacts
       #   uses: actions/upload-artifact@v3
       #   with:
