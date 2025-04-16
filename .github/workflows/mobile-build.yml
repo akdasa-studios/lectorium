@@ -35,12 +35,12 @@ jobs:
         working-directory: modules/apps/mobile
         run: ionic build --prod
 
-      - name: 📤 Upload Build Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ionic-build
-          path: modules/apps/mobile/www
-          retention-days: 7
+      # - name: 📤 Upload Build Artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ionic-build
+      #     path: modules/apps/mobile/www
+      #     retention-days: 7
       
         
       # - name: Check Vulnerabilities
