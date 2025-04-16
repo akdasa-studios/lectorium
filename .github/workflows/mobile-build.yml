@@ -50,9 +50,9 @@ jobs:
         working-directory: modules/libs/downloader
         run: npm i && npm run build
 
-      # - name: 🏗️ Build Ionic App
-      #   working-directory: modules/apps/mobile
-      #   run: npm i && npm run build+sync
+      - name: 🏗️ Build Ionic App
+        working-directory: modules/apps/mobile
+        run: npm i && npm run build+sync
 
       - name: 🏗️ Build Android App
         working-directory: modules/apps/mobile/android
