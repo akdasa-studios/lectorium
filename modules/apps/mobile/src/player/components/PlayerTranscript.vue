@@ -61,7 +61,6 @@ const text = [
     text: 'Thank you very much. Hare Kṛṣṇa.'
   }
 ]
-
 </script>
 
 
