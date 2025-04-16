@@ -43,12 +43,12 @@ jobs:
           cache-dependency-path: 'modules/package-lock.json'
 
       - name: 📦 Install Dependencies
-        working-directory: modules/apps/mobile
+        working-directory: modules
         run: npm ci
 
       - name: 🏗️ Build Ionic App
         working-directory: modules/apps/mobile
-        run: npm run build+sync
+        run: npm i && npm run build+sync
 
       - name: 🏗️ Build Ionic App
         working-directory: modules/apps/mobile
