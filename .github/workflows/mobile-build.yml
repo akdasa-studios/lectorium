@@ -20,13 +20,13 @@ jobs:
         with:
           submodules: true
 
-      - name: Set up Java
+      - name: 💾 Install Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 🤖 Set up Android SDK
+      - name: 🤖 Install Android SDK
         uses: android-actions/setup-android@v2
 
       - name: 📝 Accept Android SDK licenses
@@ -35,7 +35,7 @@ jobs:
       - name: 🧰 Install SDK packages
         run: sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-      - name: 🧰 Setup Node.js
+      - name: 🧰 Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22'
