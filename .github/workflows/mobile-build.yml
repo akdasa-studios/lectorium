@@ -33,7 +33,7 @@ jobs:
 
       - name: 🏗️ Build Ionic App
         working-directory: modules/apps/mobile
-        run: npx cap build android --prod
+        run: npx cap build android
 
       # - name: 📤 Upload Build Artifacts
       #   uses: actions/upload-artifact@v3
