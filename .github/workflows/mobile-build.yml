@@ -48,8 +48,11 @@ jobs:
 
       - name: 🏗️ Build Ionic App
         working-directory: modules/apps/mobile
-        run: npx cap build android
+        run: npm run build+sync
 
+      - name: 🏗️ Build Ionic App
+        working-directory: modules/apps/mobile
+        run: npx cap build android
       # - name: 📤 Upload Build Artifacts
       #   uses: actions/upload-artifact@v3
       #   with:
