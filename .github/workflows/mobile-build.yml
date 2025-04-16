@@ -2,9 +2,9 @@ name: Mobile
 
 on:
   push:
-    # paths:
-    #   - "modules/apps/mobile/**"
-    #   - ".github/workflows/mobile-build.yml"
+    paths:
+      - "modules/apps/mobile/**"
+      - ".github/workflows/mobile-build.yml"
   
 env:
   REGISTRY: ghcr.io
@@ -26,16 +26,16 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Android SDK
+      - name: 🤖 Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Accept Android SDK licenses
+      - name: 📝 Accept Android SDK licenses
         run: yes | sdkmanager --licenses
 
-      - name: Install SDK packages
+      - name: 🧰 Install SDK packages
         run: sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
-      - name: 🛠️ Setup Node.js
+      - name: 🧰 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22'
@@ -46,15 +46,15 @@ jobs:
         working-directory: modules
         run: npm ci
 
-      - name: 🏗️ Build Plugins
+      - name: 👷 Build Plugins
         working-directory: modules/libs/downloader
         run: npm i && npm run build
 
-      - name: 🏗️ Build Ionic App
+      - name: 👷 Build Ionic App
         working-directory: modules/apps/mobile
         run: npm i && npm run build+sync
 
-      - name: 🏗️ Build Android App
+      - name: 👷 Build Android App
         working-directory: modules/apps/mobile/android
         run: ./gradlew assembleDebug
         # run: npx cap build android
@@ -63,17 +63,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app
-          path: modules/apps/mobile/android/app
+          path: modules/apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
       
-        
-      # - name: Check Vulnerabilities
-      #   uses: aquasecurity/trivy-action@v0.3.0
-      #   with:
-      #     image-ref: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-mobile:staging
-      #     format: 'json'
-      #     output: 'trivy-report.json'
-      #     ignore-unfixed: true
-      #     severity: 'HIGH,CRITICAL'
-      #     exit-code: 1
-      #     ignore-policy: '.github/actions/trivy-policy.json'
