@@ -55,8 +55,9 @@ jobs:
         run: npm i && npm run build+sync
 
       - name: 🏗️ Build Android App
-        working-directory: modules/apps/mobile
-        run: npx cap build android
+        working-directory: modules/apps/mobile/android
+        run: ./gradlew assembleDebug
+        # run: npx cap build android
 
       # - name: 📤 Upload Build Artifacts
       #   uses: actions/upload-artifact@v3
