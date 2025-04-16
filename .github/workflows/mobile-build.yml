@@ -42,17 +42,22 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'modules/package-lock.json'
 
-      - name: 📦 Install Dependencies
+      - name: 📦 Install Node Dependencies
         working-directory: modules
         run: npm ci
+
+      - name: 🏗️ Build Plugins
+        working-directory: modules/libs/downloader
+        run: npm i && npm run build
 
       - name: 🏗️ Build Ionic App
         working-directory: modules/apps/mobile
         run: npm i && npm run build+sync
 
-      - name: 🏗️ Build Ionic App
+      - name: 🏗️ Build Android App
         working-directory: modules/apps/mobile
         run: npx cap build android
+        
       # - name: 📤 Upload Build Artifacts
       #   uses: actions/upload-artifact@v3
       #   with:
