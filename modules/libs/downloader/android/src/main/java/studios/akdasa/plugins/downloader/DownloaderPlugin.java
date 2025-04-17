@@ -104,6 +104,9 @@ public class DownloaderPlugin extends Plugin {
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
     public void onDownloadComplete(PluginCall call) {
+        // TODO: Currently, onDownloadComplete stores only one callback which will be overwritten
+        //       if multiple callbacks are registered; consider using a collection to support
+        //       multiple simultaneous download complete callbacks.
         call.setKeepAlive(true);
         getBridge().saveCall(call);
         onDownloadCompleteCallback = call;
