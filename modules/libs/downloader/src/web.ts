@@ -5,7 +5,7 @@ import type { DownloaderPlugin, DownloadRequest, DownloadResponse, GetStatusRequ
 export class DownloaderWeb extends WebPlugin implements DownloaderPlugin {
   async enqueue(request: DownloadRequest): Promise<DownloadResponse> {
     console.log('Downloading: ', request.url);
-    return { taskId: '12345' };
+    return { taskId: Math.random().toString(36).substring(2, 15) };
   }
 
   async getStatus(request: GetStatusRequest): Promise<GetStatusResponse> {
