@@ -12,11 +12,19 @@ export type GetMediaRequest = {
  * MediaService is responsible for managing media items and their download status.
  */
 export class MediaService {
+
+  /**
+   * Initializes a new instance of the MediaService class.
+   * @param mediaItems Media items service
+   * @param downloader Downloader service
+   */
   constructor(
     private readonly mediaItems: MediaItemsService,
     private readonly downloader: DownloaderService
   ) {
-    setInterval(async () => await this.updateMediaItems(), 1000 * 5)
+    downloader.onDownloadComplete(
+      async ({ taskId, status }) => await this.onMediaItemDownloadComplete(taskId, status) 
+    )
   }
 
   /**
@@ -54,41 +62,37 @@ export class MediaService {
     })
   }
 
-  /**
-   * Updates media items status based on downloader task status.
-   */
-  private async updateMediaItems() {
-    // get all media items which state can be updated
-    const mediaItems = await this.mediaItems
-      .getInState(['pending', 'downloading'])
+  /* -------------------------------------------------------------------------- */
+  /*                                   Private                                  */
+  /* -------------------------------------------------------------------------- */
 
-    // get downloader task status for each media item
-    // and update media item status if necessary
-    for (const mediaItem of mediaItems) {
-      // get downloader task status
-      const taskStatus = await this.downloader.getStatus({
-        taskId: mediaItem.taskId
-      })
-
-      // maps statuses between downloader service 
-      // task status and media item status
-      const statusesMap: 
-        Record<
-          DownloaderTaskStatuses, 
-          MediaItem['status']
-        > = {
-          pending: 'pending',
-          running: 'downloading',
-          successful: 'available',
-          failed: 'failed',
-          paused: 'paused'
-        }
-
-      // update media item status if necessary
-      if (mediaItem.status !== taskStatus.status) {
-        mediaItem.status = statusesMap[taskStatus.status]
-        await this.mediaItems.updateOne(mediaItem._id, mediaItem)
+  private async onMediaItemDownloadComplete(
+    taskId: string,
+    status: DownloaderTaskStatuses
+  ) {
+    const statusesMap: 
+      Record<
+        DownloaderTaskStatuses, 
+        MediaItem['status']
+      > = {
+        pending: 'pending',
+        running: 'downloading',
+        successful: 'available',
+        failed: 'failed',
+        paused: 'paused'
       }
-    }
+
+    // get media item by taskId
+    const mediaItem = await this.mediaItems.findOne({ taskId })
+    console.log(
+      `Download ${taskId} completed with status: `+
+      `${mediaItem?.status ?? 'unknown'} -> ${status}`)
+
+    // update media item status if necessary
+    if (mediaItem && mediaItem.status !== status) {
+      mediaItem.status = statusesMap[status]
+      await this.mediaItems.updateOne(mediaItem._id, mediaItem)
+      console.log('Media item status updated:', mediaItem._id, mediaItem.status)
+    } 
   }
 }

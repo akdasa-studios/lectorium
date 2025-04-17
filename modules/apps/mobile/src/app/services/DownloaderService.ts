@@ -13,4 +13,10 @@ export class DownloaderService {
   async getStatus(request: GetStatusRequest): Promise<GetStatusResponse> {
     return await Downloader.getStatus(request)
   }
+
+  async onDownloadComplete(
+    callback: (event: { taskId: string; status: DownloaderTaskStatuses }) => void
+  ): Promise<{ callbackId: string }> {
+    return await Downloader.onDownloadComplete(callback)
+  }
 }
