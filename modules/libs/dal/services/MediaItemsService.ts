@@ -48,7 +48,7 @@ export class MediaItemsService
   ): Promise<MediaItem[]> {
     return await this.getMany({
       selector: {
-        status: { $in: states }
+        taskStatus: { $in: states }
       }
     })
   }
