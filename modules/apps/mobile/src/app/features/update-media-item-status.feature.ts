@@ -1,6 +1,5 @@
 import { App } from '@capacitor/app'
-import { MediaItem } from '@lectorium/dal/models'
-import { DownloaderTaskStatuses, useDAL, useDownloaderService } from '..'
+import { useDAL, useDownloaderService } from '..'
 
 export async function initUpdateMediaItemStatusesOnAppStateChange() {
 
@@ -30,7 +29,7 @@ export async function initUpdateMediaItemStatusesOnAppStateChange() {
   async function updateMediaItems() {
     // get all media items which state can be updated
     const mediaItems = await dal.mediaItems
-      .getInState(['pending', 'downloading'])
+      .getInState(['pending', 'running'])
 
     // get downloader task status for each media item
     // and update media item status if necessary
@@ -40,26 +39,12 @@ export async function initUpdateMediaItemStatusesOnAppStateChange() {
         taskId: mediaItem.taskId
       })
 
-      // maps statuses between downloader service 
-      // task status and media item status
-      const statusesMap: 
-        Record<
-          DownloaderTaskStatuses, 
-          MediaItem['status']
-        > = {
-          pending: 'pending',
-          running: 'downloading',
-          successful: 'available',
-          failed: 'failed',
-          paused: 'paused'
-        }
-
       // update media item status if necessary
-      if (mediaItem.status !== taskStatus.status) {
+      if (mediaItem.taskStatus !== taskStatus.status) {
         console.log(
           `Download ${mediaItem.taskId} completed with status: `+
-          `${mediaItem.status} -> ${taskStatus.status}`)
-        mediaItem.status = statusesMap[taskStatus.status]
+          `${mediaItem.taskStatus} -> ${taskStatus.status}`)
+        mediaItem.taskStatus = taskStatus.status
         await dal.mediaItems.updateOne(mediaItem._id, mediaItem)
       }
     }
