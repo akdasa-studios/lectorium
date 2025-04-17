@@ -1,5 +1,5 @@
 import { MediaItemsService } from '@lectorium/dal/index'
-import { DownloaderService, DownloaderTaskStatuses } from '@/app'
+import { DownloaderService, DownloaderTaskStatuses, generateId } from '@/app'
 
 export type GetMediaRequest = {
   url: string
@@ -33,14 +33,13 @@ export class MediaService {
   async get(
     request: GetMediaRequest
   ): Promise<void> {
-    // TODO: get hash of desrtination and use it as id
-    const mediaItemId = request.destination
-
     // check if media item already exists
-    const mediaItem = await this.mediaItems.findOne({ _id: mediaItemId })
+    const mediaItem = await this.mediaItems.findOne({ 
+      localPath: request.destination 
+    })
     if (mediaItem && mediaItem.taskStatus === 'failed') {
       // Media item failed, remove it and start download again
-      await this.mediaItems.removeOne(mediaItemId)
+      await this.mediaItems.removeOne(mediaItem._id)
     } else if (mediaItem) {
       return // Media item already exists, do nothing
     }
@@ -52,7 +51,7 @@ export class MediaService {
 
     // add to media items
     await this.mediaItems.addOne({
-      _id: mediaItemId,
+      _id: generateId(22),
       taskId: downloaderResponse.taskId,
       type: 'mediaItem',
       title: request.title,
@@ -60,7 +59,6 @@ export class MediaService {
       localPath: request.destination,
       taskStatus: 'pending',
     })
-    console.log('Media item added:', JSON.stringify(mediaItemId))
   }
 
   /* -------------------------------------------------------------------------- */
