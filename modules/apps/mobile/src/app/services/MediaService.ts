@@ -46,9 +46,9 @@ export class MediaService {
     }
       
     // start download
+    console.log('Starting download for:', JSON.stringify(request))
     const downloaderResponse =
       await this.downloader.enqueue(request)
-    console.log('Download started:', downloaderResponse.taskId)
 
     // add to media items
     await this.mediaItems.addOne({
