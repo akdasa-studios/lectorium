@@ -1,6 +1,6 @@
 <template>
   <IonItem>
-    No tracks added yet your playlist. Tap here to add some tracks.
+    No tracks have been added to your playlist yet. Tap here to add some tracks.
     <IonIcon
       slot="end"
       aria-hidden="true"
