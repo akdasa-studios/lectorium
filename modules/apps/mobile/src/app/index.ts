@@ -22,11 +22,13 @@ export * from './composables/useSyncService'
 export * from './composables/useDAL'
 export * from './composables/useMediaService'
 export * from './composables/useDownloaderService'
+export * from './composables/useBucketService'
 
 // services:
 export * from './services/SyncService'
 export * from './services/DownloaderService'
 export * from './services/MediaService'
+export * from './services/BucketService'
 
 // features:
 export * from './features/navigation-bar.feature'
