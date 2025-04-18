@@ -2,6 +2,7 @@ import { MediaItemsService } from '@lectorium/dal/index'
 import { DownloaderService, DownloaderTaskStatuses, generateId } from '@/app'
 
 export type GetMediaRequest = {
+  trackId: string,
   url: string
   destination: string
   title: string
@@ -52,12 +53,13 @@ export class MediaService {
     // add to media items
     await this.mediaItems.addOne({
       _id: generateId(22),
-      taskId: downloaderResponse.taskId,
       type: 'mediaItem',
+      taskStatus: 'pending',
+      trackId: request.trackId,
+      taskId: downloaderResponse.taskId,
       title: request.title,
       remoteUrl: request.url,
       localPath: request.destination,
-      taskStatus: 'pending',
     })
   }
 
