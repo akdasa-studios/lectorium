@@ -23,6 +23,7 @@ export * from './composables/useDAL'
 export * from './composables/useMediaService'
 export * from './composables/useDownloaderService'
 export * from './composables/useBucketService'
+export * from './composables/useSafeOperation'
 
 // services:
 export * from './services/SyncService'

@@ -5,5 +5,5 @@ export const useBucketService = createGlobalState(() => {
   const config = useConfig()
   return new BucketService(
     config.apiUrl.value, 
-    config.databaseUrl.value)
+    config.authToken.value)
 })

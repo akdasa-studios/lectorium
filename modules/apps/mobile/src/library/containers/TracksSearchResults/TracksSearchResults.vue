@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDAL, TracksListItem, TracksListItemData } from '@/app'
+import { useDAL, TracksListItem, TracksListItemData, useSafeOperation } from '@/app'
 import { mapTrackToPlaylistItem } from '@/home'
 import { useLibraryScenarios } from '@/library/composables/useLibraryScenarios'
 import { IonList, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/vue'
@@ -36,6 +36,7 @@ import { ref, toRefs, onMounted } from 'vue'
 
 const dal = useDAL()
 const libraryScenarios = useLibraryScenarios()
+const safeOperation = useSafeOperation()
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -90,7 +91,9 @@ async function onInfiniteSctoll(e: InfiniteScrollCustomEvent) {
 }
 
 async function onTrackClick(trackId: string) {
-  libraryScenarios.userAddsTrackToPlaylistScenario.execute(trackId)
+  safeOperation.execute(
+    async () => await libraryScenarios.userAddsTrackToPlaylistScenario.execute(trackId)
+  )
 }
 
 /* -------------------------------------------------------------------------- */

@@ -17,6 +17,9 @@ export class BucketService {
       },
       body: JSON.stringify(request),
     })
+    if (response.status !== 200) {
+      throw new Error(`Failed to get signed URL: ${response.statusText}`)
+    }
     return await response.json() as S3SignedUrlResponse
   }
 }
