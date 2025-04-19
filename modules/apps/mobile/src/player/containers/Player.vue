@@ -1,30 +1,42 @@
 <template>
   <PlayerControls
+    v-if="isVisible"
     :playing="isPlaying"
+    :title="title"
+    :author="author"
     :class="{
       'player': true,
       'closed': !isPlayerTranscriptOpen,
       'opened': isPlayerTranscriptOpen
     }"
-    @play="isPlaying = !isPlaying"
+    @play="togglePause"
     @click="isPlayerTranscriptOpen = !isPlayerTranscriptOpen"
   />
   <PlayerTranscript v-model:open="isPlayerTranscriptOpen" />
 </template>
 
 <script setup lang="ts">
-import { PlayerControls, PlayerTranscript, usePlayerControls, usePlayerTranscript } from '@/player'
+import { computed } from 'vue'
+import { 
+  PlayerControls, PlayerTranscript, usePlayerControls,
+  usePlayerTranscript, usePlayerControlsPlayerScenario
+} from '@/player'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const { isPlaying } = usePlayerControls()
+const { isPlaying, title, author } = usePlayerControls()
 const { isOpen: isPlayerTranscriptOpen } = usePlayerTranscript()
+const { togglePause } = usePlayerControlsPlayerScenario()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
+
+const isVisible = computed(() => {
+  return title.value !== '' || author.value !== ''
+})
 
 </script>
 
