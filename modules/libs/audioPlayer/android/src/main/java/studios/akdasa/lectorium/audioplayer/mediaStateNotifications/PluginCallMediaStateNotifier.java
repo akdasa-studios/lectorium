@@ -13,17 +13,10 @@ public final class PluginCallMediaStateNotifier implements IMediaStateNotifier {
     @Override
     public void send(MediaState state) {
         JSObject payload = new JSObject();
-        if (state.trackId() != null) {
-            payload.put("position", state.position() / 1000);
-            payload.put("duration", state.duration() / 1000);
-            payload.put("playing", state.isPlaying());
-            payload.put("trackId", state.trackId());
-        } else {
-            payload.put("position", 0);
-            payload.put("duration", 0);
-            payload.put("playing", false);
-            payload.put("trackId", null);
-        }
+        payload.put("trackId", state.getTrackId());
+        payload.put("position", state.getPosition() / 1000);
+        payload.put("duration", state.getDuration() / 1000);
+        payload.put("playing", state.getState().equals("playing"));
         call.resolve(payload);
     }
 }

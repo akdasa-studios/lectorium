@@ -9,6 +9,7 @@ export { default as Player } from './containers/Player.vue'
 export * from './composables/usePlayerTranscript'
 export * from './composables/usePlayerControls'
 export * from './composables/usePlayer'
+export * from './composables/useSyncPlayerFeature'
 
 // scenarios:
 export * from './composables/usePlayerControlsPlayerScenario'

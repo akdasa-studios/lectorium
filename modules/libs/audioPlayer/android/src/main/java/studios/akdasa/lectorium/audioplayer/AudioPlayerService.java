@@ -10,14 +10,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import com.getcapacitor.PluginCall;
 
 import studios.akdasa.lectorium.audioplayer.mediaSession.MediaSessionCallback;
-import studios.akdasa.lectorium.audioplayer.mediaSession.MediaSessionController;
 import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.MediaSessionMediaStateNotifier;
 import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.MediaStateNotificationService;
 import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.PluginCallMediaStateNotifier;
@@ -26,8 +24,6 @@ import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.PluginCallMe
 public final class AudioPlayerService extends Service {
     private static final String CHANNEL_ID = "MediaPlaybackChannel";
     private static final int NOTIFICATION_ID = 1;
-
-    private MediaSessionController mediaSessionController;
 
     private MediaPlayer mediaPlayer;
     private MediaStateNotificationService mediaStateNotificationService;
@@ -49,15 +45,11 @@ public final class AudioPlayerService extends Service {
             );
         }
 
-        // Create media session controller
-        mediaSessionController = new MediaSessionController(
+        // Set media state change notification service
+        mediaStateNotificationService.addNotifier(new MediaSessionMediaStateNotifier(
                 context,
                 notificationManager,
-                new MediaSessionCallback(this)
-        );
-
-        // Set media state change notification service
-        mediaStateNotificationService.addNotifier(new MediaSessionMediaStateNotifier(mediaSessionController));
+                new MediaSessionCallback(this)));
         mediaStateNotificationService.run();
     }
 
@@ -98,9 +90,13 @@ public final class AudioPlayerService extends Service {
             mediaPlayer.reset();
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
-            mediaStateNotificationService.setCurrentTrackId(trackId);
+            mediaStateNotificationService.getState().setTrackId(trackId); 
+            mediaStateNotificationService.getState().setTitle(trackTitle);
+            mediaStateNotificationService.getState().setArtist(trackArtist);
+            mediaStateNotificationService.getState().setPosition(0);
+            mediaStateNotificationService.getState().setDuration(mediaPlayer.getDuration());
+            mediaStateNotificationService.getState().setState("stopped");
             mediaStateNotificationService.update();
-            mediaSessionController.setMediaInfo(trackTitle, trackArtist, mediaPlayer.getDuration());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,18 +105,18 @@ public final class AudioPlayerService extends Service {
     public void play() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+            mediaStateNotificationService.getState().setState("playing");
             mediaStateNotificationService.update();
-            mediaSessionController.setPlaybackState(PlaybackState.STATE_PLAYING, 0);
         }
     }
 
     public void togglePause() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            mediaSessionController.setPlaybackState(PlaybackState.STATE_PAUSED, mediaPlayer.getCurrentPosition());
+            mediaStateNotificationService.getState().setState("paused");
         } else {
             mediaPlayer.start();
-            mediaSessionController.setPlaybackState(PlaybackState.STATE_PLAYING, mediaPlayer.getCurrentPosition());
+            mediaStateNotificationService.getState().setState("playing");
         }
         mediaStateNotificationService.update();
     }
@@ -129,7 +125,11 @@ public final class AudioPlayerService extends Service {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mediaPlayer.seekTo(position, SEEK_PREVIOUS_SYNC);
+            } else {
+                mediaPlayer.seekTo((int)position);
             }
+            mediaStateNotificationService.getState().setState("playing");
+            mediaStateNotificationService.getState().setPosition(position);
             mediaStateNotificationService.update();
         }
     }
@@ -137,8 +137,8 @@ public final class AudioPlayerService extends Service {
     public void stop() {
         mediaPlayer.stop();
         mediaPlayer.reset();
-        mediaStateNotificationService.setCurrentTrackId(null);
-        mediaSessionController.setPlaybackState(PlaybackState.STATE_STOPPED, 0);
+        mediaStateNotificationService.getState().setState("stopped");
+        mediaStateNotificationService.getState().setPosition(0);
         mediaStateNotificationService.update();
     }
 

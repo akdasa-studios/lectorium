@@ -28,7 +28,9 @@ export function useUserSelectsTrackToPlayScenario() {
     })
     await player.play()
 
-    playerControls.isPlaying.value = true
+    // TODO: looks like it didn't help
+    //       it still update playr controls slowly
+    playerControls.isPlaying.value = !playerControls.isPlaying.value
     playerControls.title.value = track.title.en // TODO: use localized title
     playerControls.author.value = author.fullName['en'] // TODO: use localized author
   }

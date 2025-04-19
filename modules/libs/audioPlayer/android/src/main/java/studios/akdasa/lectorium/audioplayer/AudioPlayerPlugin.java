@@ -54,9 +54,10 @@ public final class AudioPlayerPlugin extends Plugin {
     public void open(PluginCall call) {
         String url = call.getString("url");
         String trackId = call.getString("trackId");
-        String trackTitle = call.getString("title");
-        String trackArtist = call.getString("author");
+        String title = call.getString("title");
+        String author = call.getString("author");
 
+        // Validate input arguments
         if (url == null) {
             call.reject("Argument 'url' is required");
             return;
@@ -67,10 +68,14 @@ public final class AudioPlayerPlugin extends Plugin {
             return;
         }
 
+        // Convert url to local path
         File directory = getContext().getExternalFilesDir(".");
         Uri localUrl = Uri.fromFile(new File(directory, url));
 
-        audioPlayerServiceConnection.getService().open(trackId, localUrl.toString(), trackTitle, trackArtist);
+        // Start playing
+        audioPlayerServiceConnection
+          .getService()
+          .open(trackId, localUrl.toString(), title, author);
         call.resolve();
     }
 

@@ -1,13 +1,13 @@
 <template>
   <PlayerControls
-    v-if="isVisible"
     :playing="isPlaying"
     :title="title"
     :author="author"
     :class="{
       'player': true,
       'closed': !isPlayerTranscriptOpen,
-      'opened': isPlayerTranscriptOpen
+      'opened': isPlayerTranscriptOpen,
+      'hidden': !isVisible
     }"
     @play="togglePause"
     @click="isPlayerTranscriptOpen = !isPlayerTranscriptOpen"
@@ -37,7 +37,6 @@ const { togglePause } = usePlayerControlsPlayerScenario()
 const isVisible = computed(() => {
   return title.value !== '' || author.value !== ''
 })
-
 </script>
 
 <style scoped>
@@ -64,5 +63,11 @@ const isVisible = computed(() => {
   right: 0px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+}
+
+.hidden {
+  opacity: 0;
+  bottom: 0;
+  pointer-events: none;
 }
 </style>

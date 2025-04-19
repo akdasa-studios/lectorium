@@ -2,17 +2,21 @@ package studios.akdasa.lectorium.audioplayer.mediaStateNotifications;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class is responsible for notifying the media state to the registered notifiers.
+ * It runs in a separate thread and updates the media state every second.
+ */
 public final class MediaStateNotificationService {
     private final List<IMediaStateNotifier> notifiers = new ArrayList<>();
     private final MediaPlayer mediaPlayer;
     private boolean isRunning = true;
-
-    private final Handler handler = new Handler();
+    private final MediaState state = new MediaState("", "stopped", "", "", 0, 0);
+    private final Handler handler = new Handler(); 
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -21,7 +25,6 @@ public final class MediaStateNotificationService {
             handler.postDelayed(this, 1000);
         }
     };
-    private String currentTrackId;
 
     public MediaStateNotificationService(
             MediaPlayer mediaPlayer
@@ -34,19 +37,15 @@ public final class MediaStateNotificationService {
         this.runnable.run();
     }
 
-    public void update() {
-        for (IMediaStateNotifier notifier : notifiers) {
-            notifier.send(
-                    new MediaState(
-                            currentTrackId,
-                            mediaPlayer.isPlaying() ? mediaPlayer.getCurrentPosition() : 0,
-                            mediaPlayer.isPlaying() ? mediaPlayer.getDuration() : 0,
-                            mediaPlayer.isPlaying()));
-        }
+    public MediaState getState() {
+        return this.state;
     }
 
-    public void setCurrentTrackId(String value) {
-        currentTrackId = value;
+    public void update() {
+        state.setPosition(mediaPlayer.getCurrentPosition());
+        for (IMediaStateNotifier notifier : notifiers) {
+            notifier.send(state);
+        }
     }
 
     public void addNotifier(IMediaStateNotifier notifier) {
