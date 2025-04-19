@@ -4,6 +4,10 @@ on:
   push:
     paths:
       - "modules/apps/mobile/**"
+      - "modules/libs/downloader/**"
+      - "modules/libs/audioPlayer/**"
+      - "modules/package.json"
+      - "modules/package-lock.json"
       - ".github/workflows/mobile-build.yml"
   
 env:
