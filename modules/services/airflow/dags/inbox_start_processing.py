@@ -48,7 +48,7 @@ def inbox_start_processing():
     return couchdb_find_documents.function(
       connection_string=conf_database_connection_string,
       collection=conf_database_collections["tracks_inbox"],
-      filter={"status": "ready-to-process"},
+      filter={"status": "pending"},
     )
   
   @task(

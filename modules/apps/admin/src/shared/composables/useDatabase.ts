@@ -10,20 +10,20 @@ export const useDatabase = createSharedComposable(() => {
 
   return {
     local: {
-      tracks: new Database({ name: 'library-tracks-v0001.db' }),
-      transcripts: new Database({ name: 'library-transcripts-v0001.db' }),
-      dictionary: new Database({ name: 'library-dictionary-v0001.db' }),
-      index: new Database({ name: 'library-index-v0001.db' }),
-      inboxTracks: new Database({ name: 'tracks-inbox.db' }),
+      tracks: new Database({ name: 'tracks.db' }),
+      transcripts: new Database({ name: 'transcripts.db' }),
+      dictionary: new Database({ name: 'dictionary.db' }),
+      index: new Database({ name: 'index.db' }),
+      inboxTracks: new Database({ name: 'inbox.db' }),
     },
     remote: {
-      tracks: new Database({ name: serverBaseUrl + '/library-tracks-v0001' }),
+      tracks: new Database({ name: serverBaseUrl + '/tracks' }),
       transcripts: new Database({
-        name: serverBaseUrl + '/library-transcripts-v0001',
+        name: serverBaseUrl + '/transcripts',
       }),
       dictionary: new Database({ name: serverBaseUrl + '/dictionary' }),
-      index: new Database({ name: serverBaseUrl + '/library-index-v0001' }),
-      inboxTracks: new Database({ name: serverBaseUrl + '/tracks-inbox' }),
+      index: new Database({ name: serverBaseUrl + '/index' }),
+      inboxTracks: new Database({ name: serverBaseUrl + '/inbox' }),
     },
   }
 })
