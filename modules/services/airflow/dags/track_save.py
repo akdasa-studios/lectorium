@@ -85,7 +85,7 @@ def track_save():
         continue
 
       path     = bucket_object["key"].removeprefix(transcript_prefix)
-      langauge = path.split("/")[1]
+      language = path.split("/")[1]
       kind     = Path(path).stem 
       print(path)
 
@@ -94,7 +94,7 @@ def track_save():
 
       result.append(
         transcript_info(
-          language=langauge,
+          language=language,
           kind=kind,
           path=bucket_object["key"]
         ) 
