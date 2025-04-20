@@ -10,7 +10,7 @@
 import { onMounted } from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { NavigationBarHolder, useSyncService } from '@/app'
-import { Player, useSyncPlayerFeautre } from '@/player'
+import { Player, useSyncPlayerFeature } from '@/player'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -24,6 +24,6 @@ const syncService = useSyncService()
 
 onMounted(async () => {
   syncService.sync()
-  useSyncPlayerFeautre()
+  useSyncPlayerFeature()
 })
 </script>

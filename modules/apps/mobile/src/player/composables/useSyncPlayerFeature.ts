@@ -2,7 +2,7 @@ import { useDAL } from '@/app'
 import { usePlayer, usePlayerControls } from '@/player'
 
 
-export function useSyncPlayerFeautre() {
+export function useSyncPlayerFeature() {
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
