@@ -82,7 +82,7 @@ watch(trackId, async (value) => {
     || 'en'
   languages.value = await getAvailableLanguages(track)
   sections.value = await loadTranscriptBlocks(track, language)
-  activeLanguage.value = track.languages[0].language
+  activeLanguage.value = language
 })
 
 /* -------------------------------------------------------------------------- */
