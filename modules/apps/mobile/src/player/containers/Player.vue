@@ -118,7 +118,9 @@ async function loadTranscript(trackId: string, language: string) {
       lastSection.push(block)
     }
   }
-}
+  if (lastSection.length > 0) {
+    sections.value.push({ blocks: lastSection })
+  }
 </script>
 
 <style scoped>
