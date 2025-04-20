@@ -29,7 +29,7 @@ from lectorium.shared import (
       type="string",
       title="Track ID",
     ),
-    "auidio_type": Param(
+    "audio_type": Param(
       default="original",
       description="Type of audio to process",
       title="Audio Type",
