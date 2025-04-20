@@ -31,11 +31,11 @@ def transcript_enrich_chunk(
     best_match_score = 0
 
     context_to_search_in = proofread_sentences[int(original_sentence_idx)-5:int(original_sentence_idx)+5]
-    for profread_sentence_idx, proofread_sentence in context_to_search_in:
+    for proofread_sentence_idx, proofread_sentence in context_to_search_in:
       distance = jellyfish.jaro_winkler_similarity(original_sentence, proofread_sentence)
       if distance > best_match_score:
         best_match_score = distance
-        best_match_id = int(profread_sentence_idx)
+        best_match_id = int(proofread_sentence_idx)
 
     if best_match_id != -1:
       print(original_sentence, proofread_sentences[best_match_id][1], best_match_score)
