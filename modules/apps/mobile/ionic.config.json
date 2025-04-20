@@ -1,0 +1,7 @@
+{
+  "name": "lectorium",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

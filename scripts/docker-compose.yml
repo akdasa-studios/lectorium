@@ -46,16 +46,22 @@ x-airflow-common:
 
 services:
 
-  database:
-    build:
-      context: ../modules/services/database/
-      dockerfile: Dockerfile
+  api:
+    ports:
+      - "8081:8081"
+    networks:
+      - lectorium
+
+  couchdb:
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:5984/_up"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
+    volumes:
+      - ../data/couchdb/data:/opt/couchdb/data
+      - ../data/couchdb/config:/opt/couchdb/etc/local.d
     networks:
       - lectorium
     environment:
@@ -63,6 +69,17 @@ services:
       - COUCHDB_PASSWORD=lectorium
     ports:
       - "5984:5984"
+
+  couchdb-init:
+    depends_on:
+      couchdb:
+        condition: service_healthy
+    environment:
+      - CONNECTION_STRING=http://lectorium:lectorium@couchdb:5984
+    networks:
+      - lectorium
+    volumes:
+      - ../data/keys/jwt/:/etc/lectorium/keys
 
   redis:
     image: redis:7.2-bookworm
@@ -148,7 +165,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-      database:
+      couchdb:
         condition: service_healthy
     networks:
       - lectorium

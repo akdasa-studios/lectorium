@@ -1,0 +1,33 @@
+name: lectorium
+
+# -------------------------------------------------------------------------- #
+#                                  Services                                  #
+# -------------------------------------------------------------------------- #
+
+services:
+  api:
+    image: ghcr.io/akdasa-studios/lectorium-api:staging
+
+  admin:
+    image: ghcr.io/akdasa-studios/lectorium-admin:staging
+
+  couchdb:
+    image: ghcr.io/akdasa-studios/lectorium-couchdb:staging
+
+  couchdb-init:
+    image: ghcr.io/akdasa-studios/lectorium-couchdb-init:staging
+
+  airflow-webserver:
+    image: ghcr.io/akdasa-studios/lectorium-airflow:staging
+
+  airflow-scheduler:
+    image: ghcr.io/akdasa-studios/lectorium-airflow:staging
+
+  airflow-worker:
+    image: ghcr.io/akdasa-studios/lectorium-airflow:staging
+
+  airflow-triggerer:
+    image: ghcr.io/akdasa-studios/lectorium-airflow:staging
+
+  airflow-init:
+    image: ghcr.io/akdasa-studios/lectorium-airflow:staging

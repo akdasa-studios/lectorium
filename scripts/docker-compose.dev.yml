@@ -8,12 +8,36 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - lectorium
     volumes:
       - ../:/workspaces/lectorium
+    depends_on:
+      - couchdb
+      - postgres
+      - redis
       
   # -------------------------------------------------------------------------- #
   #                                  Services                                  #
   # -------------------------------------------------------------------------- #
+
+  api:
+    build:
+      context: ../modules/
+      dockerfile: ./services/api/Dockerfile
+
+  couchdb:
+    build:
+      context: ../modules/
+      dockerfile: ./services/couchdb/service/Dockerfile
+
+  couchdb-init:
+    build:
+      context: ../modules/
+      dockerfile: ./services/couchdb/init/Dockerfile
+    environment:
+      LECTORIUM_CONTENT_MANAGER_EMAIL: contentManager@lectorium.dev
+      LECTORIUM_CONTENT_MANAGER_PASSWORD: contentManager
 
   postgres:
     environment:
@@ -21,7 +45,30 @@ services:
       POSTGRES_PASSWORD: lectorium
       POSTGRES_DB: lectorium
 
+  airflow-webserver:
+    build:
+      context: ../modules/
+      dockerfile: ./services/airflow/Dockerfile
+
+  airflow-scheduler:
+    build:
+      context: ../modules/
+      dockerfile: ./services/airflow/Dockerfile
+
+  airflow-worker:
+    build:
+      context: ../modules/
+      dockerfile: ./services/airflow/Dockerfile
+
+  airflow-triggerer:
+    build:
+      context: ../modules/
+      dockerfile: ./services/airflow/Dockerfile
+
   airflow-init:
+    build:
+      context: ../modules/
+      dockerfile: ./services/airflow/Dockerfile
     environment:
       _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'

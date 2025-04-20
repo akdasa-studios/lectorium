@@ -1,0 +1,4 @@
+node_modules
+.airflow
+.vscode
+logs
