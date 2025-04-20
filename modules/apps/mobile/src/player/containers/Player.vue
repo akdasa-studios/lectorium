@@ -1,4 +1,5 @@
 <template>
+  <!-- Floating player -->
   <PlayerControls
     :playing="isPlaying"
     :title="title"
@@ -12,6 +13,8 @@
     @play="togglePause"
     @click="isPlayerTranscriptOpen = !isPlayerTranscriptOpen"
   />
+
+  <!-- Transcript dialog -->
   <TranscriptDialog
     v-model:open="isPlayerTranscriptOpen" 
   >
@@ -37,7 +40,7 @@ import {
 } from '@/player'
 import { useDAL } from '@/app'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
-import type { Transcript } from '@lectorium/dal/models'
+import type { Transcript, Track } from '@lectorium/dal/models'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -57,6 +60,7 @@ const isVisible = computed(() => {
   return title.value !== '' || author.value !== ''
 })
 
+let track: Track | undefined = undefined
 const sections = ref<TranscriptSection[]>([])
 const languages = ref<TranscriptLanguage[]>([])
 const activeLanguage = ref<string>('')
@@ -67,18 +71,17 @@ const activeLanguage = ref<string>('')
 
 watch(trackId, async (value) => {
   if (!value) return
-  const track = await dal.tracks.getOne(value)
- 
-  const languageCodes = track.languages.map((lang) => lang.language) 
-  const languageItems = await dal.languages.getMany({
-    selector: { code : { $in: languageCodes } },
-  })
-  languages.value = languageItems.map((lang) => ({
-    code: lang.code,
-    icon: lang.icon,
-  }))
-
-  await loadTranscript(value.replace('::track', ''), track.languages[0].language)
+  track = await dal.tracks.getOne(value)
+  if (!track) return
+  
+  const language = 
+    track.languages
+      .find(x => x.source === 'track' && x.type === 'original')
+      ?.language 
+    || track.languages[0].language 
+    || 'en'
+  languages.value = await getAvailableLanguages(track)
+  sections.value = await loadTranscriptBlocks(track, language)
   activeLanguage.value = track.languages[0].language
 })
 
@@ -91,8 +94,8 @@ function onRewind(time: number) {
 }
 
 async function onChangeLanguage(lang: string) {
-  if (!trackId.value) return
-  await loadTranscript(trackId.value.replace('::track', ''), lang)
+  if (!track) return
+  sections.value = await loadTranscriptBlocks(track, lang)
   activeLanguage.value = lang
 }
 
@@ -100,27 +103,41 @@ async function onChangeLanguage(lang: string) {
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
 
-async function loadTranscript(trackId: string, language: string) {
+async function getAvailableLanguages(track: Track) {
+  const languageCodes = track.languages.map((lang) => lang.language) 
+  const languageItems = await dal.languages.getMany({
+    selector: { code : { $in: languageCodes } },
+  })
+  return languageItems.map((lang) => ({
+    code: lang.code,
+    icon: lang.icon,
+  })) 
+}
+
+async function loadTranscriptBlocks(track: Track, language: string) {
+  // load transcript file
   const result = await Filesystem.readFile({
-    path: 'library/tracks/' + trackId + '/transcripts/' + language + '.json',
+    path: track.transcripts[language].path,
     directory: Directory.External,
     encoding: Encoding.UTF8,
   })
   const transcript = JSON.parse(result.data as string) as Transcript
 
-  sections.value = []
+  // convert transcript to sections
+  const sections = []
   let lastSection: TranscriptBlock[] = []
   for (const block of transcript.blocks) {
     if (block.type === 'paragraph') {
-      sections.value.push({ blocks: lastSection })
+      sections.push({ blocks: lastSection })
       lastSection = []
     } else {
       lastSection.push(block)
     }
   }
   if (lastSection.length > 0) {
-    sections.value.push({ blocks: lastSection })
+    sections.push({ blocks: lastSection })
   }
+  return sections
 }
 </script>
 
