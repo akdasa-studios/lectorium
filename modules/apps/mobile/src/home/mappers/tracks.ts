@@ -3,7 +3,7 @@ import { TracksListItemData } from '@/app'
 import { useDAL } from '@/app'
 
 // TODO: move to @/app
-// TODO: DAL acces should be cached
+// TODO: DAL access should be cached
 
 export async function mapTrackToPlaylistItem(
   track: Track,
