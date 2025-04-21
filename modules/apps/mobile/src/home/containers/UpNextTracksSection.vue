@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { IonList } from '@ionic/vue'
-import { SectionHeader, PlaylistIsEmpty, useHomeScenarios, useUserSelectsTrackToPlayScenario } from '@/home'
+import { SectionHeader, PlaylistIsEmpty, useHomeScenarios, useUserSelectsTrackToPlay } from '@/home'
 import { TracksListItem, TracksListItemSkeleton, useConfig } from '@/app'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -51,7 +51,7 @@ import { useRouter } from 'vue-router'
 const homeScenarios = useHomeScenarios()
 const config = useConfig()
 const router = useRouter()
-const userSelectsTrackToPlay = useUserSelectsTrackToPlayScenario()
+const userSelectsTrackToPlay = useUserSelectsTrackToPlay()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
