@@ -10,9 +10,10 @@ const FailedStatuses = ['failed']
 export class TracksListScenario {
   protected async map(
     track: Track,
+    language: string = 'en',
     enricher: (track: Track) => object
   ) {
-    const mapedItem = await mapTrackToPlaylistItem(track)
+    const mapedItem = await mapTrackToPlaylistItem(track, language)
     return { ...mapedItem, ...enricher(track) }
   }
 }
@@ -27,7 +28,9 @@ export class UserSeesUpNextTracksScenario extends TracksListScenario{
     super()
   }
 
-  async execute() {
+  async execute(
+    language: string = 'en'
+  ) {
     // Get next 10 tracks from the playlist
     const playlistItems = await this.playlistItems.getAll({ limit: 10 })
     const upNextTrackIds = playlistItems.map(item => item.trackId)
@@ -57,7 +60,7 @@ export class UserSeesUpNextTracksScenario extends TracksListScenario{
 
     // Enrich tracks with their statuses
     const trackStatusEnricher = (track: Track) => ({ status: trackStatuses[track._id] })
-    const trackMappers = upNextTracks.map((x) => this.map(x, trackStatusEnricher))
+    const trackMappers = upNextTracks.map((x) => this.map(x, language, trackStatusEnricher))
     return await Promise.all(trackMappers)
   }
 }
