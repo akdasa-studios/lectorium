@@ -13,9 +13,8 @@ export class TracksListScenario {
     language: string = 'en',
     enricher: (track: Track) => object
   ) {
-    const mapedItem = await mapTrackToPlaylistItem(track, language)
-    return { ...mapedItem, ...enricher(track) }
-  }
+    const mappedItem = await mapTrackToPlaylistItem(track, language)
+    return { ...mappedItem, ...enricher(track) }
 }
 
 
