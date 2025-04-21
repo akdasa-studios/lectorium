@@ -15,8 +15,8 @@ export class TracksListScenario {
   ) {
     const mappedItem = await mapTrackToPlaylistItem(track, language)
     return { ...mappedItem, ...enricher(track) }
+  }
 }
-
 
 export class UserSeesUpNextTracksScenario extends TracksListScenario{
   constructor(
