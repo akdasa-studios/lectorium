@@ -39,7 +39,7 @@ const { state, execute: refresh } = useAsyncState(
 /*                                    Hooks                                   */
 /* -------------------------------------------------------------------------- */
 
-watch(config.appLanguage, refresh)
+watch(config.appLanguage, async () => await refresh())
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */

@@ -1,4 +1,5 @@
 export const ru = {
-  upNext: 'Плейлист',
-  youMightLike: 'Рекомендации',
+  upNext: 'Следующий',
+  youMightLike: 'Вам может понравиться',
+  playlistIsEmpty: 'Ваш плейлист пуст. Нажмите здесь, чтобы добавить треки.'
 }

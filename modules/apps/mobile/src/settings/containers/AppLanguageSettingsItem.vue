@@ -12,7 +12,7 @@
   </IonItem>
   <ListItemSelectorDialog 
     v-model:open="open"
-    :value="config.appLanguage"
+    :value="config.appLanguage.value"
     :title="$t('settings.appLanguage.title')"
     :items="items"
     :allow-empty="false"
@@ -49,7 +49,8 @@ const { state: items } = useAsyncState(loadItems, [], { immediate: true, shallow
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-function onSelect(value: string) {
+function onSelect(value?: string) {
+  if (!value) return
   userChangesLang.execute(value)
 }
 
