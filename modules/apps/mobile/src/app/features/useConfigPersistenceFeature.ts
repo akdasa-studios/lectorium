@@ -11,7 +11,7 @@ export async function useConfigPersistenceFeature() {
   const config = useConfig()
 
   /* -------------------------------------------------------------------------- */
-  /*                               Initizalization                              */
+  /*                               Initialization                               */
   /* -------------------------------------------------------------------------- */
 
   const storage = new Storage({ name: 'config' })
