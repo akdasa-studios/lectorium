@@ -39,6 +39,7 @@ export * from './features/useNavigationBarFeature'
 export * from './features/useStatusBarFeature'
 export * from './features/useSafeAreaFeature'
 export * from './features/useSyncMediaItemStatusesFeature'
+export * from './features/useConfigPerisitenceFeature'
 
 // services:
 export * from './services/SyncService'

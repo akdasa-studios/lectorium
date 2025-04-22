@@ -36,6 +36,8 @@ import './app/theme/variables.css'
 
 import { createI18n } from 'vue-i18n'
 import { 
+  useConfig,
+  useConfigPerisitenceFeature,
   useNavigationBarFeature,
   useSafeAreaFeature,
   useStatusBarFeature,
@@ -77,8 +79,12 @@ const app = createApp(App)
 
 
 router.isReady().then(async () => {
+  console.time('App Initialization')
+  console.group('Initializing App...')
+
   // App //
 
+  await useConfigPerisitenceFeature()
   await useNavigationBarFeature()
   await useStatusBarFeature()
   await useSafeAreaFeature()
@@ -88,5 +94,14 @@ router.isReady().then(async () => {
 
   useSyncAudioPlayerPluginStateFeature()
   useSetPlayerControlsInfoFeature()
+
+  // Rest //
+
+  const config = useConfig()
+  i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
+
+  console.groupEnd()
+  console.timeEnd('App Initialization')
+
   app.mount('#app')
 })
