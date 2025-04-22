@@ -2,7 +2,7 @@ import { watch, Ref, toRaw } from 'vue'
 import { Storage } from '@ionic/storage'
 import { useConfig } from '@/app'
 
-export async function useConfigPerisitenceFeature() {
+export async function useConfigPersistenceFeature() {
 
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
