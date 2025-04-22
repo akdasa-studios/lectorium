@@ -37,7 +37,7 @@ import './app/theme/variables.css'
 import { createI18n } from 'vue-i18n'
 import { 
   useConfig,
-  useConfigPerisitenceFeature,
+  useConfigPersistenceFeature,
   useNavigationBarFeature,
   useSafeAreaFeature,
   useStatusBarFeature,
@@ -84,7 +84,7 @@ router.isReady().then(async () => {
 
   // App //
 
-  await useConfigPerisitenceFeature()
+  await useConfigPersistenceFeature()
   await useNavigationBarFeature()
   await useStatusBarFeature()
   await useSafeAreaFeature()
