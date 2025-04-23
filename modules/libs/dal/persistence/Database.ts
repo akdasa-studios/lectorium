@@ -1,8 +1,6 @@
 import PouchDB from 'pouchdb'
 import PouchDBFind from 'pouchdb-find'
-import PouchDBAdapterSqlLite from 'pouchdb-adapter-cordova-sqlite'
 
-PouchDB.plugin(PouchDBAdapterSqlLite)
 PouchDB.plugin(PouchDBFind)
 
 export interface DatabaseConfig {
