@@ -55,7 +55,7 @@ jobs:
         run: npm ci
 
       - name: 📦 Install Script Dependencies
-        working-directory: modules/scripts
+        working-directory: scripts
         run: pip3 install -r requirements.txt        
 
       # ---------------------------------------------------------------------------- #
