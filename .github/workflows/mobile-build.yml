@@ -16,7 +16,6 @@ env:
 
 jobs:
   build:
-    environment: dev
     name: 👷‍♂️ Build
     runs-on: ubuntu-latest
     steps:
