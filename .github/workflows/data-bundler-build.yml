@@ -1,4 +1,4 @@
-name: Bake Data
+name: Data Bundler
 
 on:
   push:
