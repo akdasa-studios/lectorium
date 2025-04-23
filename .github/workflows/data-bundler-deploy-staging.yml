@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "modules/services/data-bundler/**"
+      - "modules/tools/dataBundler/**"
       - ".github/workflows/data-bundler-build.yml"
       - ".github/workflows/data-bundler-deploy-staging.yml"
 
