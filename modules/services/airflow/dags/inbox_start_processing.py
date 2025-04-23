@@ -6,7 +6,7 @@ from airflow.models import Variable
 from lectorium.shared import run_dag
 from lectorium.bucket import bucket_move_file
 from lectorium.tracks_inbox import TrackInbox
-from lectorium.couchdb import couchdb_save_document
+from lectorium.couchdb import couchdb_save_document, couchdb_find_documents
 from lectorium.config.database import (
   LECTORIUM_DATABASE_COLLECTIONS, LECTORIUM_DATABASE_CONNECTION_STRING,
   LectoriumDatabaseCollections)
