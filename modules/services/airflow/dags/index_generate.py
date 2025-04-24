@@ -1,3 +1,4 @@
+import string
 from datetime import datetime, timedelta
 
 from airflow.models import Param
@@ -81,10 +82,11 @@ def index_generate():
     words = set()
     for lang, title in document["title"].items():
       stemmer = SnowballStemmer(languages[lang], ignore_stopwords=True)
-      print(f"language: {lang}, title: {title}")
+      clean_title = title.translate(str.maketrans("", "", string.punctuation))
+
       words.update({
         stemmer.stem(w.lower())
-        for w in title.split()
+        for w in clean_title.split()
         if len(w) > 1
       })
     return list(words)
