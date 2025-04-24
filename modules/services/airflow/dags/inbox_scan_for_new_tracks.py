@@ -159,16 +159,14 @@ def inbox_scan_for_new_tracks():
     """
     if not bucket_objects:
       raise AirflowSkipException("Nothing to process")
-    
+
+    # TODO: extract to config
+    sequence_name = "lectorium::track-id-sequence"
+    redis_client = redis.Redis(host="redis", port=6379)
+  
     for inbox in bucket_objects:
       # get unique id for the track
       try:
-        sequence_name = "lectorium::inbox::track-id-sequence"
-        redis_client = redis.Redis(
-          host="redis",
-          port=6379,
-        )
-
         next_id = redis_client.incr(sequence_name)
       except redis.RedisError as e:
         raise Exception(f"Failed to generate ID from Redis: {str(e)}")
