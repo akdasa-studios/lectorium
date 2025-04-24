@@ -1,18 +1,15 @@
 import string
+from sqids import Sqids
+
 from datetime import datetime, timedelta
 
 from airflow.models import Param
 from airflow.models import Variable
 from airflow.decorators import dag, task
-from airflow.utils.context import Context
 
-from nltk import download
 
-from lectorium.shared import LANGUAGE_PARAMS, LANGUAGES_PARAMS_OPTIONAL
 from lectorium.couchdb import couchdb_get_document, couchdb_save_document
-from lectorium.bucket import bucket_upload_data
 from lectorium.tracks import Track
-from lectorium.claude import claude_run_prompt
 from lectorium.config.database import (
   LECTORIUM_DATABASE_COLLECTIONS, LECTORIUM_DATABASE_CONNECTION_STRING,
   LectoriumDatabaseCollections)
@@ -53,7 +50,6 @@ def index_generate():
   # ---------------------------------------------------------------------------- #
 
   conf_track_id      = "{{ params.track_id }}"
-  conf_titles_path   = "{{ 'library/tracks/' ~ params.track_id ~ '/artifacts/metadata/titles.json' }}"
 
   conf_database_connection_string = \
     Variable.get(LECTORIUM_DATABASE_CONNECTION_STRING)
@@ -78,7 +74,6 @@ def index_generate():
   ) -> list[str]:
     result = set()
     for lang, title in document["title"].items():
-      stemmer = SnowballStemmer(languages[lang], ignore_stopwords=True)
       clean_title = (
         title.translate(str.maketrans("", "", string.punctuation))
         .lower())
@@ -95,6 +90,9 @@ def index_generate():
     word: str,
     track_id: str,
   ):
+    sqids = Sqids(min_length=10)
+    numerical_track_id = sqids.decode(track_id)[0]
+
     document = couchdb_get_document.function(
       connection_string=conf_database_connection_string,
       collection=conf_database_collections["index"],
@@ -108,7 +106,7 @@ def index_generate():
       }
 
     if track_id not in document["tracks"]:
-      document["tracks"].append(track_id)
+      document["tracks"].append(numerical_track_id)
 
     couchdb_save_document.function(
       connection_string=conf_database_connection_string,

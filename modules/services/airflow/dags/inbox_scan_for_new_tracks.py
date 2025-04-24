@@ -3,7 +3,6 @@ import redis
 from sqids import Sqids
 
 from datetime import datetime, timedelta
-from typing import Callable
 
 from airflow.decorators import dag, task
 from airflow.models import Variable
@@ -158,21 +157,16 @@ def inbox_scan_for_new_tracks():
     """
     Saves information about files in the inbox in the database.
     """
-    track_id = 0
-
     if not bucket_objects:
       raise AirflowSkipException("Nothing to process")
     
     for inbox in bucket_objects:
-      sqids = Sqids()
+      # get unique id for the track
       try:
         sequence_name = "lectorium::inbox::track-id-sequence"
         redis_client = redis.Redis(
           host="redis",
           port=6379,
-          # db="lectorium",
-          # password="lectorium",
-          # decode_responses=True
         )
 
         next_id = redis_client.incr(sequence_name)
@@ -182,6 +176,7 @@ def inbox_scan_for_new_tracks():
       # save the document in the database if it doesn't exist
       # with the status set to "new" to indicate that it needs
       # to be processed further
+      sqids = Sqids(min_length=10)
       couchdb_save_document.function(
         conf_database_connection_string,
         conf_database_collections["tracks_inbox"],

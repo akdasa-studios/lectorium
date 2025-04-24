@@ -1,11 +1,12 @@
 import { Database } from '../persistence'
+import Sqids from 'sqids'
 
 /**
  * Schema of the Source documents in the Library collection.
  */
 type IndexDBSchema = {
   _id: string
-  tracks: string[]
+  tracks: number[]
 }
 
 export type SearchResult = {
@@ -18,7 +19,13 @@ export type SearchResult = {
 // }
 
 export class IndexService {
-  constructor(private database: Database) {}
+  private readonly sqids = new Sqids({
+    minLength: 10,
+  })
+
+  constructor(
+    private readonly database: Database
+  ) {}
 
   /**
    * Searches for Tracks with specified query
@@ -39,8 +46,6 @@ export class IndexService {
       .split(" ")
       .filter(x => x !== "")
 
-    console.log(terms)
-
     // Retrieve all documents containing the specified term.
     for (const term of terms) {
       const loadedIndex = await this.database.db.allDocs<IndexDBSchema>({
@@ -50,8 +55,8 @@ export class IndexService {
       })
 
       documentIds.push(loadedIndex.rows
-        .flatMap(x => x.doc?.tracks || "")
-        .filter(x => x !== "")
+        .flatMap(x => x.doc?.tracks || [])
+        .map(x => this.sqids.encode([x]))
       )
     }
 
