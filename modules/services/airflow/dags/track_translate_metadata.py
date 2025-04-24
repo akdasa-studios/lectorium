@@ -3,26 +3,17 @@ from datetime import datetime, timedelta
 from airflow.models import Param
 from airflow.models import Variable
 from airflow.decorators import dag, task
-from airflow.utils.task_group import TaskGroup
 from airflow.utils.context import Context
-from airflow.operators.python import get_current_context
 
-from lectorium.transcripts import transcript_enrich, transcript_split_into_chunks
 from lectorium.shared import LANGUAGE_PARAMS, LANGUAGES_PARAMS_OPTIONAL
 
-from lectorium.couchdb import couchdb_get_document, couchdb_find_document
-from lectorium.bucket import bucket_download_json_data, bucket_upload_data
-from lectorium.claude import (
-  claude_run_prompt, claude_run_batch_prompt, claude_batch_prompt_sensor,
-  claude_get_batch_results
-)
+from lectorium.couchdb import couchdb_find_document
+from lectorium.bucket import bucket_upload_data
 from lectorium.tracks_inbox import TrackInbox
 from lectorium.claude import claude_run_prompt
 from lectorium.config.database import (
   LECTORIUM_DATABASE_COLLECTIONS, LECTORIUM_DATABASE_CONNECTION_STRING,
   LectoriumDatabaseCollections)
-
-from lectorium.shared import set_dag_run_note
 
 
 @dag(
