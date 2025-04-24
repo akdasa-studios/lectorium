@@ -7,7 +7,6 @@ from airflow.decorators import dag, task
 from airflow.utils.context import Context
 
 from nltk import download
-from nltk.stem.snowball import SnowballStemmer
 
 from lectorium.shared import LANGUAGE_PARAMS, LANGUAGES_PARAMS_OPTIONAL
 from lectorium.couchdb import couchdb_get_document, couchdb_save_document
@@ -18,8 +17,6 @@ from lectorium.config.database import (
   LECTORIUM_DATABASE_COLLECTIONS, LECTORIUM_DATABASE_CONNECTION_STRING,
   LectoriumDatabaseCollections)
 
-download("punkt", quiet=True)
-download('stopwords', quiet=True)
 
 
 @dag(
@@ -79,17 +76,17 @@ def index_generate():
   def get_words_to_index(
     document: Track,
   ) -> list[str]:
-    words = set()
+    result = set()
     for lang, title in document["title"].items():
       stemmer = SnowballStemmer(languages[lang], ignore_stopwords=True)
-      clean_title = title.translate(str.maketrans("", "", string.punctuation))
+      clean_title = (
+        title.translate(str.maketrans("", "", string.punctuation))
+        .lower())
 
-      words.update({
-        stemmer.stem(w.lower())
-        for w in clean_title.split()
-        if len(w) > 1
-      })
-    return list(words)
+      for word in clean_title.split():
+        result.add(word)
+
+    return list(result)
 
   @task(
     task_display_name="📤 Update Index Document",
