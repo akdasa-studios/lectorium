@@ -1,4 +1,7 @@
 import hashlib
+import redis
+from sqids import Sqids
+
 from datetime import datetime, timedelta
 from typing import Callable
 
@@ -6,8 +9,6 @@ from airflow.decorators import dag, task
 from airflow.models import Variable
 from airflow.models import Param
 from airflow.exceptions import AirflowSkipException
-
-from cuid2 import cuid_wrapper
 
 from lectorium.couchdb import couchdb_get_document
 from lectorium.tracks_inbox import TrackInbox
@@ -149,7 +150,6 @@ def inbox_scan_for_new_tracks():
     # and need to be processed
     return result 
 
-
   @task(
     task_display_name="📥 Save Inbox")
   def save_inbox(
@@ -158,12 +158,27 @@ def inbox_scan_for_new_tracks():
     """
     Saves information about files in the inbox in the database.
     """
-    track_id_generator: Callable[[], str] = cuid_wrapper()
-    
+    track_id = 0
+
     if not bucket_objects:
       raise AirflowSkipException("Nothing to process")
     
     for inbox in bucket_objects:
+      sqids = Sqids()
+      try:
+        sequence_name = "lectorium::inbox::track-id-sequence"
+        redis_client = redis.Redis(
+          host="redis",
+          port=6379,
+          # db="lectorium",
+          # password="lectorium",
+          # decode_responses=True
+        )
+
+        next_id = redis_client.incr(sequence_name)
+      except redis.RedisError as e:
+        raise Exception(f"Failed to generate ID from Redis: {str(e)}")
+
       # save the document in the database if it doesn't exist
       # with the status set to "new" to indicate that it needs
       # to be processed further
@@ -172,7 +187,7 @@ def inbox_scan_for_new_tracks():
         conf_database_collections["tracks_inbox"],
         TrackInbox(
           _id=get_track_inbox_id(inbox["key"]),
-          track_id=track_id_generator(),
+          track_id=sqids.encode([next_id]),
           path=inbox["key"],
           status="new",
         ),
