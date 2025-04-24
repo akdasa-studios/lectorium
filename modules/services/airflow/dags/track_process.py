@@ -95,7 +95,7 @@ def track_process():
     Run speaker diarization on the audio file to identify speakers if required
     """
     if (speakers_count <= 1):
-      raise AirflowSkipException("Diaraization is not required for single speaker audio files")
+      raise AirflowSkipException("Diarization is not required for single speaker audio files")
   
     return run_dag.function(
       dag_id="audio_speaker_diarization",
