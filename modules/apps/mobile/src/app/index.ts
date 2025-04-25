@@ -42,6 +42,7 @@ export * from './features/useSyncMediaItemStatusesFeature'
 export * from './features/useConfigPersistenceFeature'
 export * from './features/useCleanupMediaItemsFeature'
 export * from './features/useCleanupFilesFeature'
+export * from './features/useMarkCompletedPlaylistItem'
 
 // services:
 export * from './services/SyncService'
