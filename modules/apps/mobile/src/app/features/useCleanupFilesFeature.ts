@@ -1,7 +1,7 @@
 import { Filesystem, Directory } from '@capacitor/filesystem'
 import { useDAL } from '@/app'
 
-export async function useCleanupFilesFeature() {
+export function useCleanupFilesFeature() {
 
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
