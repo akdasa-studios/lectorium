@@ -15,7 +15,7 @@ export function useMarkCompletedPlaylistItem() {
   /* -------------------------------------------------------------------------- */
 
   watch(player.position, async (pos) => {
-    if (pos === player.duration.value) {
+    if (pos >= player.duration.value) {
       const playListItem = await dal.playlistItems.getOne(player.trackId.value) 
       playListItem.completedAt = Date.now()
       await dal.playlistItems.updateOne(playListItem._id, playListItem)
