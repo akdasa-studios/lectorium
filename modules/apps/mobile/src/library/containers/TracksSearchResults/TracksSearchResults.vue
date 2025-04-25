@@ -125,7 +125,8 @@ async function loadTracks(
   pageSize: number = 25,
 ) {
   try {
-    const searchResult = await userSearchesForTracks.execute(offset, filters)
+    const searchResult = await userSearchesForTracks
+      .execute(offset, filters, pageSize)
 
     const items = await Promise.all(
       searchResult.map(
