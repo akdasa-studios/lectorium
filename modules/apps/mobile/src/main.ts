@@ -44,7 +44,8 @@ import {
   useSyncMediaItemStatusesFeature,
   useCleanupMediaItemsFeature,
   useCleanupFilesFeature,
-  useMarkCompletedPlaylistItem
+  useMarkCompletedPlaylistItem,
+  useRemoveCompletedPlaylistItemsFeature
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
@@ -102,6 +103,7 @@ router.isReady().then(async () => {
   useCleanupMediaItemsFeature()
   useCleanupFilesFeature()
   useMarkCompletedPlaylistItem()
+  useRemoveCompletedPlaylistItemsFeature()
 
   // Player //
 
