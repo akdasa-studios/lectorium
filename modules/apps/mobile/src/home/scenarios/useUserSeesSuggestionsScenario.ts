@@ -24,13 +24,11 @@ export function useUserSeesSuggestionsScenario() {
     const totalTracksCount = await dal.tracks.getCount()
 
     // TODO: make the unique
-    // Generate array with random ids -> from 1 to trackScount
+    // Generate array with random ids -> from 1 to tracksCount
     const randomTrackIds = [...new Set(Array.from(
       { length: max }, 
       () => Math.floor(Math.random() * totalTracksCount) + 1
     ))]
-
-    console.log(randomTrackIds)
 
     // Load tracks by that ids, filter out if nothing found
     const tracks = await Promise.all(
