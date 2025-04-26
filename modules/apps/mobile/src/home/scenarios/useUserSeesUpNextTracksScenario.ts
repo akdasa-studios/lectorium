@@ -67,7 +67,8 @@ export function useUserSeesUpNextTracksScenario() {
     // Enrich tracks with their statuses
     const trackStatusEnricher = (track: Track) => ({ status: trackStatuses[track._id] })
     const trackMappers = upNextTrackIds
-      .map(x => upNextTracks.find(t => t._id === x)!)  
+      .map(x => upNextTracks.find(t => t._id === x))  
+      .filter(x => x !== undefined)
       .map(x => map(x, language, trackStatusEnricher))
     return await Promise.all(trackMappers)
   }
