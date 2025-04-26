@@ -114,7 +114,7 @@ dal.playlistItems.subscribe(async (e) => {
 
 function onInfiniteSctoll(e: InfiniteScrollCustomEvent) {
   loadTracks(tracks.value.length, filters.value)
-    .then(async () => await e.target.complete())
+    .then(() => e.target.complete())
 }
 
 async function onTrackClick(trackId: string) {
