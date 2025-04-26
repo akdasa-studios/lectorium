@@ -1,4 +1,5 @@
 import { useDAL } from '@/app'
+import { Track } from '@lectorium/dal/models'
 import Sqids from 'sqids'
 
 export function useUserSeesSuggestionsScenario() {
@@ -18,16 +19,16 @@ export function useUserSeesSuggestionsScenario() {
    * @param max - The maximum number of track suggestions to fetch. Defaults to 5.
    * @returns A Promise that resolves to an array of track objects. Any tracks that couldn't be found are filtered out.
    */
-  async function execute(max: number = 5) {
+  async function execute(max: number = 5): Promise<Track[]> {
     // Get total tracks count
     const totalTracksCount = await dal.tracks.getCount()
 
     // TODO: make the unique
     // Generate array with random ids -> from 1 to trackScount
-    const randomTrackIds = new Set(Array.from(
+    const randomTrackIds = [...new Set(Array.from(
       { length: max }, 
       () => Math.floor(Math.random() * totalTracksCount) + 1
-    )).values()
+    ))]
 
     console.log(randomTrackIds)
 
@@ -39,7 +40,7 @@ export function useUserSeesSuggestionsScenario() {
     )
 
     // List of tracks
-    return tracks.filter(track => track !== undefined)
+    return tracks.filter((track): track is Track => track != undefined)
   }
 
   /* -------------------------------------------------------------------------- */
