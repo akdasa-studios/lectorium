@@ -58,7 +58,7 @@ import {
   useUserSeesUpNextTracksScenario, useUserRemovesPlaylistItemScenario
 } from '@/home'
 import { TracksListItem, TracksListItemSkeleton, useConfig } from '@/app'
-import { computed } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { trashOutline } from 'ionicons/icons'
 
@@ -76,12 +76,12 @@ const userRemovesPlaylistItem = useUserRemovesPlaylistItemScenario()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const { state: tracks, execute: refresh, isLoading } = useAsyncState(
+const { state: tracks, execute: refresh } = useAsyncState(
   async () => await userSeesUpNextTracks.execute(config.appLanguage.value), 
-  [], { immediate: true, resetOnExecute: false }
+  [], { immediate: true, resetOnExecute: false, onSuccess: () => isFirstLoad.value = false }
 )
 
-const isFirstLoad = computed(() => tracks.value.length === 0 && isLoading.value)
+const isFirstLoad = ref(true)
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

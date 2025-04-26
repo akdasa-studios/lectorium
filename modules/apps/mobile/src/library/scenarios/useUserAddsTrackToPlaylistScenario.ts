@@ -1,3 +1,4 @@
+import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useDAL, useBucketService, useConfig, useMediaService } from '@/app'
 import { S3Operation } from '@lectorium/protocol/index'
 
@@ -21,6 +22,8 @@ export function useUserAddsTrackToPlaylistScenario() {
   async function execute(
     trackId: string,
   ) {
+    await Haptics.impact({ style: ImpactStyle.Light })
+
     // Add track to playlist, or exit if it already exists
     const existingPlayListItem = await dal.playlistItems.findOne({ _id: trackId })
     if (existingPlayListItem) { return }
