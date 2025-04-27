@@ -94,8 +94,7 @@ useSentryFeature(app)
 
 
 router.isReady().then(async () => {
-  console.time('App Initialization')
-  console.group('Initializing App...')
+  const start = new Date().getTime()
 
   // App //
 
@@ -119,12 +118,13 @@ router.isReady().then(async () => {
   const config = useConfig()
   i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
 
-  console.groupEnd()
-  console.timeEnd('App Initialization')
+  // Steps //
 
-  // TODO: refactor to initialization steps
   const dal = useDAL()
   await dal.playlistItems.init()
+
+  const elapsed = new Date().getTime() - start
+  console.log(`Initialization time: ${elapsed}ms`)
 
   app.mount('#app')
 })
