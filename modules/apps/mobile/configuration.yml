@@ -1,4 +1,6 @@
 vars:
+  VERSION:
+    default: "0.0.1"
   BUILD_ID:
     default: 1
 

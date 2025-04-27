@@ -115,7 +115,7 @@ jobs:
       - name: 🧮 Update Version
         env:
           VERSION: ${{ steps.release_version.outputs.tag }}
-          BUILD_ID: ${{ github.run_id }}
+          BUILD_ID: ${{ github.run_number }}
         working-directory: modules/apps/mobile/android
         run: npx trapeze run configuration.yml -y --android
 
