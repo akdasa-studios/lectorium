@@ -146,5 +146,4 @@ jobs:
           AWS_S3_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT_URL }}
           AWS_REGION: ${{ secrets.BUCKET_REGION_NAME }}
           SOURCE_DIR: modules/apps/mobile/android/app/build/outputs/apk/debug
-          DEST_DIR: artifacts/mobile-app
-      
+          DEST_DIR: artifacts/mobile-app/${{ steps.release_version.outputs.tag }}
