@@ -1,5 +1,5 @@
 vars:
-  GITHUB_RUN_ID:
+  BUILD_ID:
     default: 1
 
 platforms:
@@ -7,4 +7,4 @@ platforms:
   #   buildNumber: $GITHUB_RUN_ID
   android:
     versionName: $VERSION
-    versionCode: $GITHUB_RUN_ID
+    versionCode: $BUILD_ID
