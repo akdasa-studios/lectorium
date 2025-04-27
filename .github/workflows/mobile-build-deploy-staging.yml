@@ -93,7 +93,7 @@ jobs:
           BUCKET_ACCESS_KEY_ID: ${{ secrets.BUCKET_ACCESS_KEY_ID }}
           BUCKET_SECRET_ACCESS_KEY: ${{ secrets.BUCKET_SECRET_ACCESS_KEY }}
           BUCKET_ENDPOINT_URL: ${{ secrets.BUCKET_ENDPOINT_URL }}
-          BUCKET_REGION_NAME: ${{ secrets.BUCKET_ENDPOINT_URL }}
+          BUCKET_REGION_NAME: ${{ secrets.BUCKET_REGION_NAME }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/download-app-database-artifacts.py
 
@@ -144,7 +144,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.BUCKET_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.BUCKET_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT_URL }}
-          AWS_REGION: ${{ secrets.BUCKET_ENDPOINT_URL }}
+          AWS_REGION: ${{ secrets.BUCKET_REGION_NAME }}
           SOURCE_DIR: modules/apps/mobile/android/app/build/outputs/apk/debug
           DEST_DIR: artifacts/mobile-app
       
