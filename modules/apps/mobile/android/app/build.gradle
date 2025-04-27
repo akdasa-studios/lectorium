@@ -19,7 +19,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../../../../data/keys/apk/mobile.jks')
+            storeFile file('../../../../../data/keys/apk/mobile.jks')
             storePassword 'lectorium'
             keyAlias 'lectorium'
             keyPassword 'lectorium'
