@@ -2,8 +2,8 @@ name: Mobile
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - "modules/apps/mobile/**"
       - "modules/libs/downloader/**"
