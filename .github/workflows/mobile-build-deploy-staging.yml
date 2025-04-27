@@ -128,7 +128,7 @@ jobs:
               --keystorepass ${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
               --keystorealias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
               --keystorealiaspass ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }} \
-              --androidreleasetype aab
+              --androidreleasetype AAB
         # run: ./gradlew assembleRelease --stacktrace
         # run: ./gradlew assembleDebug
 
