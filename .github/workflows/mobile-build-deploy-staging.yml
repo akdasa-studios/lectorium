@@ -97,7 +97,7 @@ jobs:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/download-app-database-artifacts.py
 
-      - name: 🔑 Key Android keys
+      - name: 🔑 Get Android keys
         working-directory: data/keys/apk
         run: echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 -d > mobile.jks
 
