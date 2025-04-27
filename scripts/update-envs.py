@@ -8,6 +8,8 @@ api_url      = os.getenv('API_URL', 'http://localhost:8001/')
 database_url = os.getenv('DATABASE_URL', 'http://localhost:5984/')
 bucket_name  = os.getenv('BUCKET_NAME', 'lectorium-dev')
 
+print(release, dist)
+
 # Step 2: Define the content template
 content_template = """
 export const ENVIRONMENT = {

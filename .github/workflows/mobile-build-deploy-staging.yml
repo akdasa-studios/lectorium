@@ -103,12 +103,12 @@ jobs:
 
       - name: 📥 Update Env
         env:
-          LECTORIUM_RELEASE: ${{ steps.release_version.outputs.tag }}
-          LECTORIUM_DIST: ${{ github.sha }}
-          LECTORIUM_SENTRY_DSN: ${{ secrets.LECTORIUM_SENTRY_DSN }}
-          LECTORIUM_API_URL: ${{ secrets.LECTORIUM_API_URL }}
-          LECTORIUM_DATABASE_URL: ${{ secrets.LECTORIUM_DATABASE_URL }}
-          LECTORIUM_BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          RELEASE: ${{ steps.release_version.outputs.tag }}
+          DIST: ${{ github.sha }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          API_URL: ${{ secrets.API_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/update-envs.py
 
       # ---------------------------------------------------------------------------- #
