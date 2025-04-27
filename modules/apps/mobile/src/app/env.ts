@@ -1,3 +1,6 @@
+/**
+ * Configuration
+ */
 export const ENVIRONMENT = {
   release: 'lectorium@dev',
   dist: 'dev',
