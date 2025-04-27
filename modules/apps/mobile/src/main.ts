@@ -46,7 +46,8 @@ import {
   useCleanupFilesFeature,
   useMarkCompletedPlaylistItem,
   useRemoveCompletedPlaylistItemsFeature,
-  useDAL
+  useDAL,
+  useSentryFeature
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
@@ -88,6 +89,8 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(i18n)
+
+useSentryFeature(app)
 
 
 router.isReady().then(async () => {

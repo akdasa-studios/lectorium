@@ -2,8 +2,8 @@ name: Mobile
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - "modules/apps/mobile/**"
       - "modules/libs/downloader/**"
@@ -26,6 +26,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
+
+      # ---------------------------------------------------------------------------- #
+      #                                     Misc                                     #
+      # ---------------------------------------------------------------------------- #
+
+      - name: Get Release Version
+        id: release_version
+        run: |
+          echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
       # ---------------------------------------------------------------------------- #
       #                                 Dependencies                                 #
@@ -85,6 +94,20 @@ jobs:
           BUCKET_REGION_NAME: ${{ secrets.BUCKET_REGION_NAME }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/download-app-database-artifacts.py
+
+      # ---------------------------------------------------------------------------- #
+      #                                  Update Env                                  #
+      # ---------------------------------------------------------------------------- #
+
+      - name: 📥 Update Env
+        env:
+          LECTORIUM_RELEASE: ${{ steps.release_version.outputs.tag }}
+          LECTORIUM_DIST: ${{ github.sha }}
+          LECTORIUM_SENTRY_DSN: ${{ secrets.LECTORIUM_SENTRY_DSN }}
+          LECTORIUM_API_URL: ${{ secrets.LECTORIUM_API_URL }}
+          LECTORIUM_DATABASE_URL: ${{ secrets.LECTORIUM_DATABASE_URL }}
+          LECTORIUM_BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+        run: python3 scripts/update-envs.py
 
       # ---------------------------------------------------------------------------- #
       #                                   Build App                                  #
