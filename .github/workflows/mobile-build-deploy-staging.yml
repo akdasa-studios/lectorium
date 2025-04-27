@@ -121,20 +121,20 @@ jobs:
 
       - name: 👷 Build Android App
         working-directory: modules/apps/mobile/android
-        run: ./gradlew assembleRelease --stacktrace
-        # run: npx cap build android
+        run: |
+              npx cap build android \
+              --flavor release \
+              --keystorepath ../../../../data/keys/apk/mobile.jks \
+              --keystorepass ${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+              --keystorealias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
+              --keystorealiaspass ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }} \
+              --androidreleasetype aab
+        # run: ./gradlew assembleRelease --stacktrace
         # run: ./gradlew assembleDebug
 
       # ---------------------------------------------------------------------------- #
       #                                   Artifacts                                  #
       # ---------------------------------------------------------------------------- #
-
-      - name: 📤 Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: modules/apps/mobile/android/app/build/outputs
-          retention-days: 1
 
       - name: 📤 Upload S3
         uses: jakejarvis/s3-sync-action@v0.5.1
