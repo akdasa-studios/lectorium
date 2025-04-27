@@ -2,8 +2,6 @@ name: Mobile
 
 on:
   push:
-    # branches:
-    #   - main
     paths:
       - "modules/apps/mobile/**"
       - "modules/libs/downloader/**"
@@ -11,16 +9,19 @@ on:
       - "modules/package.json"
       - "modules/package-lock.json"
       - ".github/workflows/mobile-build-deploy-staging.yml"
-  
+
+
 env:
   REGISTRY: ghcr.io
   ORGANIZATION: akdasa-studios
 
 jobs:
-  build:
-    environment: staging
-    name: 🚀 Deploy to Staging
+
+  prepare:
+    name: 🛠️ Prepare
     runs-on: ubuntu-latest
+    outputs:
+      release_version: ${{ steps.release_version.outputs.tag }}
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -29,18 +30,22 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      # ---------------------------------------------------------------------------- #
-      #                                     Misc                                     #
-      # ---------------------------------------------------------------------------- #
-
-      - name: Get Release Version
+      - name: 🏷️ Get Release Version
         id: release_version
         run: |
           echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v//')" >> $GITHUB_OUTPUT
 
-      # ---------------------------------------------------------------------------- #
-      #                                 Dependencies                                 #
-      # ---------------------------------------------------------------------------- #
+  setup:
+    name: 🧰 Setup Environment
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: 💾 Install Java
         uses: actions/setup-java@v3
@@ -54,7 +59,7 @@ jobs:
       - name: 📝 Accept Android SDK licenses
         run: yes | sdkmanager --licenses
 
-      - name: 🧰 Install SDK packages
+      - name: 🧰 Install Android SDK packages
         run: sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
       - name: 🧰 Install Node.js
@@ -70,11 +75,19 @@ jobs:
 
       - name: 📦 Install Script Dependencies
         working-directory: scripts
-        run: pip3 install -r requirements.txt        
+        run: pip3 install -r requirements.txt
 
-      # ---------------------------------------------------------------------------- #
-      #                                 Build Plugins                                #
-      # ---------------------------------------------------------------------------- #
+  build-plugins:
+    name: 🧩 Build Plugins
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: 👷 Build Downloader Plugin
         working-directory: modules/libs/downloader
@@ -84,11 +97,15 @@ jobs:
         working-directory: modules/libs/audioPlayer
         run: npm i && npm run build
 
-      # ---------------------------------------------------------------------------- #
-      #                              Download Artifacts                              #
-      # ---------------------------------------------------------------------------- #
+  download-artifacts:
+    name: 📥 Download Database Artifacts
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
 
-      - name: 📥 Download Database Artifacts
+      - name: 📥 Download Artifacts
         env:
           BUCKET_ACCESS_KEY_ID: ${{ secrets.BUCKET_ACCESS_KEY_ID }}
           BUCKET_SECRET_ACCESS_KEY: ${{ secrets.BUCKET_SECRET_ACCESS_KEY }}
@@ -97,13 +114,17 @@ jobs:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/download-app-database-artifacts.py
 
-      # ---------------------------------------------------------------------------- #
-      #                                  Update Env                                  #
-      # ---------------------------------------------------------------------------- #
+  update-env:
+    name: 🌍 Update Environment
+    runs-on: ubuntu-latest
+    needs: [prepare, setup, download-artifacts]
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
 
-      - name: 🌎 Update Env
+      - name: 🌎 Update Env Variables
         env:
-          RELEASE: ${{ steps.release_version.outputs.tag }}
+          RELEASE: ${{ needs.prepare.outputs.release_version }}
           DIST: ${{ github.sha }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           API_URL: ${{ secrets.API_URL }}
@@ -111,39 +132,45 @@ jobs:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/update-envs.py
 
-
-      - name: 🧮 Update Version
-        env:
-          VERSION: ${{ steps.release_version.outputs.tag }}
-          BUILD_ID: ${{ github.run_number }}
-        working-directory: modules/apps/mobile/android
-        run: npx trapeze run configuration.yml -y --android
-
-      # ---------------------------------------------------------------------------- #
-      #                                   Build App                                  #
-      # ---------------------------------------------------------------------------- #
+  build-app:
+    name: 📱 Build Mobile App
+    runs-on: ubuntu-latest
+    needs: [build-plugins, update-env]
+    environment: staging
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
 
       - name: 👷 Build Ionic App
         working-directory: modules/apps/mobile
         run: npm i && npm run build+sync
 
-      - name: 👷 Build Android App
+      - name: 🧮 Update Android Version
+        env:
+          VERSION: ${{ needs.prepare.outputs.release_version }}
+          BUILD_ID: ${{ github.run_number }}
+        working-directory: modules/apps/mobile/android
+        run: npx trapeze run configuration.yml -y --android
+
+      - name: 👷 Build Android App (AAB)
         working-directory: modules/apps/mobile/android
         run: |
-              npx cap build android \
-              --keystorepath ../../../../data/keys/apk/mobile.jks \
-              --keystorepass ${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
-              --keystorealias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
-              --keystorealiaspass ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }} \
-              --androidreleasetype AAB
-        # run: ./gradlew assembleRelease --stacktrace
-        # run: ./gradlew assembleDebug
+          npx cap build android \
+          --keystorepath ../../../../data/keys/apk/mobile.jks \
+          --keystorepass ${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+          --keystorealias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
+          --keystorealiaspass ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }} \
+          --androidreleasetype AAB
 
-      # ---------------------------------------------------------------------------- #
-      #                                   Artifacts                                  #
-      # ---------------------------------------------------------------------------- #
+  upload:
+    name: 📤 Upload Build Artifacts
+    runs-on: ubuntu-latest
+    needs: build-app
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
 
-      - name: 📤 Upload S3
+      - name: 📤 Upload to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
           args: --acl public-read --follow-symlinks --delete
@@ -154,4 +181,5 @@ jobs:
           AWS_S3_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT_URL }}
           AWS_REGION: ${{ secrets.BUCKET_REGION_NAME }}
           SOURCE_DIR: modules/apps/mobile/android/app/build/outputs/bundle/release
-          DEST_DIR: artifacts/mobile-app/${{ steps.release_version.outputs.tag }}
+          DEST_DIR: artifacts/mobile-app/${{ needs.prepare.outputs.release_version }}
+
