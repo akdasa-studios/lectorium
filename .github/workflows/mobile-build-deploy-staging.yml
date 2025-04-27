@@ -123,7 +123,6 @@ jobs:
         working-directory: modules/apps/mobile/android
         run: |
               npx cap build android \
-              --flavor release \
               --keystorepath ../../../../data/keys/apk/mobile.jks \
               --keystorepass ${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
               --keystorealias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
