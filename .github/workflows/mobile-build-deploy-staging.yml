@@ -133,7 +133,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app
-          path: modules/apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          path: modules/apps/mobile/android/app/build/outputs
           retention-days: 1
 
       - name: 📤 Upload S3
@@ -146,5 +146,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.BUCKET_SECRET_ACCESS_KEY }}
           AWS_S3_ENDPOINT: ${{ secrets.BUCKET_ENDPOINT_URL }}
           AWS_REGION: ${{ secrets.BUCKET_REGION_NAME }}
-          SOURCE_DIR: modules/apps/mobile/android/app/build/outputs/apk/debug
+          SOURCE_DIR: modules/apps/mobile/android/app/build/outputs
           DEST_DIR: artifacts/mobile-app/${{ steps.release_version.outputs.tag }}
