@@ -97,6 +97,10 @@ jobs:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/download-app-database-artifacts.py
 
+      - name: 🔑 Key Android keys
+        working-directory: data/keys/apk
+        run: echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 -d > mobile.jks
+
       # ---------------------------------------------------------------------------- #
       #                                  Update Env                                  #
       # ---------------------------------------------------------------------------- #
@@ -136,8 +140,6 @@ jobs:
               --keystorealias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
               --keystorealiaspass ${{ secrets.ANDROID_KEYSTORE_ALIAS_PASSWORD }} \
               --androidreleasetype AAB
-        # run: ./gradlew assembleRelease --stacktrace
-        # run: ./gradlew assembleDebug
 
       # ---------------------------------------------------------------------------- #
       #                                   Artifacts                                  #
