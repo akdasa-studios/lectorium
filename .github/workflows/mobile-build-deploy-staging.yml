@@ -101,7 +101,7 @@ jobs:
       #                                  Update Env                                  #
       # ---------------------------------------------------------------------------- #
 
-      - name: 📥 Update Env
+      - name: 🌎 Update Env
         env:
           RELEASE: ${{ steps.release_version.outputs.tag }}
           DIST: ${{ github.sha }}
@@ -110,6 +110,13 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: python3 scripts/update-envs.py
+
+
+      - name: 🧮 Update Version
+        env:
+          VERSION: ${{ steps.release_version.outputs.tag }}
+          BUILD_ID: ${{ github.run_id }}
+        run: npx trapeze run configuration.yml -y --android
 
       # ---------------------------------------------------------------------------- #
       #                                   Build App                                  #
