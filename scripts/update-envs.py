@@ -11,25 +11,21 @@ bucket_name  = os.getenv('BUCKET_NAME', 'lectorium-dev')
 print(release, dist)
 
 # Step 2: Define the content template
-content_template = """
-export const ENVIRONMENT = {
-  release: "{}",
-  dist: "{}",
-  sentryDsn: "{}",
-  apiUrl: "{}",
-  databaseUrl: "{}",
-  bucketName: "{}"
-}
+config = f"""
+export const ENVIRONMENT = {{
+  release: "{release}",
+  dist: "{dist}",
+  sentryDsn: "{sentry_dsn}",
+  apiUrl: "{api_url}",
+  databaseUrl: "{database_url}",
+  bucketName: "{bucket_name}"
+}}
 """
-
-# Step 3: Replace the placeholders with the actual values
-final_content = content_template.format(
-  release, dist, sentry_dsn, api_url, database_url, bucket_name)
 
 # Step 4: Write the final content to a file
 try:
   with open('./modules/apps/mobile/src/app/env.ts', 'w') as file:
-    file.write(final_content)
+    file.write(config)
   print('Config: File updated.')
 except Exception as err:
   print(f'Config: Error writing to file: {err}')
