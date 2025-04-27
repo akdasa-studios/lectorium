@@ -121,8 +121,8 @@ jobs:
 
       - name: 👷 Build Android App
         working-directory: modules/apps/mobile/android
-        run: ./gradlew assembleDebug
-        # run: npx cap build android
+        run: npx cap build android
+        # run: ./gradlew assembleDebug
 
       # ---------------------------------------------------------------------------- #
       #                                   Artifacts                                  #
