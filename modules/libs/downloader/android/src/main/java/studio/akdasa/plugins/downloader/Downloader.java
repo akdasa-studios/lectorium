@@ -1,4 +1,4 @@
-package studios.akdasa.plugins.downloader;
+package studio.akdasa.plugins.downloader;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;

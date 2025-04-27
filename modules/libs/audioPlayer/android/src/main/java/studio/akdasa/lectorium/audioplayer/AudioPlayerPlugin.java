@@ -1,4 +1,4 @@
-package studios.akdasa.lectorium.audioplayer;
+package studio.akdasa.lectorium.audioplayer;
 
 import android.content.Context;
 import android.content.Intent;

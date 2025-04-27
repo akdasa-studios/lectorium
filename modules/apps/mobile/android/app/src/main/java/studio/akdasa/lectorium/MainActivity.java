@@ -1,4 +1,4 @@
-package studios.akdasa.lectorium;
+package studio.akdasa.lectorium;
 
 import android.os.Bundle;
 import android.webkit.WebView;

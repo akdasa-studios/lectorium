@@ -1,4 +1,4 @@
-package studios.akdasa.lectorium;
+package studio.akdasa.lectorium;
 
 import android.content.Context;
 import android.util.Log;

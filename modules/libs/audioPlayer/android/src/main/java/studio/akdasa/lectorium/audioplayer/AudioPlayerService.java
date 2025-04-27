@@ -1,4 +1,4 @@
-package studios.akdasa.lectorium.audioplayer;
+package studio.akdasa.lectorium.audioplayer;
 
 import static android.media.MediaPlayer.SEEK_PREVIOUS_SYNC;
 
@@ -15,10 +15,10 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import com.getcapacitor.PluginCall;
 
-import studios.akdasa.lectorium.audioplayer.mediaSession.MediaSessionCallback;
-import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.MediaSessionMediaStateNotifier;
-import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.MediaStateNotificationService;
-import studios.akdasa.lectorium.audioplayer.mediaStateNotifications.PluginCallMediaStateNotifier;
+import studio.akdasa.lectorium.audioplayer.mediaSession.MediaSessionCallback;
+import studio.akdasa.lectorium.audioplayer.mediaStateNotifications.MediaSessionMediaStateNotifier;
+import studio.akdasa.lectorium.audioplayer.mediaStateNotifications.MediaStateNotificationService;
+import studio.akdasa.lectorium.audioplayer.mediaStateNotifications.PluginCallMediaStateNotifier;
 
 
 public final class AudioPlayerService extends Service {
