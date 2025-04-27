@@ -36,7 +36,7 @@ jobs:
       - name: Get Release Version
         id: release_version
         run: |
-          echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+          echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v//')" >> $GITHUB_OUTPUT
 
       # ---------------------------------------------------------------------------- #
       #                                 Dependencies                                 #
