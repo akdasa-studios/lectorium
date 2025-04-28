@@ -39,4 +39,7 @@ services:
     image: ghcr.io/akdasa-studios/lectorium-gateway:staging
     volumes:
       - ../data/gateway/certs:/workspaces/lectorium/data/gateway/certs
+    environment:
+      - CONFIG_TYPE=release
+
     

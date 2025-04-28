@@ -18,4 +18,4 @@ COPY ./services/gateway .
 #                                      Run                                     #
 # ---------------------------------------------------------------------------- #
 
-CMD ["nginx", "-c", "/lectorium/gateway/nginx.conf", "-g", "daemon off;"]
+CMD ["nginx", "-c", "/lectorium/gateway/nginx.$CONFIG_TYPE.conf", "-g", "daemon off;"]
