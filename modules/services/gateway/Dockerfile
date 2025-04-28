@@ -18,4 +18,4 @@ COPY ./services/gateway .
 #                                      Run                                     #
 # ---------------------------------------------------------------------------- #
 
-ENTRYPOINT [ "run.sh" ]
+ENTRYPOINT [ "/lectorium/gateway/run.sh" ]
