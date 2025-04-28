@@ -52,6 +52,12 @@ services:
     networks:
       - lectorium
 
+  admin:
+    expose:
+      - "80:80"
+    networks:
+      - lectorium
+
   gateway:
     ports:
       - "80:80"
