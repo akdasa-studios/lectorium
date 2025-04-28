@@ -2,8 +2,8 @@ name: Api
 
 on:
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
     paths:
       - "modules/services/api/**"
       - ".github/workflows/api-build.yml"
