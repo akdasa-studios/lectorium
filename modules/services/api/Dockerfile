@@ -34,4 +34,4 @@ COPY --from=build /akd-stidios/lectorium/services/api/dist .
 
 EXPOSE 8101
 
-CMD ["node", "./dist/services/api/src/main"]
+CMD ["node", "./services/api/src/main"]
