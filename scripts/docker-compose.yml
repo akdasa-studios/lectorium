@@ -55,6 +55,11 @@ services:
   gateway:
     ports:
       - "80:80"
+    depends_on:
+      - airflow-webserver
+      - api
+      - admin
+      - couchdb
     networks:
       - lectorium
 
