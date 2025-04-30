@@ -54,12 +54,6 @@ export class TracksService extends DatabaseService<Track, TracksDBSchema> {
       trackSerializer, 
       trackDeserializer, 
       { type: "track" },
-      [
-        {
-          name: "type",
-          fields: ["type"]
-        }
-      ]
     )
   }
 

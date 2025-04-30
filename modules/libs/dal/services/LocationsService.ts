@@ -26,9 +26,6 @@ export class LocationsService extends DatabaseService<
       locationSerializer,
       locationDeserializer,
       { type: "location" },
-      [
-        { name: "type", fields: ["type"] }
-      ]
     )
   }
 }

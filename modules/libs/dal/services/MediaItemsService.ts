@@ -40,11 +40,8 @@ export class MediaItemsService
       database, 
       mediaItemSerializer, 
       mediaItemDeserializer, 
-      { type: "mediaItem" },
-      [
-        { name: "taskStatus", fields: [ "taskStatus" ] },
-        { name: "trackId", fields: ["trackId"] }
-      ])
+      { type: "mediaItem" }
+    )
   }
 
   /**
