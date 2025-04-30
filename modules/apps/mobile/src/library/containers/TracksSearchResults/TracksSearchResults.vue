@@ -36,8 +36,8 @@
 import { ref, toRefs, onMounted, watch } from 'vue'
 import { IonList, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonItem, IonNote } from '@ionic/vue'
 import { useDAL, TracksListItem, TracksListItemData, useSafeOperation, useConfig } from '@lectorium/mobile/app'
-import { mapTrackToPlaylistItem } from '@lectorium/mobile/home'
 import { useUserAddsTrackToPlaylistScenario, useUserSearchesForTracksScenario } from '@lectorium/mobile/library'
+import { mapTrackToPlaylistItem } from '@lectorium/mobile/home/mappers/tracks'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
