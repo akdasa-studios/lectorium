@@ -17,12 +17,12 @@ export function useDatabase() {
       userData: new Database({ 
         name: 'userData.db', 
         adapter: adapter, 
-        // indices: [
-        //   { name: 'type', fields: ['type'] },
-        //   { name: 'addedAt', fields: ['addedAt'] },
-        //   { name: 'taskStatus', fields: [ 'taskStatus' ] },
-        //   { name: 'trackId', fields: ['trackId'] }
-        // ]
+        indices: [
+          { name: 'addedAt', fields: ['addedAt'] },
+          // { name: 'type', fields: ['type'] },
+          // { name: 'taskStatus', fields: [ 'taskStatus' ] },
+          // { name: 'trackId', fields: ['trackId'] }
+        ]
       }),
       tracks: new Database({
         name: 'tracks.db',
@@ -34,11 +34,14 @@ export function useDatabase() {
       dictionary: new Database({
         name: 'dictionary.db',
         adapter: adapter,
-        // indices: [
-        //   { name: 'type', fields: ['type'] }
-        // ]
+        indices: [
+          { name: 'type', fields: ['type'] }
+        ]
       }),
-      index: new Database({ name: 'index.db', adapter }),
+      index: new Database({
+        name: 'index.db',
+        adapter: adapter
+      }),
     },
     remote: {
       tracks: new Database({
