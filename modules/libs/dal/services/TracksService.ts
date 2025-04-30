@@ -56,13 +56,9 @@ export class TracksService extends DatabaseService<Track, TracksDBSchema> {
       { type: "track" },
       [
         {
-          name: "search",
-          fields: ["type", "audio.original.duration"]
-        },
-        // {
-        //   name: "search2",
-        //   fields: ["type", "audio"]
-        // }
+          name: "type",
+          fields: ["type"]
+        }
       ]
     )
   }
