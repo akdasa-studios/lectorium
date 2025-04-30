@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "paths": {
+      "@lectorium/mobile/*": ["./src/*"],
       "@/*": ["./src/*"],
       "@lectorium/dal/*": ["../../libs/dal/*"],
       "@lectorium/protocol/*": ["../../libs/protocol/*"],

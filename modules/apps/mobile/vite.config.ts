@@ -43,6 +43,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@lectorium/mobile': path.resolve(__dirname, './src'),
       '@lectorium/protocol': fileURLToPath(
         new URL('../../libs/protocol', import.meta.url),
       ),

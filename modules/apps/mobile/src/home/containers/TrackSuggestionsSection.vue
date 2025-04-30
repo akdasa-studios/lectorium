@@ -19,9 +19,9 @@
 <script setup lang="ts">
 import { useAsyncState } from '@vueuse/core'
 import { IonList } from '@ionic/vue'
-import { mapTrackToPlaylistItem, SectionHeader, useUserSeesSuggestionsScenario } from '@/home'
-import { TracksListItem, type TracksListItemData, useConfig } from '@/app'
-import { useDAL } from '@/app'
+import { mapTrackToPlaylistItem, SectionHeader, useUserSeesSuggestionsScenario } from '@lectorium/mobile/home'
+import { TracksListItem, type TracksListItemData, useConfig } from '@lectorium/mobile/app'
+import { useDAL } from '@lectorium/mobile/app'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
