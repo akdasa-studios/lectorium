@@ -153,16 +153,17 @@ export abstract class DatabaseService<
   async getAll(
     request?: GetAllRequest
   ): Promise<TItem[]> {
-    const response = await this._database.db.find({
+    const r = {
       selector: {
         ...this._scope,
       },
       limit: request?.limit ?? 25,
       skip: request?.skip ?? 0,
       sort: request?.sort ?? undefined
-    })
+    }
+    const response = await this._database.db.find(r)
     if (response.warning) {
-      console.warn(response.warning, request)
+      console.warn(response.warning, r)
     }
     return response.docs.map(row => this._deserializer(row as unknown as TDbScheme))
   }
@@ -182,7 +183,7 @@ export abstract class DatabaseService<
     }
     const response = await this._database.db.find(r)
     if (response.warning) {
-      console.warn(response.warning, request)
+      console.warn(response.warning, r)
     }
 
     return response.docs

@@ -49,7 +49,22 @@ export type FindTracksRequest = {
  */
 export class TracksService extends DatabaseService<Track, TracksDBSchema> {
   constructor(database: Database) {
-    super(database, trackSerializer, trackDeserializer, { type: "track" })
+    super(
+      database, 
+      trackSerializer, 
+      trackDeserializer, 
+      { type: "track" },
+      [
+        {
+          name: "search",
+          fields: ["type", "audio.original.duration"]
+        },
+        // {
+        //   name: "search2",
+        //   fields: ["type", "audio"]
+        // }
+      ]
+    )
   }
 
   async find(request: FindTracksRequest): Promise<Track[]> {

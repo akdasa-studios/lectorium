@@ -122,6 +122,9 @@ router.isReady().then(async () => {
 
   const dal = useDAL()
   await dal.playlistItems.init()
+  await dal.mediaItems.init()
+  await dal.locations.init()
+  await dal.tracks.init()
 
   const elapsed = new Date().getTime() - start
   console.log(`Initialization time: ${elapsed}ms`)
