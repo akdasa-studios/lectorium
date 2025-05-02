@@ -41,13 +41,13 @@ import {
   useNavigationBarFeature,
   useSafeAreaFeature,
   useStatusBarFeature,
-  useSyncMediaItemStatusesFeature,
   useCleanupMediaItemsFeature,
   useCleanupFilesFeature,
   useMarkCompletedPlaylistItem,
   useRemoveCompletedPlaylistItemsFeature,
   useSentryFeature,
-  useDatabase
+  useDatabase,
+  useSyncMediaItemProgressFeature
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
@@ -102,11 +102,11 @@ router.isReady().then(async () => {
   await useNavigationBarFeature()
   await useStatusBarFeature()
   await useSafeAreaFeature()
-  await useSyncMediaItemStatusesFeature()
   useCleanupMediaItemsFeature()
   useCleanupFilesFeature()
   useMarkCompletedPlaylistItem()
   useRemoveCompletedPlaylistItemsFeature()
+  await useSyncMediaItemProgressFeature().init()
 
   // Player //
 

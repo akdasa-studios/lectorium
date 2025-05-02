@@ -5,7 +5,7 @@
     @click="onItemClicked"
   >
     <IonIcon
-      v-if="statusIcon.icon"
+      v-if="statusIcon.icon && status !== 'loading'"
       slot="end"
       aria-hidden="true"
       :icon="statusIcon.icon"
@@ -13,6 +13,19 @@
       class="icon"
     />
 
+    <RadialProgress
+      v-if="status==='loading'"
+      slot="end"
+      :stroke-width="4"
+      :inner-stroke-width="4"
+      :diameter="24"
+      :completed-steps="progress"
+      :total-steps="100"
+      start-color="var(--ion-color-primary)"
+      stop-color="var(--ion-color-primary)"
+      inner-stroke-color="var(--ion-color-light)"
+    />
+  
     <IonLabel class="ion-text-nowrap">
       <h3 class="title-block">
         <span
@@ -38,9 +51,10 @@
 
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, toRefs } from 'vue'
 import { IonItem, IonLabel, IonIcon } from '@ionic/vue'
 import { closeCircle, arrowDownCircle, checkmarkCircle, checkmarkDoneCircle } from 'ionicons/icons'
+import RadialProgress from 'vue3-radial-progress'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -59,6 +73,7 @@ export type TracksListItemData = {
   location?: string
   references: string[]
   status: TracksListItemStatus,
+  progress?: number
   date: string
 }
 
@@ -68,12 +83,15 @@ const props = withDefaults(defineProps<
   }
 >(), {
   enabled: true, 
-  location: undefined 
+  location: undefined,
+  progress: 0,
 })
 
 const emit = defineEmits<{
   click: []
 }>()
+
+const { progress } = toRefs(props) 
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */

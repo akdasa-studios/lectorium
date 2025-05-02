@@ -62,6 +62,7 @@ export class MediaService {
       title: request.title,
       remoteUrl: request.url,
       localPath: request.destination,
+      progress: 0
     })
   }
 

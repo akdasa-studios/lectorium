@@ -2,7 +2,11 @@ import { mapTrackToPlaylistItem } from '../mappers/tracks'
 import { Track } from '@lectorium/dal/models'
 import { TracksListItemData, useDAL } from '@lectorium/mobile/app'
 
-type TrackStatus = 'none' | 'loading' | 'failed' | 'completed'
+type TrackStatus = {
+  status: 'none' | 'loading' | 'failed' | 'completed',
+  progress: number
+}
+
 const LoadingStatuses = ['pending', 'running', 'paused']
 const FailedStatuses = ['failed']
 
@@ -55,24 +59,31 @@ export function useUserSeesUpNextTracksScenario() {
                           || (trackMediaItems.length === 0 && Date.now() < playListItem.addedAt + 3000)
         const isFailed = trackMediaItems.some(item => FailedStatuses.includes(item.taskStatus)) 
                           || (trackMediaItems.length === 0 && Date.now() > playListItem.addedAt + 3000)
+        const progress = Math.min(...trackMediaItems.map(x => x.progress))
+
         if (playListItem?.completedAt) {
-          acc[trackId] = 'completed'
+          acc[trackId] = { status: 'completed', progress: 100 }
         } else if (isLoading) {
-          acc[trackId] = 'loading'
+          acc[trackId] = { status: 'loading', progress }
         } else if (isFailed) {
-          acc[trackId] = 'failed'
+          acc[trackId] = { status: 'failed', progress }
         } else {
-          acc[trackId] = 'none'
+          acc[trackId] = { status: 'none', progress }
         }
         return acc
       }, {})
 
     // Enrich tracks with their statuses
-    const trackStatusEnricher = (track: Track) => ({ status: trackStatuses[track._id] })
+    const trackStatusEnricher = (track: Track) => ({ 
+      status: trackStatuses[track._id].status, 
+      progress: trackStatuses[track._id].progress
+    })
+    
     const trackMappers = upNextTrackIds
       .map(x => upNextTracks.find(t => t._id === x)!)  
       .filter(x => x !== undefined)
       .map(x => map(x, language, trackStatusEnricher))
+    
     return await Promise.all(trackMappers)
   }
 

@@ -37,4 +37,6 @@ export type MediaItem = {
    * - `paused`: The media item download is paused.
    */
   taskStatus: 'pending' | 'running' | 'successful' | 'failed' | 'paused'
+
+  progress: number
 }

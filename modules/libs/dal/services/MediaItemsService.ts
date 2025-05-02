@@ -14,6 +14,7 @@ type MediaItemDBSchema = {
   trackId: string,
   taskId: string
   taskStatus: 'pending' | 'running' | 'successful' | 'failed' | 'paused'
+  progress: number
 }
 
 const mediaItemSerializer = (item: MediaItem): MediaItemDBSchema => item

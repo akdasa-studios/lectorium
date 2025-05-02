@@ -23,6 +23,7 @@
           :references="item.references"
           :date="item.date"
           :status="item.status"
+          :progress="item.progress"
           @click="() => onPlaylistItemClicked(item.status, item.trackId)"
         />
         <IonItemOptions>
@@ -77,7 +78,11 @@ const userRedownloadsFailedMediaItems = useUserRedownloadsFailedMediaItemsScenar
 
 const { state: tracks, execute: refresh } = useAsyncState(
   async () => await userSeesUpNextTracks.execute(config.appLanguage.value), 
-  [], { immediate: true, resetOnExecute: false, onSuccess: () => isFirstLoad.value = false }
+  [], { 
+    immediate: true, 
+    resetOnExecute: false, 
+    onSuccess: () => isFirstLoad.value = false,
+  }
 )
 
 const isFirstLoad = ref(true)

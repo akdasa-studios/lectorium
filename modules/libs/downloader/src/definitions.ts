@@ -14,11 +14,13 @@ export type GetStatusRequest = {
 
 export type GetStatusResponse = {
   status: "successful" | "pending" | "paused" | "failed" | "running";
+  progress: number;
 }
 
 export type DownloadCompleteEvent = {
   taskId: string
   status: "successful" | "failed"
+  progress: number
 }
 
 export interface DownloaderPlugin {
