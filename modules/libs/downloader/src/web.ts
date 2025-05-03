@@ -13,7 +13,7 @@ export class DownloaderWeb extends WebPlugin implements DownloaderPlugin {
     const taskId = Math.random().toString(36).substring(2, 15)
     setTimeout(() => {
       for (const callback of Object.values(this.callbacks)) {
-        callback({ taskId, status: 'successful', progress: 100 });
+        callback({ taskId, status: 'successful' });
       }
     }, 10000);
     return { taskId };
