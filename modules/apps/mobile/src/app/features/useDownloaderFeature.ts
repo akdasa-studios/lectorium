@@ -112,7 +112,6 @@ export function useDownloaderFeature() {
         downloadFailed: undefined,
         inPlaylist: true 
       })
-      // setTimeout(() => trackStateStore.setStatus(trackId, {downloadProgress: undefined}), 1000)
     } else if (hasFailedTasks) {
       trackStateStore.setStatus(trackId, { 
         downloadFailed: true 

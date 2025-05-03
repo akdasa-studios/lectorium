@@ -1,4 +1,5 @@
 import { usePlayer, usePlayerControls } from '@lectorium/mobile/player'
+import { Haptics, ImpactStyle } from '@capacitor/haptics'
 
 export function usePlayerControlsPlayerScenario() {
   /* -------------------------------------------------------------------------- */
@@ -14,6 +15,7 @@ export function usePlayerControlsPlayerScenario() {
 
   async function togglePause() {
     await player.togglePause()
+    await Haptics.impact({ style: ImpactStyle.Light })
     playerControls.isPlaying.value = !playerControls.isPlaying.value
   }
 

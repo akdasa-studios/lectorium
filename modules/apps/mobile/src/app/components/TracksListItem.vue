@@ -143,9 +143,11 @@ watch((): [TrackListItemIcon, number|undefined] => [props.icon, props.progress],
   if (p !== undefined && p < 100) { 
     iconDisplayMode.value = 'progress'
   } else { 
-    setTimeout(() => { 
-      iconDisplayMode.value = i !== 'none' ? 'icon' : 'none' 
-    }, iconDisplayMode.value === 'progress' ? 1000 : 0)
+    if (iconDisplayMode.value === 'progress') {
+      setTimeout(() => { iconDisplayMode.value = i !== 'none' ? 'icon' : 'none' },  1000)
+    } else {
+      iconDisplayMode.value = i !== 'none' ? 'icon' : 'none'
+    }
   }
 }, { immediate: true })
 
