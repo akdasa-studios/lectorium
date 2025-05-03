@@ -49,6 +49,10 @@ const props = defineProps<{
   max: number
 }>()
 
+const emit = defineEmits<{
+  (e: 'loading', value: boolean): void
+}>()
+
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -56,7 +60,11 @@ const props = defineProps<{
 
 const { state, execute: refresh } = useAsyncState(
   async () => await getSuggestions(),
-  [], { immediate: true, resetOnExecute: false }
+  [], { 
+    immediate: true, 
+    resetOnExecute: false,
+    onSuccess: () => emit('loading', false),
+  }
 )
 
 defineExpose({ refresh })

@@ -1,6 +1,9 @@
 <template>
-  <Page>
-    <RandomTrackSuggestions :max-authors="3" />
+  <Page :loading="loading">
+    <RandomTrackSuggestions 
+      :max-authors="2"
+      @loading="onLoadingStateChanged"
+    />
   </Page>
 </template>
 
@@ -20,7 +23,15 @@ const config = useConfig()
 /* -------------------------------------------------------------------------- */
 
 const trackSuggestionsRef = ref<typeof RandomTrackSuggestions>()
+const loading = ref(true)
 
+/* -------------------------------------------------------------------------- */
+/*                                  Handlers                                  */
+/* -------------------------------------------------------------------------- */
+
+function onLoadingStateChanged(value: boolean) {
+  loading.value = value
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                    Hooks                                   */

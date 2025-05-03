@@ -1,18 +1,20 @@
 <template>
   <template 
-    v-for="author in authors"
+    v-for="author, idx in authors"
     :key="author.id"
   >
     <TrackSuggestionsSection
       :max="4"
       :title="authorName(author)"
       :selector="{ 'author': author._id.replace('author::', '') }"
+      @loading="v => onComponentLoaded(v, idx)"
     />
   </template>
 </template>
 
 
 <script setup lang="ts">
+import { watch, ref } from 'vue'
 import { useDAL } from '@lectorium/mobile/app'
 import { useAsyncState } from '@vueuse/core'
 import { type Author } from '@lectorium/dal/models'
@@ -37,10 +39,16 @@ const props = defineProps<{
   maxAuthors: number
 }>()
 
+const emit = defineEmits<{
+  (e: 'loading', value: boolean): void
+}>()
+
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
+
+const componentsLoadingState = ref<boolean[]>([])
 
 const { state: authors } = useAsyncState(
   async () => { 
@@ -52,7 +60,28 @@ const { state: authors } = useAsyncState(
         selector: { _id: { $ne: 'author::acbsp' } } 
       })
     ])
-    return [acbsp, ...rest].filter(x => x !== undefined) as Author[]
-  }, [], { immediate: true, resetOnExecute: false }
+    const authors = [acbsp, ...rest].filter(x => x !== undefined) as Author[]
+    componentsLoadingState.value = Array(authors.length).fill(true)
+    return authors
+  }, [], { 
+    immediate: true, 
+    resetOnExecute: false,
+  }
 )
+
+/* -------------------------------------------------------------------------- */
+/*                                    Hooks                                   */
+/* -------------------------------------------------------------------------- */
+
+function onComponentLoaded(value: boolean, idx: number) {
+  componentsLoadingState.value[idx] = value
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Hooks                                   */
+/* -------------------------------------------------------------------------- */
+
+watch(componentsLoadingState, (value: boolean[]) => {
+  emit('loading', value.some(v => v === true))
+}, { deep: true })
 </script>
