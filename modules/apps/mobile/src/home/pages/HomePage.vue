@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
 import { TrackSuggestionsSection, UpNextTracksSection } from '@lectorium/mobile/home'
 import { Page, useDAL, useConfig } from '@lectorium/mobile/app'
 
@@ -24,17 +23,15 @@ const config = useConfig()
 
 const upNextTracksRef = ref<typeof UpNextTracksSection>() 
 const trackSuggestionsRef = ref<typeof TrackSuggestionsSection>()
-const refreshDeferred = useDebounceFn(() => { refresh() }, 100, { maxWait: 500 })
 
 
 /* -------------------------------------------------------------------------- */
 /*                                    Hooks                                   */
 /* -------------------------------------------------------------------------- */
 
-dal.mediaItems.subscribe(refreshDeferred) // ADD debounce
-dal.playlistItems.subscribe(refreshDeferred)
+dal.playlistItems.subscribe(refresh)
 watch(config.appLanguage, () => {
-  refreshDeferred()
+  refresh()
   trackSuggestionsRef.value?.refresh()
 })
 

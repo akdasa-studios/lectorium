@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
@@ -47,7 +48,8 @@ import {
   useRemoveCompletedPlaylistItemsFeature,
   useSentryFeature,
   useDatabase,
-  useSyncMediaItemProgressFeature
+  useDownloaderFeature,
+  useRestoreTracksStatuses,
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
@@ -84,11 +86,12 @@ const i18n = createI18n({
     }
   }
 })
-
+const pinia = createPinia()
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(i18n)
+  .use(pinia)
 
 useSentryFeature(app)
 
@@ -98,15 +101,34 @@ router.isReady().then(async () => {
 
   // App //
 
+  console.log('useConfigPersistenceFeature...')
   await useConfigPersistenceFeature()
+
+  console.log('useNavigationBarFeature...')
   await useNavigationBarFeature()
+
+  console.log('useStatusBarFeature...')
   await useStatusBarFeature()
+
+  console.log('useSafeAreaFeature...')
   await useSafeAreaFeature()
+
+  console.log('useCleanupMediaItemsFeature...')
   useCleanupMediaItemsFeature()
+
+  console.log('useCleanupFilesFeature...')
   useCleanupFilesFeature()
+
+  console.log('useConfigPersistenceFeature...')
   useMarkCompletedPlaylistItem()
+
+  console.log('useRemoveCompletedPlaylistItemsFeature...')
   useRemoveCompletedPlaylistItemsFeature()
-  await useSyncMediaItemProgressFeature().init()
+
+  console.log('useDownloaderFeature...')
+  await useDownloaderFeature().init()
+
+  await useRestoreTracksStatuses().init()
 
   // Player //
 

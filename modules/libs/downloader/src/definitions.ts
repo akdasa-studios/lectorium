@@ -20,7 +20,6 @@ export type GetStatusResponse = {
 export type DownloadCompleteEvent = {
   taskId: string
   status: "successful" | "failed"
-  progress: number
 }
 
 export interface DownloaderPlugin {

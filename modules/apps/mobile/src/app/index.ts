@@ -7,7 +7,7 @@ export { default as Header } from './components/Header.vue'
 export { default as ListItemsSelectorDialog, type Item as SelectorDialogItem } from './components/SelectorDialog/ListItemsSelectorDialog.vue'
 export { default as ListItemSelectorDialog, type Item as ListItemSelectorItem } from './components/SelectorDialog/ListItemSelectorDialog.vue'
 export { default as DateRangeSelectorDialog, type DateRange } from './components/SelectorDialog/DateRangeSelectorDialog.vue'
-export { default as TracksListItem, type TracksListItemData, type TracksListItemStatus } from './components/TracksListItem.vue'
+export { default as TracksListItem, type TracksListItemData, type TrackListItemIcon } from './components/TracksListItem.vue'
 export { default as TracksListItemSkeleton } from './components/TracksListItemSkeleton.vue'
 export { default as Page } from './components/Page.vue'
 
@@ -47,7 +47,8 @@ export * from './features/useCleanupFilesFeature'
 export * from './features/useMarkCompletedPlaylistItem'
 export * from './features/useRemoveCompletedPlaylistItemsFeature'
 export * from './features/useSentryFeature'
-export * from './features/useSyncMediaItemProgressFeature'
+export * from './features/useDownloaderFeature'
+export * from './features/useRestoreTracksStatuses'
 
 // services:
 export * from './services/SyncService'

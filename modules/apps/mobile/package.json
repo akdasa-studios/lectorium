@@ -33,6 +33,7 @@
     "events": "^3.3.0",
     "ionicons": "^7.0.0",
     "lectorium-downloader": "^0.0.1",
+    "pinia": "^3.0.2",
     "pouchdb": "^9.0.0",
     "pouchdb-adapter-cordova-sqlite": "^2.0.8",
     "pouchdb-find": "^9.0.0",

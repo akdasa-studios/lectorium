@@ -73,7 +73,6 @@ public class DownloaderPlugin extends Plugin {
             Uri localUrl = Uri.fromFile(new File(directory, destination));
 
             // Return task ID
-
             long taskId = implementation.enqueue(Uri.parse(url), localUrl, title);
             JSObject ret = new JSObject();
             ret.put("taskId", Long.toString(taskId));
@@ -124,8 +123,7 @@ public class DownloaderPlugin extends Plugin {
             if (onDownloadCompleteCallback == null) { return; }
             JSObject result = new JSObject();
             result.put("taskId", Long.toString(taskId));
-            result.put("status", status);
-            result.put("progress", status.progress());
+            result.put("status", status.status());
             onDownloadCompleteCallback.resolve(result);
         }
     }
