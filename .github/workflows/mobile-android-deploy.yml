@@ -2,8 +2,8 @@ name: Mobile / Android
 
 on:
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
     paths:
       - "modules/apps/mobile/**"
       - "modules/libs/audioPlayer/**"
@@ -33,7 +33,7 @@ jobs:
       # ---------------------------------------------------------------------------- #
 
       - name: Set version with offset
-        run: echo "BUILD_NUMBER=$((${{ github.run_number }} + 100))" >> $GITHUB_ENV
+        run: echo "BUILD_NUMBER=$((${{ github.run_number }} + 200))" >> $GITHUB_ENV
       
       - name: 🚀 Run Prepare Mobile Action
         uses: ./.github/actions/mobile-prepare-env
