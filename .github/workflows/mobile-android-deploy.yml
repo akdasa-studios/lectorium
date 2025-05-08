@@ -33,7 +33,7 @@ jobs:
       # ---------------------------------------------------------------------------- #
 
       - name: Set version with offset
-        run: echo "BUILD_NUMBER=${{ github.run_number + 100 }}" >> $GITHUB_ENV
+        run: echo "BUILD_NUMBER=$((${{ github.run_number }} + 100))" >> $GITHUB_ENV
       
       - name: 🚀 Run Prepare Mobile Action
         uses: ./.github/actions/mobile-prepare-env
