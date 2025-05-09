@@ -1,4 +1,4 @@
-name: Admin
+name: Landing
 
 on:
   push:
