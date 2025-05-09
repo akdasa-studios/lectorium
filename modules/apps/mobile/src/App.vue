@@ -35,6 +35,19 @@ try {
       -ms-user-select: none;
       user-select: none;
       touch-action: manipulation;
+    }
+
+    ion-content::part(scroll) {
+      /* For Webkit */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      
+      /* For Firefox */
+      scrollbar-width: none;
+      
+      /* For IE and Edge */
+      -ms-overflow-style: none;
     }`
     const head = document.head || document.getElementsByTagName('head')[0]
     const style = document.createElement('style')
