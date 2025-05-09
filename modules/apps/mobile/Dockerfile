@@ -17,7 +17,7 @@ COPY . .
 # ---------------------------------------------------------------------------- #
 
 FROM base AS build
-RUN cd ./apps/mobile && npm run build-only
+RUN cd ./apps/mobile && npm run build
 
 # ---------------------------------------------------------------------------- #
 #                                    Release                                   #
