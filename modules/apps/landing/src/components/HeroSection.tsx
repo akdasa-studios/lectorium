@@ -1,10 +1,31 @@
 
 import { Button } from '@/components/ui/button';
-import { BookOpen, Apple, PlaySquare } from 'lucide-react';
+import { BookOpen, Apple, PlaySquare, SlideShow } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { useEffect, useState } from 'react';
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // Images for mobile slideshow
+  const slideImages = [
+    "/res/slide1.png",
+    "/res/slide2.png",
+    "/res/slide3.png",
+  ];
+  
+  // Auto-advance slides
+  useEffect(() => {
+    if (isMobile) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % slideImages.length);
+      }, 3000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isMobile, slideImages.length]);
   
   return (
     <section className="pattern-bg min-h-screen flex flex-col items-center justify-center relative pt-16 section-padding">
@@ -56,13 +77,35 @@ const HeroSection = () => {
           <div className="w-full max-w-xs mx-auto">
             <div className="relative aspect-[9/19] rounded-[2.5rem] border-8 border-sadu-dark-purple p-1 bg-sadu-off-white shadow-2xl animate-float">
               <div className="absolute inset-0 rounded-[2rem] overflow-hidden">
-                <iframe 
-                  src="https://mobile.listentosadhu.app/" 
-                  className="w-full h-full border-0 overflow-hidden" 
-                  title="App Preview"
-                  loading="lazy"
-                  sandbox="allow-scripts allow-same-origin"
-                />
+                {isMobile ? (
+                  <div className="w-full h-full">
+                    {slideImages.map((src, index) => (
+                      <div 
+                        key={index} 
+                        className={`absolute inset-0 transition-opacity duration-500 ${
+                          index === currentSlide ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        <img 
+                          src={src} 
+                          alt={`App preview ${index + 1}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <video
+                    src="/res/demo.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                )}
               </div>
             </div>
           </div>

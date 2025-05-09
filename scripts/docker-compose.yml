@@ -82,6 +82,7 @@ services:
       - admin
       - couchdb
       - landing
+      - mobile-web
     networks:
       - lectorium
 

@@ -12,6 +12,8 @@ services:
  
   landing:
     image: ghcr.io/akdasa-studios/lectorium-landing:staging
+    volumes:
+      - ../data/landing/res:/usr/share/nginx/html/res
 
   mobile-web:
     image: ghcr.io/akdasa-studios/lectorium-mobile-web:staging
