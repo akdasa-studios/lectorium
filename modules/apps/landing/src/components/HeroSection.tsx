@@ -58,7 +58,7 @@ const HeroSection = () => {
               <div className="absolute inset-0 rounded-[2rem] overflow-hidden">
                 <iframe 
                   src="https://mobile.listentosadhu.app/" 
-                  className="w-full h-full border-0" 
+                  className="w-full h-full border-0 overflow-hidden" 
                   title="App Preview"
                   loading="lazy"
                   sandbox="allow-scripts allow-same-origin"
