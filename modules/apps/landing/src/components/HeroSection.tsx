@@ -5,16 +5,18 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { t } = useLanguage();
   
-  // Images for mobile slideshow
+  // Updated images for mobile slideshow
   const slideImages = [
-    "/res/slide1.png",
-    "/res/slide2.png",
-    "/res/slide3.png",
+    "https://listentosadhu.app/res/slide1.png",
+    "https://listentosadhu.app/res/slide2.png",
+    "https://listentosadhu.app/res/slide3.png"
   ];
   
   // Auto-advance slides
@@ -28,6 +30,20 @@ const HeroSection = () => {
     }
   }, [isMobile, slideImages.length]);
   
+  // Helper function to render text with highlights
+  const renderWithHighlights = (text: string) => {
+    if (!text.includes('[highlight]')) return text;
+    
+    const parts = text.split(/\[highlight\](.*?)\[\/highlight\]/g);
+    return parts.map((part, i) => {
+      // Every odd index contains the highlighted text
+      if (i % 2 === 1) {
+        return <span key={i} className="heading-gradient">{part}</span>;
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+  
   return (
     <section className="pattern-bg min-h-screen flex flex-col items-center justify-center relative pt-16 section-padding">
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-sadu-purple/10 rounded-full blur-3xl -z-10" />
@@ -38,29 +54,29 @@ const HeroSection = () => {
           {!isMobile && (
             <div className="flex items-center opacity-0 animate-fade-in">
               <BookOpen className="h-8 w-8 text-sadu-purple mr-2" />
-              <span className="text-lg font-medium text-sadu-deep-purple">Ancient Wisdom for Modern Life</span>
+              <span className="text-lg font-medium text-sadu-deep-purple">{t('hero.tagline')}</span>
             </div>
           )}
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight opacity-0 animate-fade-in animate-delay-100">
-            Discover the <span className="heading-gradient">Vedic Knowledge</span> in Your Pocket
+            {renderWithHighlights(t('hero.title'))}
             <Badge className="ml-2 bg-sadu-gold text-black text-xs px-2 py-0.5 rounded-md align-top translate-y-2">BETA</Badge>
           </h1>
           
           <p className="text-lg text-gray-700 max-w-xl opacity-0 animate-fade-in animate-delay-200">
-            Explore ancient Sanskrit teachings, guided meditations, and timeless wisdom adapted for your modern life journey, all within a beautiful mobile experience.
+            {t('hero.description')}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in animate-delay-300">
             <Button size="lg" className="bg-black hover:bg-black/80 text-white flex items-center" 
               onClick={() => window.open("https://testflight.apple.com/join/KYVY7r3a", "_blank")}>
               <Apple className="mr-2 h-5 w-5" />
-              App Store
+              {t('hero.appStore')}
             </Button>
             <Button size="lg" className="bg-black hover:bg-black/80 text-white flex items-center"
               onClick={() => window.open("https://play.google.com/store/apps/details?id=studio.akdasa.lectorium", "_blank")}>
               <PlaySquare className="mr-2 h-5 w-5" />
-              Google Play
+              {t('hero.googlePlay')}
             </Button>
           </div>
           
@@ -71,7 +87,7 @@ const HeroSection = () => {
               ))}
             </div>
             <p className="text-sm text-gray-600">
-              <span className="font-semibold">1,000+</span> 5-star reviews
+              <span className="font-semibold">1,000+</span> {t('hero.reviews')}
             </p>
           </div>
         </div>
@@ -100,7 +116,7 @@ const HeroSection = () => {
                   </div>
                 ) : (
                   <video
-                    src="/res/demo.mp4"
+                    src="https://listentosadhu.app/res/demo.mp4"
                     autoPlay
                     loop
                     muted
@@ -119,14 +135,14 @@ const HeroSection = () => {
       <div className="w-full max-w-4xl mx-auto mt-20 opacity-0 animate-fade-in animate-delay-500">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { number: "1000+", label: "Lectures" },
-            { number: "10+", label: "Lectors" },
-            { number: "20+", label: "Vedic Categories" },
-            { number: "Daily", label: "Wisdom Updates" }
+            { number: "1000+", label: 'stats.lectures' },
+            { number: "10+", label: 'stats.lectors' },
+            { number: "20+", label: 'stats.categories' },
+            { number: "Daily", label: 'stats.updates' }
           ].map((stat, index) => (
             <div key={index} className="flex flex-col">
               <p className="text-3xl font-serif font-bold text-sadu-purple">{stat.number}</p>
-              <p className="text-sm text-gray-600">{stat.label}</p>
+              <p className="text-sm text-gray-600">{t(stat.label)}</p>
             </div>
           ))}
         </div>

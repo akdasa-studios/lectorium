@@ -1,8 +1,11 @@
 
 import { Button } from '@/components/ui/button';
 import { BookOpen, Apple, PlaySquare, Facebook, MessageSquare } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const DownloadSection = () => {
+  const { t } = useLanguage();
+  
   return (
     <section id="download" className="section-padding relative overflow-hidden">
       <div className="absolute inset-0 pattern-bg opacity-10 -z-10" />
@@ -15,33 +18,33 @@ const DownloadSection = () => {
           <div className="max-w-3xl mx-auto text-center text-white">
             <div className="flex items-center justify-center mb-6">
               <BookOpen className="h-10 w-10 text-white/90 mr-2" />
-              <h2 className="text-3xl md:text-4xl font-serif font-bold">Begin Your Wisdom Journey</h2>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold">{t('download.title')}</h2>
             </div>
             
             <p className="text-lg text-white/80 mb-8">
-              Download the Listen to Sadhu app today and access centuries of Vedic wisdom reimagined for your modern life journey.
+              {t('download.description')}
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
               <Button size="lg" className="bg-white text-sadu-deep-purple hover:bg-white/90 font-medium flex items-center justify-center"
                 onClick={() => window.open("https://testflight.apple.com/join/KYVY7r3a", "_blank")}>
                 <Apple className="h-5 w-5 mr-2" />
-                App Store
+                {t('download.appStore')}
               </Button>
               
               <Button size="lg" className="bg-white text-sadu-deep-purple hover:bg-white/90 font-medium flex items-center justify-center"
                 onClick={() => window.open("https://play.google.com/store/apps/details?id=studio.akdasa.lectorium", "_blank")}>
                 <PlaySquare className="h-5 w-5 mr-2" />
-                Google Play
+                {t('download.googlePlay')}
               </Button>
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 pt-8 border-t border-white/20">
               {[
-                { number: "4.9", label: "App Store Rating" },
-                { number: "4.8", label: "Google Play Rating" },
-                { number: "10K+", label: "Active Users" },
-                { number: "Free", label: "With Premium Options" }
+                { number: "4.9", label: t('download.ratings.appStore') },
+                { number: "4.8", label: t('download.ratings.googlePlay') },
+                { number: "10K+", label: t('download.ratings.users') },
+                { number: "Free", label: t('download.ratings.pricing') }
               ].map((stat, index) => (
                 <div key={index} className="flex flex-col">
                   <p className="text-3xl font-serif font-bold text-white">{stat.number}</p>
@@ -54,11 +57,11 @@ const DownloadSection = () => {
         
         <div className="mt-24 text-center">
           <h3 className="text-2xl md:text-3xl font-serif font-bold mb-6 heading-gradient">
-            Follow Us
+            {t('download.follow')}
           </h3>
           
           <p className="text-gray-700 max-w-2xl mx-auto mb-8">
-            Join our community on social media to stay updated with the latest wisdom, events, and connect with fellow seekers.
+            {t('download.community')}
           </p>
           
           <div className="flex justify-center gap-6">
