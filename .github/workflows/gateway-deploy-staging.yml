@@ -2,8 +2,8 @@ name: Gateway
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - "modules/services/gateway/**"
       - ".github/workflows/gateway-build.yml"
