@@ -1,0 +1,77 @@
+name: Mobile / Web
+
+on:
+  push:
+    # branches:
+    #   - main
+    paths:
+      - "modules/apps/mobile/**"
+      - "modules/libs/audioPlayer/**"
+      - "modules/package.json"
+      - "modules/package-lock.json"
+      - ".github/workflows/mobile-web-deploy.yml"
+  
+env:
+  REGISTRY: ghcr.io
+  ORGANIZATION: akdasa-studios
+
+jobs:
+  build:
+    environment: staging
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          fetch-tags: true
+      
+      # ---------------------------------------------------------------------------- #
+      #                                  Prepare Env                                 #
+      # ---------------------------------------------------------------------------- #
+      
+      - name: 🚀 Run Prepare Mobile Action
+        uses: ./.github/actions/mobile-prepare-env
+        with:
+          gemRequired: false
+          bucketAccessKeyId: ${{ secrets.BUCKET_ACCESS_KEY_ID }}
+          bucketSecretAccessKey: ${{ secrets.BUCKET_SECRET_ACCESS_KEY }}
+          bucketEndpointUrl: ${{ secrets.BUCKET_ENDPOINT_URL }}
+          bucketRegionName: ${{ secrets.BUCKET_REGION_NAME }}
+          bucketName: ${{ secrets.BUCKET_NAME }}
+          sentryDsn: ${{ secrets.SENTRY_DSN }}
+          apiUrl: ${{ secrets.API_URL }}
+          databaseUrl: ${{ secrets.DATABASE_URL }}
+          readonlyAuthToken: ${{ secrets.READONLY_AUTH_TOKEN }}
+
+      # ---------------------------------------------------------------------------- #
+      #                                 Build Plugins                                #
+      # ---------------------------------------------------------------------------- #
+
+      - name: 👷 Build Audio Player Plugin
+        working-directory: modules/libs/audioPlayer
+        run: npm i && npm run build
+
+      # ---------------------------------------------------------------------------- #
+      #                                   Build App                                  #
+      # ---------------------------------------------------------------------------- #
+
+      - name: 👷 Build Ionic App
+        working-directory: modules/apps/mobile
+        run: npm i && npm run build+sync
+      
+      - name: 👷‍♂️ Build Container
+        uses: ./.github/actions/build-container
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          file: modules/apps/mobile/Dockerfile
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-mobile-web:staging
+
+      - name: ⬆️ Push staging Image
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/lectorium-mobile-web:staging
