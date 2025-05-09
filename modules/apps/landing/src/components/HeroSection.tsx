@@ -57,9 +57,9 @@ const HeroSection = () => {
             <div className="relative aspect-[9/19] rounded-[2.5rem] border-8 border-sadu-dark-purple p-1 bg-sadu-off-white shadow-2xl animate-float">
               <div className="absolute inset-0 rounded-[2rem] overflow-hidden">
                 <iframe 
-                  src="https://shlokas-staging.netlify.app?ionic:mode=ios&demo=true" 
+                  src="https://mobile.listentosadhu.app/" 
                   className="w-full h-full border-0" 
-                  title="Sadu App Preview"
+                  title="App Preview"
                   loading="lazy"
                   sandbox="allow-scripts allow-same-origin"
                 />

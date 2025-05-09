@@ -39,6 +39,11 @@ services:
       context: ../modules/
       dockerfile: ./apps/landing/Dockerfile
 
+  mobile-web:
+    build:
+      context: ../modules/
+      dockerfile: ./apps/mobile/Dockerfile
+
   gateway:
     build:
       context: ../modules/
