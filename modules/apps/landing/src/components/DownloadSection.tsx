@@ -23,12 +23,14 @@ const DownloadSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-              <Button size="lg" className="bg-white text-sadu-deep-purple hover:bg-white/90 font-medium flex items-center justify-center">
+              <Button size="lg" className="bg-white text-sadu-deep-purple hover:bg-white/90 font-medium flex items-center justify-center"
+                onClick={() => window.open("https://testflight.apple.com/join/KYVY7r3a", "_blank")}>
                 <Apple className="h-5 w-5 mr-2" />
                 App Store
               </Button>
               
-              <Button size="lg" className="bg-white text-sadu-deep-purple hover:bg-white/90 font-medium flex items-center justify-center">
+              <Button size="lg" className="bg-white text-sadu-deep-purple hover:bg-white/90 font-medium flex items-center justify-center"
+                onClick={() => window.open("https://play.google.com/store/apps/details?id=studio.akdasa.lectorium", "_blank")}>
                 <PlaySquare className="h-5 w-5 mr-2" />
                 Google Play
               </Button>

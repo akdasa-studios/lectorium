@@ -1,9 +1,10 @@
 
 import { Button } from '@/components/ui/button';
-import { BookOpen, Apple, PlaySquare, SlideShow } from 'lucide-react';
+import { BookOpen, Apple, PlaySquare } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
@@ -43,6 +44,7 @@ const HeroSection = () => {
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight opacity-0 animate-fade-in animate-delay-100">
             Discover the <span className="heading-gradient">Vedic Knowledge</span> in Your Pocket
+            <Badge className="ml-2 bg-sadu-gold text-black text-xs px-2 py-0.5 rounded-md align-top translate-y-2">BETA</Badge>
           </h1>
           
           <p className="text-lg text-gray-700 max-w-xl opacity-0 animate-fade-in animate-delay-200">
@@ -50,11 +52,13 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in animate-delay-300">
-            <Button size="lg" className="bg-black hover:bg-black/80 text-white flex items-center">
+            <Button size="lg" className="bg-black hover:bg-black/80 text-white flex items-center" 
+              onClick={() => window.open("https://testflight.apple.com/join/KYVY7r3a", "_blank")}>
               <Apple className="mr-2 h-5 w-5" />
               App Store
             </Button>
-            <Button size="lg" className="bg-black hover:bg-black/80 text-white flex items-center">
+            <Button size="lg" className="bg-black hover:bg-black/80 text-white flex items-center"
+              onClick={() => window.open("https://play.google.com/store/apps/details?id=studio.akdasa.lectorium", "_blank")}>
               <PlaySquare className="mr-2 h-5 w-5" />
               Google Play
             </Button>
