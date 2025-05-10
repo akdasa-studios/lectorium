@@ -21,7 +21,7 @@ const NavBar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <Avatar className="h-10 w-10 border-2 border-sadu-purple">
+              <Avatar className="h-10 w-10">
                 <AvatarImage src="/lovable-uploads/acb0a4a1-c49c-4f3d-8dc2-3aee32773e48.png" alt="Sadu Logo" />
                 <AvatarFallback className="bg-sadu-purple text-white">SD</AvatarFallback>
               </Avatar>
@@ -31,13 +31,6 @@ const NavBar = () => {
           
           <div className="flex items-center">
             <nav className="hidden md:flex items-center space-x-8 mr-4">
-              <a href="#features" className="text-sadu-dark-purple hover:text-sadu-purple transition-colors">
-                {t('nav.features')}
-              </a>
-              
-              <a href="#download" className="text-sadu-dark-purple hover:text-sadu-purple transition-colors">
-                {t('nav.download')}
-              </a>
             </nav>
             <LanguageSwitcher />
           </div>

@@ -1,17 +1,15 @@
 
 import NavBar from "@/components/NavBar";
 import HeroSection from "@/components/HeroSection";
-import FeatureSection from "@/components/FeatureSection";
-import DownloadSection from "@/components/DownloadSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
-      <HeroSection />
-      <FeatureSection />
-      <DownloadSection />
+      <main className="flex-grow">
+        <HeroSection />
+      </main>
       <Footer />
     </div>
   );
