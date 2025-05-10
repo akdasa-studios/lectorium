@@ -65,12 +65,6 @@ services:
       - "80:80"
     networks:
       - lectorium
-
-  mobile-web:
-    expose:
-      - "80:80"
-    networks:
-      - lectorium
   
   gateway:
     ports:
@@ -82,7 +76,6 @@ services:
       - admin
       - couchdb
       - landing
-      - mobile-web
     networks:
       - lectorium
 
