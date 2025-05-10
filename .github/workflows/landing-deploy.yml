@@ -2,8 +2,8 @@ name: Landing
 
 on:
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
     paths:
       - "modules/apps/landing/**"
       - "modules/libs/dal/**"
