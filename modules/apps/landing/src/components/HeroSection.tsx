@@ -51,12 +51,6 @@ const HeroSection = () => {
       
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className="flex flex-col space-y-6">
-          {!isMobile && (
-            <div className="flex items-center opacity-0 animate-fade-in">
-              <BookOpen className="h-8 w-8 text-sadu-purple mr-2" />
-              <span className="text-lg font-medium text-sadu-deep-purple">{t('hero.tagline')}</span>
-            </div>
-          )}
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight opacity-0 animate-fade-in animate-delay-100">
             {renderWithHighlights(t('hero.title'))}
@@ -64,7 +58,7 @@ const HeroSection = () => {
           </h1>
           
           <p className="text-lg text-gray-700 max-w-xl opacity-0 animate-fade-in animate-delay-200">
-            {t('hero.description')}
+            {t('app.description')}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in animate-delay-300">
@@ -129,22 +123,6 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      
-      <div className="w-full max-w-4xl mx-auto mt-20 opacity-0 animate-fade-in animate-delay-500">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { number: "1000+", label: 'stats.lectures' },
-            { number: "10+", label: 'stats.lectors' },
-            { number: "20+", label: 'stats.categories' },
-            { number: "Daily", label: 'stats.updates' }
-          ].map((stat, index) => (
-            <div key={index} className="flex flex-col">
-              <p className="text-3xl font-serif font-bold text-sadu-purple">{stat.number}</p>
-              <p className="text-sm text-gray-600">{t(stat.label)}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
