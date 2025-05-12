@@ -12,33 +12,51 @@ class DatabaseHelper {
     ) -> Bool {
         let fileManager = FileManager.default
         
-        // Construct paths
-        guard let documentsDirectory = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+        // Construct destination URL
+        guard let libraryDirectory = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first else {
             print("Error: Could not access Library directory")
             return false
         }
         
-        let destinationPath = documentsDirectory.appendingPathComponent(destinationFileName)
+        let destinationURL = libraryDirectory.appendingPathComponent(destinationFileName)
         
-        // Check if database already exists in Library directory
-        if fileManager.fileExists(atPath: destinationPath.path) {
-            print("Database already exists in Library directory")
+        // Check if database already exists at destination
+        if fileManager.fileExists(atPath: destinationURL.path) {
+            print("Database already exists at: \(destinationURL.path)")
             return true
         }
         
-        // Get source file from bundle
-        guard let sourcePath = Bundle.main.path(forResource: sourceFileName, ofType: "db") else {
-            print("Error: Source database file not found in bundle")
+        // Create destination directory if it doesn't exist
+        let destinationDirectory = destinationURL.deletingLastPathComponent()
+        do {
+            try fileManager.createDirectory(at: destinationDirectory, withIntermediateDirectories: true, attributes: nil)
+            print("Created destination directory: \(destinationDirectory.path)")
+        } catch {
+            print("Error creating destination directory: \(error.localizedDescription)")
             return false
         }
         
+        // Get source file URL from bundle
+        guard let sourceURL = Bundle.main.url(forResource: sourceFileName, withExtension: "db") else {
+            print("Error: Source database file not found in bundle for resource: \(sourceFileName)")
+            return false
+        }
+        
+        // Verify source file exists and is accessible
+        if !fileManager.fileExists(atPath: sourceURL.path) {
+            print("Error: Source file does not exist at: \(sourceURL.path)")
+            return false
+        }
+        
+        // Attempt to copy the file
         do {
-            // Attempt to copy the file
-            try fileManager.copyItem(atPath: sourcePath, toPath: destinationPath.path)
-            print("Database successfully copied to Library directory")
+            try fileManager.copyItem(at: sourceURL, to: destinationURL)
+            print("Database successfully copied to: \(destinationURL.path)")
             return true
         } catch {
             print("Error copying database: \(error.localizedDescription)")
+            print("Source URL: \(sourceURL)")
+            print("Destination URL: \(destinationURL)")
             return false
         }
     }

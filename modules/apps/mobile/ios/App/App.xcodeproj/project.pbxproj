@@ -60,7 +60,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4D47D3BD2DD23D67009A9FB5 /* databases */ = {
+		4D47D3CF2DD24F00009A9FB5 /* databases */ = {
 			isa = PBXGroup;
 			children = (
 				4D47D3BE2DD23D88009A9FB5 /* dictionary.db */,
@@ -91,8 +91,8 @@
 		504EC3061FED79650016851F /* App */ = {
 			isa = PBXGroup;
 			children = (
+				4D47D3CF2DD24F00009A9FB5 /* databases */,
 				4D47D3CC2DD245AF009A9FB5 /* DatabaseHelper.swift */,
-				4D47D3BD2DD23D67009A9FB5 /* databases */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
