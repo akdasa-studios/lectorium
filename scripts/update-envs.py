@@ -7,6 +7,8 @@ sentry_dsn          = os.getenv('SENTRY_DSN', '')
 api_url             = os.getenv('API_URL', 'http://localhost:8101/')
 database_url        = os.getenv('DATABASE_URL', 'http://localhost:5984/')
 bucket_name         = os.getenv('BUCKET_NAME', 'lectorium-dev')
+apple_rc_key        = os.getenv('APPLE_REVENUE_CAT_KEY', '')
+google_rc_key       = os.getenv('GOOGLE_REVENUE_CAT_KEY', '')
 readonly_auth_token = os.getenv('READONLY_AUTH_TOKEN', '')
 
 # Step 2: Define the content template
@@ -18,6 +20,8 @@ export const ENVIRONMENT = {{
   apiUrl: "{api_url}",
   databaseUrl: "{database_url}",
   bucketName: "{bucket_name}",
+  appleRevenueCatKey: "{apple_rc_key}",
+  googleRevenueCatKey: "{google_rc_key}",
   readonlyAuthToken: "{readonly_auth_token}"
 }}
 """
