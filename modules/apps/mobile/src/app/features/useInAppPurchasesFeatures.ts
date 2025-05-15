@@ -12,13 +12,12 @@ export function useInAppPurchasesFeatures() {
     if (Capacitor.getPlatform() === 'web') {
       return
     }
+    if (!ENVIRONMENT.revenueCatKey) {
+      return
+    }
 
     await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG })
-    await Purchases.configure({
-      apiKey: Capacitor.getPlatform() === 'ios' 
-        ? ENVIRONMENT.appleRevenueCatKey 
-        : ENVIRONMENT.googleRevenueCatKey,
-    })
+    await Purchases.configure({ apiKey: ENVIRONMENT.revenueCatKey })
     console.log('RevenueCat SDK configured!')
   }
 

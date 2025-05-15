@@ -12,7 +12,6 @@
   </IonItem>
   <SubscriptionDialog 
     v-model:open="open"
-    :value="config.appLanguage.value"
     :title="$t('settings.subscription.title')"
     :subscription-plans="subscriptionPlans"
     :active-plan="activePlan"
@@ -24,15 +23,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { IonItem, IonLabel } from '@ionic/vue'
-import { useConfig } from '@lectorium/mobile/app'
 import { Purchases } from '@revenuecat/purchases-capacitor'
 import { default as SubscriptionDialog, type SubscriptionPlan } from './SubscriptionDialog.vue'
-
-/* -------------------------------------------------------------------------- */
-/*                                Dependencies                                */
-/* -------------------------------------------------------------------------- */
-
-const config = useConfig()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */

@@ -18,6 +18,11 @@ export const ru = {
       'P1M': 'месяц',
       'P3M': '3 месяца',
       'P1Y': 'год',
+    },
+    plans: {
+      '$rc_monthly': 'Индра',
+      '$rc_three_month': 'Брахма',
+      '$rc_annual': 'Вишну',
     }
   }
 }

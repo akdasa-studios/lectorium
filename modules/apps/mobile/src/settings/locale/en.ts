@@ -18,6 +18,11 @@ export const en = {
       'P1M': 'month',
       'P3M': '3 months',
       'P1Y': 'year',
+    },
+    plans: {
+      '$rc_monthly': 'Indra',
+      '$rc_three_month': 'Brahma',
+      '$rc_annual': 'Vishnu',
     }
   },
 }

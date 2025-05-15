@@ -50,8 +50,7 @@ jobs:
           databaseUrl: ${{ secrets.DATABASE_URL }}
           readonlyAuthToken: ${{ secrets.READONLY_AUTH_TOKEN }}
           appleCertificates: ${{ secrets.APPLE_CERTIFICATES }}
-          appleRevenueCatKey: ${{ secrets.APPLE_REVENUE_CAT_KEY }}
-          googleRevenueCatKey: ${{ secrets.GOOGLE_REVENUE_CAT_KEY }}
+          revenueCatKey: ${{ secrets.APPLE_REVENUE_CAT_KEY }}
 
       # ---------------------------------------------------------------------------- #
       #                                 Build Plugins                                #

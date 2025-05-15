@@ -35,7 +35,7 @@
             @click="selectPlan(plan)"
           >
             <IonLabel>
-              <h2>{{ plan.name }}</h2>
+              <h2>{{ $t(`settings.subscription.plans.${plan.packageId}`) }}</h2>
               <p>
                 {{ plan.price }} / 
                 {{ $t(`settings.subscription.periods.${plan.billingPeriod}`) }}
