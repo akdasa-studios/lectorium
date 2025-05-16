@@ -53,7 +53,6 @@ defineProps<{
   position: absolute;
   border-radius: 5px;
   padding: .3rem;
-  position: absolute;
   transform: rotate(-23deg);
   top: 3px;
   right: -3px;
