@@ -3,76 +3,50 @@
     :is-open="isOpen"
     @did-dismiss="isOpen = false"
   >
-    <IonContent class="ion-padding">
-      <h2 class="center header">
-        {{ $t('settings.subscription.choose') }}
-      </h2>
-      <p class="center">
-        {{ $t('settings.subscription.benefits.intro') }}
-      </p>
+    <Content>
+      <SubscriptionHeader />
+      <SubscriptionActive
+        v-if="activePlan"
+        package-id="studio.akdasa.lectorium"
+        sku="pro"
+      />
+      
+      <!-- Subscription Benefits -->
       <div 
         v-for="(index) in [0, 1, 2, 3, 4, 5]"
         :key="index"
-        class="benefit-block"
       >
-        <IonItem
-          class="benefit"
-          lines="none"
-        >
-          <div slot="start">
-            {{ $t(`settings.subscription.benefits.benefit${index}.icon`) }}
-          </div>
-          <IonLabel>
-            <h2>{{ $t(`settings.subscription.benefits.benefit${index}.title`) }}</h2>
-            <p>{{ $t(`settings.subscription.benefits.benefit${index}.description`) }}</p>
-          </IonLabel>
-        </IonItem>
-          
-        <div
-          v-if="index !== 0"
-          class="soon"
-        >
-          {{ $t("app.soon") }}
-        </div>
+        <SubscriptionBenefit
+          :icon="$t(`settings.subscription.benefits.benefit${index}.icon`)"
+          :title="$t(`settings.subscription.benefits.benefit${index}.title`)"
+          :description="$t(`settings.subscription.benefits.benefit${index}.description`)"
+          :tag="index !== 0 ? $t('app.soon') : undefined"
+        />
       </div>
 
-      <div class="delemiter" />
-
-      <IonItem
-        v-for="plan in subscriptionPlans"
-        :key="plan.packageId"
-        :color="selectedPlan?.packageId === plan.packageId ? 'primary' : 'light'"
-        class="plan"
-        lines="none"
-        @click="selectPlan(plan)"
-      >
-        <div slot="start">
-          ⭐️
-        </div>
-        <IonLabel>
-          <h2>{{ $t(`settings.subscription.plans.${plan.packageId}`) }}</h2>
-          <p>
-            {{ plan.price }} / 
-            {{ $t(`settings.subscription.periods.${plan.billingPeriod}`) }}
-          </p>
-          <p>{{ plan.description }}</p>
-        </IonLabel>
-        <IonIcon
-          v-if="selectedPlan?.packageId === plan.packageId"
-          slot="end"
-          :icon="checkmarkCircle"
+      <!-- Subscription Plans -->
+      <template v-if="!activePlan">
+        <SubscriptionPlanListItem 
+          v-for="plan in subscriptionPlans"
+          :key="plan.packageId"
+          :title="$t(`settings.subscription.plans.${plan.packageId}`)"
+          :price="plan.price"
+          :period="$t(`settings.subscription.periods.${plan.billingPeriod}`)"
+          :selected="selectedPlan?.packageId === plan.packageId"
+          @click="selectPlan(plan)"
         />
-      </IonItem>
 
-      <IonButton
-        expand="block"
-        class="subscribe"
-        :disabled="!selectedPlan"
-        @click="subscribe"
-      >
-        {{ $t('settings.subscription.subscribe') }}
-      </IonButton>
-
+        <IonButton
+          expand="block"
+          class="subscribe"
+          :disabled="!selectedPlan"
+          @click="subscribe"
+        >
+          {{ $t('settings.subscription.subscribe') }}
+        </IonButton>
+      </template>
+     
+      <!-- Back Button -->
       <IonButton
         class="back"
         size="small"
@@ -83,14 +57,18 @@
       >
         {{ $t('app.back') }}
       </IonButton>
-    </IonContent>
+    </Content>
   </IonModal>
 </template>
 
 <script setup lang="ts">
-import { IonModal, IonButton, IonItem, IonLabel, IonIcon, IonContent } from '@ionic/vue'
-import { checkmarkCircle } from 'ionicons/icons'
+import { IonModal, IonButton } from '@ionic/vue'
 import { ref, toRefs, watch } from 'vue'
+import Content from '@lectorium/mobile/app/components/Content.vue'
+import SubscriptionActive from '../components/SubscriptionActive.vue'
+import SubscriptionHeader from '../components/SubscriptionHeader.vue'
+import SubscriptionBenefit from '../components/SubscriptionBenefit.vue'
+import SubscriptionPlanListItem from '../components/SubscriptionPlanListItem.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                   Models                                   */
@@ -158,54 +136,9 @@ const subscribe = async () => {
 </script>
 
 <style scoped>
-.header {
-  padding-top: var(--ion-safe-area-top, 2rem);
-}
-
-.center {
-  text-align: center;
-}
-
-.plan {
-  border-radius: 8px;
-  margin-bottom: 10px;
-  transition: all 0.5s ease-in-out;
-}
-
 .subscribe {
   margin-top: 1.5rem;
   margin-bottom: 1rem;
   --box-shadow: none;
-}
-
-.benefit-block {
-  position: relative;
-}
-
-.benefit {
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-.soon {
-  position: absolute;
-  border-radius: 5px;
-  padding: .3rem;
-  position: absolute;
-  transform: rotate(-23deg);
-  top: 3px;
-  right: -3px;
-  background-color: var(--ion-color-primary);
-  color: var(--ion-color-dark-contrast);
-  font-size: .55rem;
-  z-index: 1;
-}
-
-.back {
-  padding-bottom: var(--ion-safe-area-bottom, 2rem);
-}
-
-.delemiter {
-  padding: 1rem;
 }
 </style>

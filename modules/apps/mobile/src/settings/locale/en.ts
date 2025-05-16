@@ -41,6 +41,8 @@ export const en = {
         icon: '🔍'
       },
     },
+    subscriptionIsActive: 'Subscription is active',
+    tapToManage: 'You are already subscribed. Tap to manage your subscription.',
     periods: {
       'P1M': 'month',
       'P3M': '3 months',
