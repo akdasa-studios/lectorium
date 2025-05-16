@@ -48,7 +48,6 @@
      
       <!-- Back Button -->
       <IonButton
-        class="back"
         size="small"
         expand="block"
         color="medium"

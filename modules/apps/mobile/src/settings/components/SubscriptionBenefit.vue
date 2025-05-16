@@ -26,10 +26,6 @@
 <script lang="ts" setup>
 import { IonItem, IonLabel } from '@ionic/vue'
 
-/* -------------------------------------------------------------------------- */
-/*                                  Inteface                                  */
-/* -------------------------------------------------------------------------- */
-
 defineProps<{
   title: string
   description: string
