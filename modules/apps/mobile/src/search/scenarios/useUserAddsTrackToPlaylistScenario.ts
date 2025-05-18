@@ -1,7 +1,7 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useDAL, useBucketService, useConfig, useMediaService, useIdGenerator } from '@lectorium/mobile/app'
 import { S3Operation } from '@lectorium/protocol/index'
-import { usePlaylistStore } from '@lectorium/mobile/app/stores/usePlaylistStore'
+import { usePlaylistStore } from '@lectorium/mobile/home/stores/usePlaylistStore'
 import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
 
 /**
@@ -28,11 +28,9 @@ export function useUserAddsTrackToPlaylistScenario() {
     trackId: string,
   ) {
     try {
-      // Add track to playlist:, 
-      // - If track is already played (completedAt is defined), add track to playlist
-      // - If track is already in playlist and not played (completedAt is undefined), exit
+      // Add track to playlist: 
       const existingPlayListItem = await dal.playlistItems
-        .getMany({ selector: { trackId, completedAt: undefined } })
+        .getMany({ selector: { trackId, archivedAt: { $exists: false } } })
       if (existingPlayListItem.length >= 1) { return }
 
       // Notify user
@@ -41,10 +39,6 @@ export function useUserAddsTrackToPlaylistScenario() {
       // Get track information
       const track = await dal.tracks.getOne(trackId)
       const trackTitle = track.title[config.appLanguage.value] || track.title['en'] || 'Unknown'
-
-      // Update user interface to show that track is being added and started downloading
-      playlistStore.updateByTrackId(trackId, { progress: 0 })
-      searchResultsStore.updateByTrackId(trackId, { progress: 0, added: true })
 
       // Add track to playlist
       await dal.playlistItems.addOne({
@@ -55,6 +49,10 @@ export function useUserAddsTrackToPlaylistScenario() {
         completedAt: undefined,
         archivedAt: undefined,
       })
+      
+      // Update user interface to show that track is being added and started downloading
+      playlistStore.updateByTrackId(trackId, { progress: 0 })
+      searchResultsStore.updateByTrackId(trackId, { progress: 0, added: true })
 
       const transcripts = Object.values(track.transcripts)
 

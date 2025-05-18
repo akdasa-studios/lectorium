@@ -41,13 +41,16 @@ export function useSetPlayerControlsInfoFeature() {
     const track = await dal.tracks.getOne(trackId)
     const author = await dal.authors.getOne('author::' + track.author)
 
-    playerControls.author.value =
-      author.fullName[language] 
-        || author.fullName['en'] 
-        || track.author
     playerControls.title.value =
       track.title[language]
         || track.title['en']
         || track.title[Object.keys(track.title)[0]]
+        || 'No title'
+
+    playerControls.author.value =
+      author.fullName[language]
+        || author.fullName['en']
+        || author.fullName[Object.keys(author.fullName)[0]]
+        || track.author
   }
 }

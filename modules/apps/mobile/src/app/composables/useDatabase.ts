@@ -22,7 +22,7 @@ export function useDatabase() {
           { name: 'addedAt', fields: ['addedAt'] },
           // { name: 'type', fields: ['type'] },
           // { name: 'taskStatus', fields: [ 'taskStatus' ] },
-          { name: 'trackId', fields: ['trackId'] }
+          // { name: 'trackId', fields: ['trackId'] }
         ]
       }),
       tracks: new Database({

@@ -37,8 +37,11 @@ import TrackHeader from '@lectorium/mobile/app/components/TrackHeader.vue'
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
+export type PlaylistItemIdentity = {
+  playlistItemId: string
+}
+
 export type PlaylistItemState = {
-  state?: 'failed' | 'completed'
   progress?: number
 }
 
@@ -52,35 +55,23 @@ export type PlaylistItemProps = {
   references: string[]
 }
 
-export type PlaylistItemIdentity = {
-  playlistItemId: string
-}
-
-const props = defineProps<PlaylistItemProps & PlaylistItemState>()
+const props = defineProps<
+  & PlaylistItemProps 
+  & PlaylistItemState
+>()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const { state, progress } = toRefs(props)
+const { progress, completedAt } = toRefs(props)
 
-const isLoading = computed(() => 
-  (progress.value !== undefined && progress.value < 100)
-)
-
-const disabled = computed(() => 
-  state.value === 'failed' || isLoading.value
-)
-
-const dimmed = computed(() => 
-  state.value === 'failed' ||
-  state.value === 'completed' ||
-  isLoading.value
-)
-
+const loading = computed(() => (progress.value !== undefined && progress.value < 100))
+const completed = computed(() => (completedAt.value !== undefined)) 
+const disabled = computed(() => loading.value)
+const dimmed = computed(() => loading.value || completed.value)
 const icon = computed(() => {
-  if (state.value === 'failed') return 'failed'
-  if (state.value === 'completed') return 'completed'
+  if (completed.value) return 'completed'
   return 'none'
 })
 </script>

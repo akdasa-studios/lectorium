@@ -13,19 +13,21 @@ export function useCleanupMediaItemsFeature() {
   /* -------------------------------------------------------------------------- */
 
   dal.playlistItems.subscribe(async x => {
-    if (x.event !== 'removed') { return }
+    const isRemoved = x.event === 'removed'
+    const isArchived = x.item.archivedAt !== undefined
+    if (isRemoved || isArchived) {
+      // TODO: it will return first page only
+      // Get all media items related to 
+      const mediaItems = await dal.mediaItems.getMany({
+        selector: {
+          trackId: x.item.trackId
+        }
+      })
 
-    // TODO: it will return first page only
-    // Get all media items related to 
-    const mediaItems = await dal.mediaItems.getMany({
-      selector: {
-        trackId: x.item.trackId
-      }
-    })
-
-    // Remove all media items
-    await Promise.all(
-      mediaItems.map(async x => await dal.mediaItems.removeOne(x._id))
-    )
+      // Remove all media items
+      await Promise.all(
+        mediaItems.map(async x => await dal.mediaItems.removeOne(x._id))
+      )
+    }
   })
 }

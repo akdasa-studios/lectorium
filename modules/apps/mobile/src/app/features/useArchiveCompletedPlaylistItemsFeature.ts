@@ -1,6 +1,7 @@
 import { useDAL } from '@lectorium/mobile/app'
 
-export function useRemoveCompletedPlaylistItemsFeature() {
+export function useArchiveCompletedPlaylistItemsFeature() {
+
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
@@ -11,15 +12,22 @@ export function useRemoveCompletedPlaylistItemsFeature() {
   /*                                    Hooks                                   */
   /* -------------------------------------------------------------------------- */
 
-  dal.playlistItems.subscribe(async () => {
+  dal.playlistItems.subscribe(async () => { await onArchive() })
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  Handlers                                  */
+  /* -------------------------------------------------------------------------- */
+
+  async function onArchive() {
     // Get items that were completed more than 24 hours ago
-    const oneDayInMs = 24 * 60 * 60 * 1000
+    const oneDayInMs = 24 * 60 *  60 * 1000
     const date = Date.now() - oneDayInMs
 
     // Get old completed items
     const completedPlaylistItems = await dal.playlistItems.getMany({
       selector: {
-        completedAt: { $lte: date }
+        completedAt: { $lte: date },
+        archivedAt: { $exists: false }
       }
     })
 
@@ -27,5 +35,6 @@ export function useRemoveCompletedPlaylistItemsFeature() {
     await Promise.all(
       completedPlaylistItems.map(async x => await dal.playlistItems.archiveOne(x._id))
     )
-  })
+  }
+
 }

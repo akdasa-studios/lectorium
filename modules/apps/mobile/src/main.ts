@@ -44,7 +44,6 @@ import {
   useCleanupMediaItemsFeature,
   useCleanupFilesFeature,
   useMarkCompletedPlaylistItem,
-  useRemoveCompletedPlaylistItemsFeature,
   useSentryFeature,
   useDatabase,
   useShowTrackDownloadingStatusFeature,
@@ -53,7 +52,8 @@ import {
   useSyncAudioPlayerPluginStateFeature, 
   useSetPlayerControlsInfoFeature,
 } from '@lectorium/mobile/player'
-import { useSyncPlaylistStore } from '@lectorium/mobile/app/features/useSyncPlaylistStore'
+import { useSyncPlaylistStore } from '@lectorium/mobile/home/features/useSyncPlaylistStore'
+import { useArchiveCompletedPlaylistItemsFeature } from './app/features/useArchiveCompletedPlaylistItemsFeature'
 
 /** 
  * Configure PouchDB to use SQLite adapter for Cordova
@@ -123,12 +123,9 @@ router.isReady().then(async () => {
   console.log('useConfigPersistenceFeature...')
   useMarkCompletedPlaylistItem()
 
-  console.log('useRemoveCompletedPlaylistItemsFeature...')
-  useRemoveCompletedPlaylistItemsFeature()
-
   console.log('useShowTrackDownloadingStatusFeature...')
   await useShowTrackDownloadingStatusFeature().init()
-  // await useShowTrackInPlaylistStatusFeature().init()
+  useArchiveCompletedPlaylistItemsFeature()
 
   // Player //
 

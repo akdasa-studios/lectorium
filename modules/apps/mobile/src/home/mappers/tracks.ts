@@ -31,7 +31,6 @@ export async function mapPlaylistItem(
       ? await Promise.all(track.references.map(ref => mapReference(ref, language)))
       : [],
     date: mapTrackDate(track.date),
-    state: playlistItem.completedAt ? 'completed' : undefined
   }
 }
 
@@ -44,10 +43,15 @@ export async function mapTrackToSearchResultListItem(
   & SearchResultListItemState
 > {
   const dal = useDAL()
+
+  // Get all playlist items related to this track, and check it is:
+  // - in playlist -> there is at least one non-archived item
+  // - completed   -> there is at least one completed item
   const playlistItems = await dal.playlistItems.getMany({ selector: { trackId: track._id } }) 
-  const isInPlaylist = playlistItems.filter(x => x.completedAt === undefined).length >= 1
+  const isInPlaylist = playlistItems.filter(x => x.archivedAt === undefined).length >= 1
   const isCompleted = playlistItems.filter(x => x.completedAt).length >= 1
 
+  // Map track to search result list item
   return {
     trackId: track._id,
     title: mapTrackTitle(track.title, language),

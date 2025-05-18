@@ -72,12 +72,14 @@ const playButtonIcon = computed(() => {
   justify-content: center;
   font-size: .9rem;
   overflow: hidden;
+  gap: .15rem;
 }
 
 .author {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  opacity: .8;
 }
 
 .title {

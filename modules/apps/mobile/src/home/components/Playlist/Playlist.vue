@@ -13,7 +13,7 @@
         :references="item.references"
         :tags="item.tags"
         :date="item.date"
-        :state="item.state"
+        :completed-at="item.completedAt"
         :progress="item.progress"
         @click="emit('click', item.playlistItemId)"
       />

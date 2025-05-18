@@ -19,7 +19,7 @@ import {
   useUserRedownloadsFailedMediaItemsScenario
 } from '@lectorium/mobile/home'
 import { useRouter } from 'vue-router'
-import { usePlaylistStore } from '@lectorium/mobile/app/stores/usePlaylistStore'
+import { usePlaylistStore } from '@lectorium/mobile/home/stores/usePlaylistStore'
 import Playlist from '@lectorium/mobile/home/components/Playlist/Playlist.vue'
 import PlaylistEmpty from '@lectorium/mobile/home/components/Playlist/PlaylistEmpty.vue'
 
@@ -48,6 +48,7 @@ async function onPlaylistItemDelete(playlistItemId: string) {
 
 function onPlaylistItemClick(playlistItemId: string) {
   // if (!redownload) {
+  // TODO: redownload if failed
   userSelectsTrackToPlay.execute(playlistItemId)
   // } else {
   //   // userRedownloadsFailedMediaItems.execute(trackId)

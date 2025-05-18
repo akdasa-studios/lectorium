@@ -6,7 +6,6 @@ import {
 import { MediaItem } from '@lectorium/dal/models'
 import { useLogger } from '@lectorium/mobile/app/composables/useLogger'
 import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
-import { usePlaylistStore } from '../stores/usePlaylistStore'
 
 /**
  * This feature is responsible for showing the downloading status of tracks
@@ -21,7 +20,6 @@ export function useShowTrackDownloadingStatusFeature() {
 
   const dal = useDAL()
   const searchResultsStore = useSearchResultsStore()
-  const playlistStore = usePlaylistStore()
   const downloaderService = useDownloaderService()
   const logger = useLogger({ module: 'feature:track-downloading-status' })
 
@@ -47,7 +45,6 @@ export function useShowTrackDownloadingStatusFeature() {
     event: DownloaderTaskEnqueuedEventArgs
   ) {
     if (!event.meta.trackId) { return }
-    playlistStore.updateByTrackId(event.meta.trackId, { progress: 0 })
     searchResultsStore.updateByTrackId(event.meta.trackId, {
       progress: 0,
       // downloadFailed: undefined,
@@ -68,7 +65,6 @@ export function useShowTrackDownloadingStatusFeature() {
     const tasksRelatedToTrack = downloaderService.tasks
       .filter(x => x.meta.trackId === event.meta.trackId)
     const downloadProgress = Math.min(...tasksRelatedToTrack.map(x => x.progress))
-    playlistStore.updateByTrackId(event.meta.trackId, { progress: downloadProgress })
     searchResultsStore.updateByTrackId(event.meta.trackId, { progress: downloadProgress })
     // logger.info(
     //   `Downloader task status: ${event.meta.trackId}: ${event.progress}`)
@@ -98,7 +94,6 @@ export function useShowTrackDownloadingStatusFeature() {
     event: DownloaderTaskFailedEventArgs
   ) {
     if (!event.meta.mediaItemId) { return }
-    playlistStore.updateByTrackId(event.meta.trackId, { progress: undefined, state: 'failed' })
     // searchResultsStore.updateByTrackId(event.meta.trackId, { downloadFailed: true })
     dal.mediaItems.patchOne(event.meta.mediaItemId, { state: 'failed' })
   }
@@ -116,10 +111,10 @@ export function useShowTrackDownloadingStatusFeature() {
     const failedTracks = failedMediaItems
       .map(track => track.trackId)
       .filter(id => id !== undefined)
-    failedTracks.forEach(trackId => {
-      playlistStore.updateByTrackId(trackId, { state: 'failed' })
-      // searchResultsStore.updateByTrackId(trackId, { downloadFailed: true })
-    })
+    // failedTracks.forEach(trackId => {
+    //   playlistStore.updateByTrackId(trackId, { state: 'failed' })
+    //   // searchResultsStore.updateByTrackId(trackId, { downloadFailed: true })
+    // })
     logger.info(
       `Failed tracks (${failedTracks.length}): `+
       `${JSON.stringify(new Set(failedTracks), null, 2)}. ` + 
@@ -143,7 +138,7 @@ export function useShowTrackDownloadingStatusFeature() {
         logger.info(
           `Failed track in playlist - ${playlistItem.trackId}: `+
           `media items ${mediaItemsEmpty ? 'empty' : 'failed'}`)
-        playlistStore.updateByTrackId(playlistItem.trackId, { state: 'failed' })
+        // playlistStore.updateByTrackId(playlistItem.trackId, { state: 'failed' })
         // searchResultsStore.updateByTrackId(playlistItem.trackId, { downloadFailed: true })
       }
     }

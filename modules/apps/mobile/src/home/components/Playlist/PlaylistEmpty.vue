@@ -1,5 +1,5 @@
 <template>
-  <IonItem>
+  <IonItem lines="none">
     {{ $t('home.playlistIsEmpty') }}
     <IonIcon
       slot="end"

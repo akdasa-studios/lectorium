@@ -40,10 +40,13 @@ export function useUserSelectsTrackToPlayScenario() {
       url: r.uri, 
       title: track.title[config.appLanguage.value]
         || track.title['en']
-        || track.title[Object.keys(track.title)[0]],
+        || track.title[Object.keys(track.title)[0]]
+        || 'No title',
       author: author.fullName[config.appLanguage.value] 
         || author.fullName['en'] 
+        || author.fullName[Object.keys(author.fullName)[0]]
         || track.author
+        || 'Unknown author',
     })
 
     // Start playing the track
