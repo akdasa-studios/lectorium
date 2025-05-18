@@ -70,7 +70,6 @@ export function useSyncPlaylistStore() {
   function onDownloaderStatus(
     event: DownloaderStatusEventArgs
   ) {
-    console.log(event)
     if (!event.meta.trackId) { return }
     const tasksRelatedToTrack = downloaderService.tasks
       .filter(x => x.meta.trackId === event.meta.trackId)
