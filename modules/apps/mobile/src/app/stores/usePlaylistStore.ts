@@ -25,7 +25,7 @@ export const usePlaylistStore = defineStore('playlist', () =>{
   /*                                   Actions                                  */
   /* -------------------------------------------------------------------------- */
 
-  function setItems(value: any[]) {
+  function setItems(value: PlaylistStoreItem[]) {
     items.length = 0
     items.push(...value)
   }
