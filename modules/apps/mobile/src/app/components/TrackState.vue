@@ -12,7 +12,6 @@
         aria-hidden="true"
         :icon="statusIcon.icon"
         :color="statusIcon.color"
-        class="icon"
       />
     </div>
     <div
@@ -21,9 +20,9 @@
       key="progress"
     >
       <RadialProgress
-        :stroke-width="4"
-        :inner-stroke-width="4"
-        :diameter="24"
+        :stroke-width="3"
+        :inner-stroke-width="3"
+        :diameter="18"
         :completed-steps="progress"
         :total-steps="100"
         :animate-speed="750"
@@ -106,11 +105,6 @@ function onStateChanged(
 
 
 <style scoped>
-.icon {
-  width: 24px;
-  height: 24px;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;

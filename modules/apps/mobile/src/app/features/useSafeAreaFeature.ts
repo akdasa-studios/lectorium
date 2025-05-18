@@ -53,7 +53,6 @@ export async function useSafeAreaFeature() {
     // }
 
     for (const [key, value] of Object.entries(data.insets)) {
-      console.log(`SafeArea: ${key}: ${value}px`)
       document.documentElement.style.setProperty(
         `--ion-safe-area-${key}`,
         `${value}px`,

@@ -1,15 +1,16 @@
 <template>
-  <TracksFilterChip 
+  <SearchFilterChip 
     :applied="isApplied"
     @click="setDialogOpen(true)"
-    @remove="modelValue = []"
+    @remove="modelValue = undefined"
   >
     {{ title }}
-  </TracksFilterChip> 
-  <ListItemsSelectorDialog
-    :items="items"
+  </SearchFilterChip> 
+  <ListItemSelectorDialog
     :title="title"
+    :items="items"
     :open="isDialogOpen"
+    :value="modelValue"
     @close="setDialogOpen(false)"
     @select="modelValue = $event"
   />
@@ -17,28 +18,28 @@
 
 
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue'
-import { ListItemsSelectorDialog, type SelectorDialogItem } from '@lectorium/mobile/app'
-import { TracksFilterChip } from '@lectorium/mobile/search'
+import { computed, ref } from 'vue'
+import { ListItemSelectorDialog, type ListItemSelectorItem } from '@lectorium/mobile/app'
+import SearchFilterChip from '@lectorium/mobile/search/components/SearchFilterChip.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
-const props = defineProps<{
+defineProps<{
   title: string
-  items: SelectorDialogItem[]
+  items: ListItemSelectorItem[]
 }>()
 
-const modelValue = defineModel<string[]>({ required: true, default: [] })
+const modelValue = defineModel<string|undefined>({ required: true, default: undefined })
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
 const isDialogOpen = ref(false)
-const isApplied = computed(() => modelValue.value.length > 0)
-const { items } = toRefs(props)
+const isApplied = computed(() => modelValue.value !== undefined)
+
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */

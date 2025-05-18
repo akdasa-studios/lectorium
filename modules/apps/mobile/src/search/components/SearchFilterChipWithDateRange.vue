@@ -1,11 +1,11 @@
 <template>
-  <TracksFilterChip 
+  <SearchFilterChip 
     :applied="isApplied"
     @click="setDialogOpen(true)"
     @remove="modelValue = { from: '', to: '' }"
   >
     {{ title }}
-  </TracksFilterChip> 
+  </SearchFilterChip> 
   <DateRangeSelectorDialog
     :title="title"
     :open="isDialogOpen"
@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { DateRange, DateRangeSelectorDialog } from '@lectorium/mobile/app'
-import { TracksFilterChip } from '@lectorium/mobile/search'
+import SearchFilterChip from '@lectorium/mobile/search/components/SearchFilterChip.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

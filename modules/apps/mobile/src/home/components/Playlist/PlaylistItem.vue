@@ -1,0 +1,91 @@
+<template>
+  <IonItem
+    :disabled="disabled"
+    :class="{ 'dimmed': dimmed, 'track': true }"
+    lines="none"
+  >
+    <TrackState
+      :state="icon"
+      :progress="progress"
+    />
+    <IonLabel class="ion-text-nowrap">
+      <TrackHeader
+        class="info"
+        :title="title"
+        :references="references"
+        :tags="tags"
+      />
+      <TrackDetails 
+        class="details"  
+        :author="author"
+        :location="location"
+        :date="date"
+      />
+    </IonLabel>
+  </IonItem>
+</template>
+
+
+<script setup lang="ts">
+import { computed, toRefs } from 'vue'
+import { IonItem, IonLabel } from '@ionic/vue'
+import TrackState from '@lectorium/mobile/app/components/TrackState.vue'
+import TrackDetails from '@lectorium/mobile/app/components/TrackDetails.vue'
+import TrackHeader from '@lectorium/mobile/app/components/TrackHeader.vue'
+
+/* -------------------------------------------------------------------------- */
+/*                                  Interface                                 */
+/* -------------------------------------------------------------------------- */
+
+export type PlaylistItemState = {
+  state?: 'failed' | 'completed'
+  progress?: number
+}
+
+export type PlaylistItemProps = {
+  tags: string[]
+  date?: string
+  title: string
+  author?: string
+  location?: string
+  completedAt?: number
+  references: string[]
+}
+
+export type PlaylistItemIdentity = {
+  playlistItemId: string
+}
+
+const props = defineProps<PlaylistItemProps & PlaylistItemState>()
+
+/* -------------------------------------------------------------------------- */
+/*                                    State                                   */
+/* -------------------------------------------------------------------------- */
+
+const { state, progress } = toRefs(props)
+
+const isLoading = computed(() => 
+  (progress.value !== undefined && progress.value < 100)
+)
+
+const disabled = computed(() => 
+  state.value === 'failed' || isLoading.value
+)
+
+const dimmed = computed(() => 
+  state.value === 'failed' ||
+  state.value === 'completed' ||
+  isLoading.value
+)
+
+const icon = computed(() => {
+  if (state.value === 'failed') return 'failed'
+  if (state.value === 'completed') return 'completed'
+  return 'none'
+})
+</script>
+
+<style scoped>
+.track { transition: all 1s ease; }
+.dimmed { opacity: .4; }
+</style>

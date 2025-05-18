@@ -48,12 +48,12 @@ import {
   useSentryFeature,
   useDatabase,
   useShowTrackDownloadingStatusFeature,
-  useShowTrackInPlaylistStatusFeature,
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
   useSetPlayerControlsInfoFeature,
 } from '@lectorium/mobile/player'
+import { useSyncPlaylistStore } from '@lectorium/mobile/app/features/useSyncPlaylistStore'
 
 /** 
  * Configure PouchDB to use SQLite adapter for Cordova
@@ -128,7 +128,7 @@ router.isReady().then(async () => {
 
   console.log('useShowTrackDownloadingStatusFeature...')
   await useShowTrackDownloadingStatusFeature().init()
-  await useShowTrackInPlaylistStatusFeature().init()
+  // await useShowTrackInPlaylistStatusFeature().init()
 
   // Player //
 
@@ -155,6 +155,9 @@ router.isReady().then(async () => {
   const database = useDatabase()
   await database.init()
   
+
+  // Should be after database.init()
+  await useSyncPlaylistStore().init()
 
   const elapsed = new Date().getTime() - start
   console.log(`Initialization time: ${elapsed}ms`)

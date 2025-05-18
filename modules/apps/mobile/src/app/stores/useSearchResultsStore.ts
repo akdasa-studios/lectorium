@@ -1,8 +1,7 @@
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 
-type PlaylistStoreItem = {
-  playlistItemId: string
+type SearchResultItem = {
   trackId: string
   tags: string[]
   date?: string
@@ -10,23 +9,27 @@ type PlaylistStoreItem = {
   author?: string
   location?: string
   references: string[]
-  state?: 'failed' | 'completed'
   progress?: number
+  added?: boolean
+  completed?: boolean
 }
 
-export const usePlaylistStore = defineStore('playlist', () =>{
+export const useSearchResultsStore = defineStore('search', () =>{
   /* -------------------------------------------------------------------------- */
   /*                                    State                                   */
   /* -------------------------------------------------------------------------- */
 
-  const items = reactive<Array<PlaylistStoreItem>>([])
+  const items = reactive<Array<SearchResultItem>>([])
 
   /* -------------------------------------------------------------------------- */
   /*                                   Actions                                  */
   /* -------------------------------------------------------------------------- */
 
-  function setItems(value: any[]) {
-    items.length = 0
+  function setItems(
+    value: SearchResultItem[], 
+    options? : { replace?: boolean }
+  ) {
+    if (options?.replace) { items.length = 0 }
     items.push(...value)
   }
 
@@ -36,7 +39,7 @@ export const usePlaylistStore = defineStore('playlist', () =>{
 
   function updateByTrackId(
     trackId: string, 
-    data: Partial<PlaylistStoreItem>
+    data: Partial<SearchResultItem>
   ) {
     const item = getByTrackId(trackId)
     if (item) {

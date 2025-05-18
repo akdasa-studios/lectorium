@@ -1,7 +1,8 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
-import { useDAL, useBucketService, useConfig, useMediaService } from '@lectorium/mobile/app'
-import { useTrackStateStore } from '@lectorium/mobile/app/stores'
+import { useDAL, useBucketService, useConfig, useMediaService, useIdGenerator } from '@lectorium/mobile/app'
 import { S3Operation } from '@lectorium/protocol/index'
+import { usePlaylistStore } from '@lectorium/mobile/app/stores/usePlaylistStore'
+import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
 
 /**
  * Scenario for adding a track to a playlist.
@@ -13,9 +14,11 @@ export function useUserAddsTrackToPlaylistScenario() {
 
   const dal = useDAL()
   const config = useConfig()
+  const idGenerator = useIdGenerator()
   const mediaService = useMediaService()
   const bucketService = useBucketService()
-  const trackStateStore = useTrackStateStore()
+  const playlistStore = usePlaylistStore()
+  const searchResultsStore = useSearchResultsStore()
 
   /* -------------------------------------------------------------------------- */
   /*                                  Handlers                                  */
@@ -25,28 +28,32 @@ export function useUserAddsTrackToPlaylistScenario() {
     trackId: string,
   ) {
     try {
-      // Add track to playlist, or exit if it already exists
-      const existingPlayListItem = await dal.playlistItems.findOne({ _id: trackId })
-      if (existingPlayListItem) { return }
+      // Add track to playlist:, 
+      // - If track is already played (completedAt is defined), add track to playlist
+      // - If track is already in playlist and not played (completedAt is undefined), exit
+      const existingPlayListItem = await dal.playlistItems
+        .getMany({ selector: { trackId, completedAt: undefined } })
+      if (existingPlayListItem.length >= 1) { return }
 
       // Notify user
       await Haptics.impact({ style: ImpactStyle.Light })
 
       // Get track information
       const track = await dal.tracks.getOne(trackId)
-      const trackTitle = track.title[config.appLanguage.value] 
-        || track.title['en']
-        || 'Unknown'
+      const trackTitle = track.title[config.appLanguage.value] || track.title['en'] || 'Unknown'
+
+      // Update user interface to show that track is being added and started downloading
+      playlistStore.updateByTrackId(trackId, { progress: 0 })
+      searchResultsStore.updateByTrackId(trackId, { progress: 0, added: true })
 
       // Add track to playlist
-      trackStateStore.setStatus(trackId, { downloadProgress: 0 })
       await dal.playlistItems.addOne({
-        _id: trackId,
+        _id: idGenerator.generateId(24),
         trackId: trackId,
         type: 'playlistItem',
-        played: 0,
         addedAt: Date.now(),
-        completedAt: undefined
+        completedAt: undefined,
+        archivedAt: undefined,
       })
 
       const transcripts = Object.values(track.transcripts)
@@ -54,10 +61,13 @@ export function useUserAddsTrackToPlaylistScenario() {
       // Sign all urls and prepare download tasks for MediaService
       const downloadTasks = await Promise.all(
         [
+          // Sign url to download original audio file
           { 
             path: track.audio.original.path,
             title: trackTitle,
           },
+
+          // Sign url to download transcripts
           ...transcripts.map(transcript => ({
             path: transcript.path,
             title: trackTitle, // TODO: add "transcript:" prefix + "(language)" postfix
@@ -77,8 +87,7 @@ export function useUserAddsTrackToPlaylistScenario() {
         })
       )
 
-      // Download all files using MediaService and prepared tasks
-      // from above
+      // Download all files using MediaService and prepared task infos from above
       await Promise.all(
         downloadTasks.map(async (task) => {
           await mediaService.get({ trackId: trackId, ...task })
@@ -86,10 +95,10 @@ export function useUserAddsTrackToPlaylistScenario() {
       )
     } catch {
       // Something wrong happened
-      trackStateStore.setStatus(trackId, { 
-        downloadFailed: true,
-        downloadProgress: undefined
-      }) 
+      playlistStore.updateByTrackId(trackId, { 
+        state: 'failed',
+        progress: undefined
+      })
     }
   }
 

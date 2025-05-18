@@ -1,5 +1,5 @@
 <template>
-  <TracksFilterChipWithDateRange 
+  <SearchFilterChipWithDateRange 
     v-model="modelValue"
     :title="$t('search.filters.dates')"
   />
@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { DateRange } from '@lectorium/mobile/app'
-import { TracksFilterChipWithDateRange } from '@lectorium/mobile/search'
+import SearchFilterChipWithDateRange from '@lectorium/mobile/search/components/SearchFilterChipWithDateRange.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

@@ -18,10 +18,11 @@ export function useDatabase() {
         name: 'userData.db', 
         adapter: adapter, 
         indices: [
+          // TODO: add archivedAt?
           { name: 'addedAt', fields: ['addedAt'] },
           // { name: 'type', fields: ['type'] },
           // { name: 'taskStatus', fields: [ 'taskStatus' ] },
-          // { name: 'trackId', fields: ['trackId'] }
+          { name: 'trackId', fields: ['trackId'] }
         ]
       }),
       tracks: new Database({

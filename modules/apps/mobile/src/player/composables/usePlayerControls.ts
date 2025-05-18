@@ -7,6 +7,7 @@ export const usePlayerControls = createGlobalState(() => {
   /* -------------------------------------------------------------------------- */
   
   const trackId = ref('')
+  const playlistItemId = ref('')
   const isPlaying = ref(false)
   const title = ref('')
   const author = ref('')
@@ -19,6 +20,7 @@ export const usePlayerControls = createGlobalState(() => {
 
   function close() {
     isPlaying.value = false
+    playlistItemId.value = ''
     trackId.value = ''
     title.value = ''
     author.value = ''
@@ -34,6 +36,7 @@ export const usePlayerControls = createGlobalState(() => {
   return {
     close,
     trackId,
+    playlistItemId,
     isPlaying,
     title,
     author,

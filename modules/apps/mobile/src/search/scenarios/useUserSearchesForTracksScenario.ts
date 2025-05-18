@@ -1,17 +1,6 @@
 import { useDAL } from '@lectorium/mobile/app'
 import { Source } from '@lectorium/dal/models'
-import { ref } from 'vue'
-
-
-export type Filters = {
-  query: string
-  authors: string[]
-  sources: string[]
-  locations: string[]
-  languages: string[]
-  duration: { min: number; max: number }
-  dates: { from: string; to: string }
-}
+import { type SearchFilters } from '@lectorium/mobile/search/containers/SearchFiltersBar/SearchFiltersBar.vue'
 
 export function useUserSearchesForTracksScenario() {
   /* -------------------------------------------------------------------------- */
@@ -26,11 +15,11 @@ export function useUserSearchesForTracksScenario() {
 
   async function execute(
     offset: number = 0,
-    filters: Filters,
+    filters: SearchFilters,
     pageSize: number,
   ) {
     try {
-      // // TODO: it will return first 25 records only
+      // TODO: it will return first 25 records only
       const sources = await dal.sources.getAll()
       const sourcesNames = sources.reduce((map: Record<string, string>, { _id, shortName }: Source) => {
         Object
@@ -67,7 +56,7 @@ export function useUserSearchesForTracksScenario() {
 
     } catch (error) {
       // TODO: better error handling
-      console.error('Error fetching track suggestions:', error)
+      console.error('Error searching tracks:', error)
       return []
     }
   }

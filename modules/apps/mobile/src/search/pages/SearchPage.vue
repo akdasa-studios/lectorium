@@ -1,39 +1,34 @@
 <template>
   <Page>
     <Searchbar
-      v-model="query"
+      v-model="filters.query"
       :placeholder="$t('search.search', { count: tracksCount })"
     />
-    <TracksFilterBar v-model="filters" />
-    <TracksSearchResults
-      ref="tracksSearchResultsRef"
-      :filters="filters"
-    />
+    <SearchFiltersBar v-model="filters" />
+    <SearchResultsSection :filters="filters" />
   </Page>
 </template>
 
 <script setup lang="ts">
-import {
-  Searchbar, TracksFilterBar, TracksFilterValue, TracksSearchResults,
-} from '@lectorium/mobile/search'
-import { Page, useConfig, useDAL } from '@lectorium/mobile/app'
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useDAL } from '@lectorium/mobile/app/composables/useDAL'
+import { type SearchFilters } from '@lectorium/mobile/search/containers/SearchFiltersBar/SearchFiltersBar.vue'
+import Page from '@lectorium/mobile/app/components/Page.vue'
+import Searchbar from '@lectorium/mobile/search/components/Searchbar.vue'
+import SearchFiltersBar from '@lectorium/mobile/search/containers/SearchFiltersBar/SearchFiltersBar.vue'
+import SearchResultsSection from '@lectorium/mobile/search/containers/SearchResults/SearchResultsSection.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const config = useConfig()
 const dal = useDAL()
-const tracksSearchResultsRef = ref<typeof TracksSearchResults>()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const query = ref('')
-
-const filters = ref<TracksFilterValue>({
+const defaultFilterValue = {
   query: '',
   ids: [],
   authors: [],
@@ -42,21 +37,14 @@ const filters = ref<TracksFilterValue>({
   languages: [],
   duration: { min: 0, max: Number.MAX_SAFE_INTEGER },
   dates: { from: '', to: '' },
-})
+}
 
+const filters = ref<SearchFilters>(defaultFilterValue)
 const tracksCount = ref<number>(0)
 
 /* -------------------------------------------------------------------------- */
 /*                                    Hooks                                   */
 /* -------------------------------------------------------------------------- */
-
-watch(query, (newQuery) => {
-  filters.value.query = newQuery
-})
-
-watch(config.appLanguage, () => {
-  tracksSearchResultsRef.value?.refresh()
-})
 
 onMounted(async () => {
   tracksCount.value = await dal.tracks.getCount()

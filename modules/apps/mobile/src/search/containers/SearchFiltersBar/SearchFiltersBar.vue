@@ -1,17 +1,17 @@
 <template>
-  <TracksFilterChipsList>
+  <SearchFilterChipsList>
     <AuthorsTracksFilterChip v-model="value.authors" />
     <SourcesTracksFilterChip v-model="value.sources" />
     <LocationsTracksFilterChip v-model="value.locations" />
     <LanguagesTracksFilterChip v-model="value.languages" />
     <DurationTracksFilterChip v-model="value.duration" />
     <DateRangeTracksFilterChip v-model="value.dates" />
-  </TracksFilterChipsList>
+  </SearchFilterChipsList>
 </template>
 
 
 <script lang="ts" setup>
-import { TracksFilterChipsList } from '@lectorium/mobile/search'
+import SearchFilterChipsList from '@lectorium/mobile/search/components/SearchFilterChipsList.vue'
 import AuthorsTracksFilterChip from './Chips/AuthorsTracksFilterChip.vue'
 import SourcesTracksFilterChip from './Chips/SourcesTracksFilterChip.vue'
 import LocationsTracksFilterChip from './Chips/LocationsTracksFilterChip.vue'
@@ -23,7 +23,7 @@ import DateRangeTracksFilterChip from './Chips/DateRangeTracksFilterChip.vue'
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
-export type TracksFilterValue = {
+export type SearchFilters = {
   query: string
   ids?: string[]
   authors: string[]
@@ -38,5 +38,5 @@ export type TracksFilterValue = {
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const value = defineModel<TracksFilterValue>({ required: true })
+const value = defineModel<SearchFilters>({ required: true })
 </script>

@@ -1,14 +1,53 @@
-import { Track } from '@lectorium/dal/models'
-import { TracksListItemData,  } from '@lectorium/mobile/app'
+import { Track, PlaylistItem } from '@lectorium/dal/models'
 import { useDAL } from '@lectorium/mobile/app'
+import { PlaylistItemIdentity, PlaylistItemProps, PlaylistItemState } from '../components/Playlist/PlaylistItem.vue'
+import { SearchResultListItemIdentity, SearchResultListItemProps, SearchResultListItemState } from '@lectorium/mobile/search/components/SearchResultListItem.vue'
 
 // TODO: move to @lectorium/mobile
 // TODO: DAL access should be cached
 
-export async function mapTrackToPlaylistItem(
+export async function mapPlaylistItem(
+  playlistItem: PlaylistItem,
+  language: string = 'en'
+): Promise<
+  & PlaylistItemIdentity 
+  & PlaylistItemProps 
+  & PlaylistItemState 
+  & { trackId: string }
+> {
+  const dal = useDAL()
+  const track = await dal.tracks.getOne(playlistItem.trackId)
+  return {
+    playlistItemId: playlistItem._id,
+    trackId: track._id,
+    completedAt: playlistItem.completedAt,
+    title: mapTrackTitle(track.title, language),
+    author: await mapAuthorFullNameById(track.author, language), 
+    location: await mapLocationFullNameById(track.location, language),
+    tags: (track.tags || []).length >= 1
+      ? await Promise.all((track.tags || []).map(tag => mapTagFullNameById(tag, language)))
+      : [],
+    references: track.references?.length >= 1 
+      ? await Promise.all(track.references.map(ref => mapReference(ref, language)))
+      : [],
+    date: mapTrackDate(track.date),
+    state: playlistItem.completedAt ? 'completed' : undefined
+  }
+}
+
+export async function mapTrackToSearchResultListItem(
   track: Track,
   language: string = 'en',
-): Promise<TracksListItemData> {
+): Promise<
+  & SearchResultListItemIdentity 
+  & SearchResultListItemProps 
+  & SearchResultListItemState
+> {
+  const dal = useDAL()
+  const playlistItems = await dal.playlistItems.getMany({ selector: { trackId: track._id } }) 
+  const isInPlaylist = playlistItems.filter(x => x.completedAt === undefined).length >= 1
+  const isCompleted = playlistItems.filter(x => x.completedAt).length >= 1
+
   return {
     trackId: track._id,
     title: mapTrackTitle(track.title, language),
@@ -21,7 +60,8 @@ export async function mapTrackToPlaylistItem(
       ? await Promise.all(track.references.map(ref => mapReference(ref, language)))
       : [],
     date: mapTrackDate(track.date),
-    icon: 'none'
+    added: isInPlaylist,
+    completed: isCompleted
   }
 }
 

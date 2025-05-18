@@ -10,8 +10,8 @@
       :references="item.references"
       :tags="item.tags"
       :date="item.date"
-      :icon="trackStateStore.isInPlaylist(item.trackId) ? 'added' : 'none'"
-      :progress="trackStateStore.downloadProgress(item.trackId)"
+      :icon="'none'"
+      :progress="undefined"
       @click="onTrackClick(item.trackId)"
     />
   </IonList>
@@ -23,11 +23,10 @@ import { useAsyncState } from '@vueuse/core'
 import { IonList } from '@ionic/vue'
 import { SectionHeader } from '@lectorium/mobile/home'
 import { TracksListItem, type TracksListItemData, useConfig } from '@lectorium/mobile/app'
-import { mapTrackToPlaylistItem } from '@lectorium/mobile/home/mappers/tracks'
-import { useUserAddsTrackToPlaylistScenario } from '@lectorium/mobile/search'
+import { mapTrackToSearchResultListItem } from '@lectorium/mobile/home/mappers/tracks'
+import { useUserAddsTrackToPlaylistScenario } from '@lectorium/mobile/search/scenarios/useUserAddsTrackToPlaylistScenario'
 import { useSafeOperation } from '@lectorium/mobile/app'
 import { useRandomTracks } from '@lectorium/mobile/library/composables/useRandomTracks'
-import { useTrackStateStore } from '@lectorium/mobile/app/stores/useTrackStateStore'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -36,7 +35,6 @@ import { useTrackStateStore } from '@lectorium/mobile/app/stores/useTrackStateSt
 const config = useConfig()
 const randomTracks = useRandomTracks()
 const safeOperation = useSafeOperation()
-const trackStateStore = useTrackStateStore()
 const userAddsTrackToPlaylist = useUserAddsTrackToPlaylistScenario()
 
 
@@ -85,11 +83,12 @@ async function onTrackClick(trackId: string) {
 /* -------------------------------------------------------------------------- */
 
 async function getSuggestions() : Promise<TracksListItemData[]> {
-  const suggestedTracks = await randomTracks.get({ 
-    max: props.max, selector: props.selector 
-  })
-  return await Promise.all(
-    suggestedTracks.map(x => mapTrackToPlaylistItem(x, config.appLanguage.value))
-  )
+  // const suggestedTracks = await randomTracks.get({ 
+  //   max: props.max, selector: props.selector 
+  // })
+  return []
+  // return await Promise.all(
+  //   suggestedTracks.map(x => mapTrackToPlaylistItem(x, config.appLanguage.value))
+  // )
 }
 </script>

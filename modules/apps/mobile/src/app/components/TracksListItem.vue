@@ -9,7 +9,7 @@
       :progress="progress"
     />
     <IonLabel class="ion-text-nowrap">
-      <TrackInfo
+      <TrackHeader
         class="info"
         :title="title"
         :references="references"
@@ -31,7 +31,7 @@ import { toRefs } from 'vue'
 import { IonItem, IonLabel } from '@ionic/vue'
 import TrackState from './TrackState.vue'
 import TrackDetails from './TrackDetails.vue'
-import TrackInfo from './TrackInfo.vue'
+import TrackHeader from './TrackHeader.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -62,6 +62,7 @@ const props = withDefaults(defineProps<
   }
 >(), {
   author: '',
+  playlistItemId: undefined,
   dimmed: false,
   enabled: true, 
   location: undefined,

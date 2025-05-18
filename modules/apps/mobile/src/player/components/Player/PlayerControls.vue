@@ -1,11 +1,11 @@
 <template>
   <div class="floatingPlayer">
     <div class="info">
-      <IonLabel class="author">
-        {{ author }}
-      </IonLabel>
       <IonLabel class="title">
         {{ title }}
+      </IonLabel>
+      <IonLabel class="author">
+        {{ author }}
       </IonLabel>
     </div>
 
@@ -75,13 +75,13 @@ const playButtonIcon = computed(() => {
 }
 
 .author {
-  font-weight: bold;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .title {
+  font-weight: bold;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

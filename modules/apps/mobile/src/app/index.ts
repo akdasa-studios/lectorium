@@ -47,7 +47,6 @@ export * from './features/useMarkCompletedPlaylistItem'
 export * from './features/useRemoveCompletedPlaylistItemsFeature'
 export * from './features/useSentryFeature'
 export * from './features/useShowTrackDownloadingStatusFeature'
-export * from './features/useShowTrackInPlaylistStatusFeature'
 
 // services:
 export * from './services/SyncService'

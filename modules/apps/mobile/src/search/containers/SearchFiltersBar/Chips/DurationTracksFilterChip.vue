@@ -1,5 +1,5 @@
 <template>
-  <TracksFilterChipWithListItem
+  <SearchFilterChipWithListItem
     v-model="selectedDuration"
     :items="durations"
     :title="$t('search.filters.duration')"
@@ -8,7 +8,7 @@
 
 
 <script lang="ts" setup>
-import { TracksFilterChipWithListItem } from '@lectorium/mobile/search'
+import SearchFilterChipWithListItem from '@lectorium/mobile/search/components/SearchFilterChipWithListItem.vue'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 

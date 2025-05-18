@@ -12,8 +12,9 @@ export function useUserRemovesPlaylistItemScenario() {
   /* -------------------------------------------------------------------------- */
 
   async function execute(playlistItemId: string) {
-    await dal.playlistItems.removeOne(playlistItemId)
+    await dal.playlistItems.archiveOne(playlistItemId)
   }
+  
   /* -------------------------------------------------------------------------- */
   /*                                  Interface                                 */
   /* -------------------------------------------------------------------------- */

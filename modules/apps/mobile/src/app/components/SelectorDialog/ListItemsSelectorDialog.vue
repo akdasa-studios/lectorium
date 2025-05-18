@@ -34,7 +34,7 @@
 <script setup lang="ts" generic="T extends Item">
 import { computed, ref } from 'vue'
 import { IonList, IonCheckbox, IonItem } from '@ionic/vue'
-import { Searchbar } from '@lectorium/mobile/search'
+import Searchbar from '@lectorium/mobile/search/components/Searchbar.vue'
 import SelectorDialog from './SelectorDialog.vue'
 
 /* -------------------------------------------------------------------------- */

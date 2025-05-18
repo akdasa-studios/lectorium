@@ -10,21 +10,22 @@ export function useUserSelectsTrackToPlayScenario() {
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
 
-  const player = usePlayer()
-  const playerTranscript = usePlayerTranscript()
-  const playerControls = usePlayerControls()
   const dal = useDAL()
   const config = useConfig()
+  const player = usePlayer()
+  const playerControls = usePlayerControls()
+  const playerTranscript = usePlayerTranscript()
 
   /* -------------------------------------------------------------------------- */
   /*                                  Handlers                                  */
   /* -------------------------------------------------------------------------- */
 
-  async function execute(trackId: string) {
+  async function execute(playlistItemId: string) {
     // Notify user
     await Haptics.impact({ style: ImpactStyle.Light })
     
-    const track = await dal.tracks.getOne(trackId)
+    const playlistItem = await dal.playlistItems.getOne(playlistItemId)
+    const track = await dal.tracks.getOne(playlistItem.trackId)
     const author = await dal.authors.getOne('author::' + track.author)
 
     // open track with Audio Player plugin and
@@ -35,7 +36,7 @@ export function useUserSelectsTrackToPlayScenario() {
     })
 
     await player.open({
-      trackId: trackId,
+      trackId: track._id,
       url: r.uri, 
       title: track.title[config.appLanguage.value]
         || track.title['en']
@@ -50,8 +51,9 @@ export function useUserSelectsTrackToPlayScenario() {
 
     // Set the trackId in the player controls and transcript
     // whey will update their state accordingly
-    playerControls.trackId.value = trackId
-    playerTranscript.trackId.value = trackId
+    playerControls.trackId.value = track._id
+    playerControls.playlistItemId.value = playlistItem._id
+    playerTranscript.trackId.value = track._id
   }
 
   /* -------------------------------------------------------------------------- */
