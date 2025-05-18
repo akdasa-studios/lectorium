@@ -20,7 +20,7 @@ export function useArchiveCompletedPlaylistItemsFeature() {
 
   async function onArchive() {
     // Get items that were completed more than 24 hours ago
-    const oneDayInMs = 24 * 60 *  60 * 1000
+    const oneDayInMs = 24 * 60 * 60 * 1000
     const date = Date.now() - oneDayInMs
 
     // Get old completed items
