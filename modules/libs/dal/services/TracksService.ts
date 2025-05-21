@@ -34,7 +34,7 @@ const trackSerializer = (item: Track): TracksDBSchema => item
 const trackDeserializer = (document: TracksDBSchema): Track => document
 
 export type FindTracksRequest = {
-  ids: string[] | undefined
+  ids?: string[]
   authors: string[]
   sources: string[]
   locations: string[]

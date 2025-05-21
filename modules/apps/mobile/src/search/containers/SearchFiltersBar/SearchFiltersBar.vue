@@ -25,7 +25,6 @@ import DateRangeTracksFilterChip from './Chips/DateRangeTracksFilterChip.vue'
 
 export type SearchFilters = {
   query: string
-  ids?: string[]
   authors: string[]
   sources: string[]
   locations: string[]

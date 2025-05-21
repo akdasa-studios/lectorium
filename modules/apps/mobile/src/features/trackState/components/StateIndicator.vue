@@ -3,43 +3,26 @@
     name="fade"
     mode="out-in"
   >
-    <div
+    <IconIndicator
       v-if="mode === 'icon'"
       slot="end"
       key="icon"
-    >
-      <IonIcon
-        aria-hidden="true"
-        :icon="statusIcon.icon"
-        :color="statusIcon.color"
-      />
-    </div>
-    <div
+      :state="state"
+    />
+    <RadialIndicator
       v-else-if="mode === 'progress'"
       slot="end"
       key="progress"
-    >
-      <RadialProgress
-        :stroke-width="3"
-        :inner-stroke-width="3"
-        :diameter="18"
-        :completed-steps="progress"
-        :total-steps="100"
-        :animate-speed="750"
-        start-color="var(--ion-color-primary)"
-        stop-color="var(--ion-color-primary)"
-        inner-stroke-color="var(--ion-color-light)"
-      />
-    </div>
+      :progress="progress || 0"
+    />
   </Transition>
 </template>
 
 
 <script lang="ts" setup>
-import { computed, toRefs, ref, watch } from 'vue'
-import { IonIcon } from '@ionic/vue'
-import { closeCircle, checkmarkCircle, checkmarkDoneCircle } from 'ionicons/icons'
-import RadialProgress from 'vue3-radial-progress'
+import { toRefs, ref, watch } from 'vue'
+import IconIndicator from './IconIndicator.vue'
+import RadialIndicator from './RadialIndicator.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -55,20 +38,6 @@ const props = defineProps<{
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
-
-type StateIconMap = {
-  [key in State]: { icon?: string, color?: string }
-}
-
-const stateIconMaps: StateIconMap = {
-  'none':      { icon: undefined,           color: undefined },
-  'failed':    { icon: closeCircle,         color: 'danger'  },
-  'added':     { icon: checkmarkCircle,     color: 'primary' },
-  'completed': { icon: checkmarkDoneCircle, color: 'medium' },
-}
-const statusIcon = computed(
-  () => stateIconMaps[props.state]
-)
 
 const { progress } = toRefs(props) 
 const mode = ref<'none'|'icon'|'progress'>('none')

@@ -1,10 +1,10 @@
-<template>
+<!-- <template>
   <IonItem
     :disabled="disabled"
     :class="{ 'dimmed': dimmed, 'track': true }"
     lines="none"
   >
-    <TrackState
+    <TrackStateIndicator
       :state="icon"
       :progress="progress"
     />
@@ -29,9 +29,10 @@
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
 import { IonItem, IonLabel } from '@ionic/vue'
-import TrackState from '@lectorium/mobile/app/components/TrackState.vue'
 import TrackDetails from '@lectorium/mobile/app/components/TrackDetails.vue'
 import TrackHeader from '@lectorium/mobile/app/components/TrackHeader.vue'
+import { TrackStateIndicator } from '@lectorium/mobile/features/trackState'
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -43,6 +44,7 @@ export type PlaylistItemIdentity = {
 
 export type PlaylistItemState = {
   progress?: number
+  failed?: boolean
 }
 
 export type PlaylistItemProps = {
@@ -64,13 +66,14 @@ const props = defineProps<
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const { progress, completedAt } = toRefs(props)
+const { progress, completedAt, failed } = toRefs(props)
 
 const loading = computed(() => (progress.value !== undefined && progress.value < 100))
 const completed = computed(() => (completedAt.value !== undefined)) 
 const disabled = computed(() => loading.value)
-const dimmed = computed(() => loading.value || completed.value)
+const dimmed = computed(() => loading.value || completed.value || failed.value)
 const icon = computed(() => {
+  if (failed.value) return 'failed'
   if (completed.value) return 'completed'
   return 'none'
 })
@@ -79,4 +82,4 @@ const icon = computed(() => {
 <style scoped>
 .track { transition: all 1s ease; }
 .dimmed { opacity: .4; }
-</style>
+</style> -->

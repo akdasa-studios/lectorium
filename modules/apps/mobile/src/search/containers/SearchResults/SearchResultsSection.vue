@@ -1,9 +1,21 @@
 <template>
-  <SearchResultsList
-    :items="searchResultsStore.items"
-    @click="onTrackClicked"
-  />
-
+  <TrackListItem
+    v-for="item in searchResultsStore.items"
+    :key="item.trackId"
+    :track-id="item.trackId"
+    :date="item.date || ''"
+    :title="item.title"
+    :author="item.author"
+    :location="item.location"
+    :references="item.references"
+    :tags="item.tags"
+    @click="onTrackClicked(item.trackId)"
+  >
+    <template #state="{ trackId }">
+      <TrackStateIndicator :track-id="trackId" />
+    </template>
+  </TrackListItem>
+  
   <SearchSpecifyCriteria 
     v-if="searchResultsStore.items.length >= maxRecords"
   />
@@ -24,10 +36,11 @@ import { useSafeOperation, useConfig } from '@lectorium/mobile/app'
 import { useUserAddsTrackToPlaylistScenario } from '@lectorium/mobile/search/scenarios/useUserAddsTrackToPlaylistScenario'
 import { useUserSearchesForTracksScenario } from '@lectorium/mobile/search/scenarios/useUserSearchesForTracksScenario'
 import { mapTrackToSearchResultListItem } from '@lectorium/mobile/home/mappers/tracks'
-import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
+import { useTrackSearchResultsStore } from '@lectorium/mobile/features/trackSearch'
 import { type SearchFilters } from '@lectorium/mobile/search/containers/SearchFiltersBar/SearchFiltersBar.vue'
 import SearchSpecifyCriteria from '@lectorium/mobile/search/components/SearchSpecifyCriteria.vue'
-import SearchResultsList from '@lectorium/mobile/search/components/SearchResultsList.vue'
+import { TrackStateIndicator } from '@lectorium/mobile/features/trackState'
+import { TrackListItem } from '@lectorium/mobile/features/trackListItem'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -35,9 +48,10 @@ import SearchResultsList from '@lectorium/mobile/search/components/SearchResults
 
 const config = useConfig()
 const safeOperation = useSafeOperation()
-const searchResultsStore = useSearchResultsStore()
+const searchResultsStore = useTrackSearchResultsStore()
 const userSearchesForTracks = useUserSearchesForTracksScenario()
 const userAddsTrackToPlaylist = useUserAddsTrackToPlaylistScenario()
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */

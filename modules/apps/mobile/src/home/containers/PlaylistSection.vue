@@ -1,26 +1,18 @@
 <template>
   <SectionHeader :title="$t('home.upNext')" />
-  <Playlist 
-    :items="playlistStore.items" 
-    @click="onPlaylistItemClick"
-    @delete="onPlaylistItemDelete" 
-  />
+  <Playlist v-if="!playlistStore.isEmpty()" />
   <PlaylistEmpty
-    v-if="playlistStore.items.length === 0"
+    v-else
     @click="goToLibrary"
   />
 </template>
 
 
 <script setup lang="ts">
-import { 
-  SectionHeader, useUserSelectsTrackToPlayScenario, 
-  useUserRemovesPlaylistItemScenario,
-  useUserRedownloadsFailedMediaItemsScenario
-} from '@lectorium/mobile/home'
+import { SectionHeader } from '@lectorium/mobile/home'
 import { useRouter } from 'vue-router'
 import { usePlaylistStore } from '@lectorium/mobile/home/stores/usePlaylistStore'
-import Playlist from '@lectorium/mobile/home/components/Playlist/Playlist.vue'
+import Playlist from '@lectorium/mobile/home/containers/Playlist.vue'
 import PlaylistEmpty from '@lectorium/mobile/home/components/Playlist/PlaylistEmpty.vue'
 
 /* -------------------------------------------------------------------------- */
@@ -28,9 +20,6 @@ import PlaylistEmpty from '@lectorium/mobile/home/components/Playlist/PlaylistEm
 /* -------------------------------------------------------------------------- */
 
 const router = useRouter()
-const userSelectsTrackToPlay = useUserSelectsTrackToPlayScenario()
-const userRemovesPlaylistItem = useUserRemovesPlaylistItemScenario()
-// const userRedownloadsFailedMediaItems = useUserRedownloadsFailedMediaItemsScenario()
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -38,22 +27,6 @@ const userRemovesPlaylistItem = useUserRemovesPlaylistItemScenario()
 
 const playlistStore = usePlaylistStore()
 
-/* -------------------------------------------------------------------------- */
-/*                                  Handlers                                  */
-/* -------------------------------------------------------------------------- */
-
-async function onPlaylistItemDelete(playlistItemId: string) {
-  await userRemovesPlaylistItem.execute(playlistItemId)
-}
-
-function onPlaylistItemClick(playlistItemId: string) {
-  // if (!redownload) {
-  // TODO: redownload if failed
-  userSelectsTrackToPlay.execute(playlistItemId)
-  // } else {
-  //   // userRedownloadsFailedMediaItems.execute(trackId)
-  // }
-}
 
 /* -------------------------------------------------------------------------- */
 /*                                  Helpers                                   */

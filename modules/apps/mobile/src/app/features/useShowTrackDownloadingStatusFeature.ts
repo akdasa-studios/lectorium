@@ -3,9 +3,9 @@ import {
   DownloaderTaskEnqueuedEventArgs, DownloaderTaskFailedEventArgs,
   useDAL, useDownloaderService
 } from '@lectorium/mobile/app'
-import { MediaItem } from '@lectorium/dal/models'
+// import { MediaItem } from '@lectorium/dal/models'
 import { useLogger } from '@lectorium/mobile/app/composables/useLogger'
-import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
+// import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
 
 /**
  * This feature is responsible for showing the downloading status of tracks
@@ -19,7 +19,7 @@ export function useShowTrackDownloadingStatusFeature() {
   /* -------------------------------------------------------------------------- */
 
   const dal = useDAL()
-  const searchResultsStore = useSearchResultsStore()
+  // const searchResultsStore = useSearchResultsStore()
   const downloaderService = useDownloaderService()
   const logger = useLogger({ module: 'feature:track-downloading-status' })
 
@@ -45,10 +45,10 @@ export function useShowTrackDownloadingStatusFeature() {
     event: DownloaderTaskEnqueuedEventArgs
   ) {
     if (!event.meta.trackId) { return }
-    searchResultsStore.updateByTrackId(event.meta.trackId, {
-      progress: 0,
-      // downloadFailed: undefined,
-    })
+    // searchResultsStore.updateByTrackId(event.meta.trackId, {
+    //   progress: 0,
+    //   // downloadFailed: undefined,
+    // })
   }
 
   /**
@@ -62,10 +62,10 @@ export function useShowTrackDownloadingStatusFeature() {
   ) {
     if (!event.meta.trackId) { return }
 
-    const tasksRelatedToTrack = downloaderService.tasks
-      .filter(x => x.meta.trackId === event.meta.trackId)
-    const downloadProgress = Math.min(...tasksRelatedToTrack.map(x => x.progress))
-    searchResultsStore.updateByTrackId(event.meta.trackId, { progress: downloadProgress })
+    // const tasksRelatedToTrack = downloaderService.tasks
+    //   .filter(x => x.meta.trackId === event.meta.trackId)
+    // const downloadProgress = Math.min(...tasksRelatedToTrack.map(x => x.progress))
+    // searchResultsStore.updateByTrackId(event.meta.trackId, { progress: downloadProgress })
     // logger.info(
     //   `Downloader task status: ${event.meta.trackId}: ${event.progress}`)
   }
@@ -98,55 +98,4 @@ export function useShowTrackDownloadingStatusFeature() {
     dal.mediaItems.patchOne(event.meta.mediaItemId, { state: 'failed' })
   }
 
-  /* -------------------------------------------------------------------------- */
-  /*                                   Actions                                  */
-  /* -------------------------------------------------------------------------- */
-
-  async function init() {
-    const failedStates: MediaItem['state'][] = ['pending', 'failed']
-
-    // Get all media items that are in the pending or in failed state
-    // and set the download failed status to true for each track
-    const failedMediaItems = await dal.mediaItems.getInState(failedStates)
-    const failedTracks = failedMediaItems
-      .map(track => track.trackId)
-      .filter(id => id !== undefined)
-    // failedTracks.forEach(trackId => {
-    //   playlistStore.updateByTrackId(trackId, { state: 'failed' })
-    //   // searchResultsStore.updateByTrackId(trackId, { downloadFailed: true })
-    // })
-    logger.info(
-      `Failed tracks (${failedTracks.length}): `+
-      `${JSON.stringify(new Set(failedTracks), null, 2)}. ` + 
-      `Media items: ${JSON.stringify(failedMediaItems, null, 2)}.`)
-
-    // Check all playlist items and set the download failed status
-    // to true for each track that has no media items or has media items
-    // in the failed state
-    const playlistItems = await dal.playlistItems.getAll()
-    for (const playlistItem of playlistItems) {
-      const mediaItems = await dal.mediaItems.getMany({ 
-        selector: { trackId: playlistItem.trackId } 
-      })
-
-      const mediaItemsEmpty = mediaItems.length === 0
-      const mediaItemsFailed = mediaItems.some(
-        x => failedStates.includes(x.state)
-      )
-
-      if (mediaItemsEmpty || mediaItemsFailed) {
-        logger.info(
-          `Failed track in playlist - ${playlistItem.trackId}: `+
-          `media items ${mediaItemsEmpty ? 'empty' : 'failed'}`)
-        // playlistStore.updateByTrackId(playlistItem.trackId, { state: 'failed' })
-        // searchResultsStore.updateByTrackId(playlistItem.trackId, { downloadFailed: true })
-      }
-    }
-  }
-
-  /* -------------------------------------------------------------------------- */
-  /*                                  Interface                                 */
-  /* -------------------------------------------------------------------------- */
-
-  return { init }
 }

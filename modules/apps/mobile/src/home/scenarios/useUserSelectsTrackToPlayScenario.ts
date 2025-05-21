@@ -20,7 +20,9 @@ export function useUserSelectsTrackToPlayScenario() {
   /*                                  Handlers                                  */
   /* -------------------------------------------------------------------------- */
 
-  async function execute(playlistItemId: string) {
+  async function execute(
+    playlistItemId: string
+  ) {
     // Notify user
     await Haptics.impact({ style: ImpactStyle.Light })
     

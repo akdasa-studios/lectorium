@@ -46,7 +46,6 @@ import {
   useMarkCompletedPlaylistItem,
   useSentryFeature,
   useDatabase,
-  useShowTrackDownloadingStatusFeature,
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
@@ -69,6 +68,9 @@ import { locale as localeLibrary } from './library/locale'
 import { locale as localeSettings } from './settings/locale'
 import { useInAppPurchasesFeatures } from './app/features/useInAppPurchasesFeatures'
 import { Device } from '@capacitor/device'
+import { initTrackStateFeature } from './initTrackStateFeature'
+import { initTrackSearchFeature } from './initTrackSearchFeature'
+
 
 const i18n = createI18n({
   locale: 'ru',
@@ -104,28 +106,20 @@ router.isReady().then(async () => {
   const start = new Date().getTime()
 
   // App //
-
-  console.log('useConfigPersistenceFeature...')
   await useConfigPersistenceFeature()
-
-  console.log('useNavigationBarFeature...')
   await useNavigationBarFeature()
-
-  console.log('useSafeAreaFeature...')
   await useSafeAreaFeature()
 
-  console.log('useCleanupMediaItemsFeature...')
+  useMarkCompletedPlaylistItem()
+  useArchiveCompletedPlaylistItemsFeature()
   useCleanupMediaItemsFeature()
-
-  console.log('useCleanupFilesFeature...')
   useCleanupFilesFeature()
 
-  console.log('useConfigPersistenceFeature...')
-  useMarkCompletedPlaylistItem()
+  // Features //
 
-  console.log('useShowTrackDownloadingStatusFeature...')
-  await useShowTrackDownloadingStatusFeature().init()
-  useArchiveCompletedPlaylistItemsFeature()
+  await initTrackStateFeature()
+  initTrackSearchFeature()
+  
 
   // Player //
 

@@ -1,7 +1,7 @@
 import { Track, PlaylistItem } from '@lectorium/dal/models'
 import { useDAL } from '@lectorium/mobile/app'
-import { PlaylistItemIdentity, PlaylistItemProps, PlaylistItemState } from '../components/Playlist/PlaylistItem.vue'
-import { SearchResultListItemIdentity, SearchResultListItemProps, SearchResultListItemState } from '@lectorium/mobile/search/components/SearchResultListItem.vue'
+// import { PlaylistItemIdentity, PlaylistItemProps, PlaylistItemState } from '../components/Playlist/PlaylistItem.vue'
+import { TrackSearchResultItem } from '@lectorium/mobile/features/trackSearch'
 
 // TODO: move to @lectorium/mobile
 // TODO: DAL access should be cached
@@ -10,10 +10,11 @@ export async function mapPlaylistItem(
   playlistItem: PlaylistItem,
   language: string = 'en'
 ): Promise<
-  & PlaylistItemIdentity 
-  & PlaylistItemProps 
-  & PlaylistItemState 
-  & { trackId: string }
+  any
+  // & PlaylistItemIdentity 
+  // & PlaylistItemProps 
+  // & PlaylistItemState 
+  // & { trackId: string }
 > {
   const dal = useDAL()
   const track = await dal.tracks.getOne(playlistItem.trackId)
@@ -38,19 +39,8 @@ export async function mapTrackToSearchResultListItem(
   track: Track,
   language: string = 'en',
 ): Promise<
-  & SearchResultListItemIdentity 
-  & SearchResultListItemProps 
-  & SearchResultListItemState
+  TrackSearchResultItem
 > {
-  const dal = useDAL()
-
-  // Get all playlist items related to this track, and check it is:
-  // - in playlist -> there is at least one non-archived item
-  // - completed   -> there is at least one completed item
-  const playlistItems = await dal.playlistItems.getMany({ selector: { trackId: track._id } }) 
-  const isInPlaylist = playlistItems.filter(x => x.archivedAt === undefined).length >= 1
-  const isCompleted = playlistItems.filter(x => x.completedAt).length >= 1
-
   // Map track to search result list item
   return {
     trackId: track._id,
@@ -64,8 +54,6 @@ export async function mapTrackToSearchResultListItem(
       ? await Promise.all(track.references.map(ref => mapReference(ref, language)))
       : [],
     date: mapTrackDate(track.date),
-    added: isInPlaylist,
-    completed: isCompleted
   }
 }
 

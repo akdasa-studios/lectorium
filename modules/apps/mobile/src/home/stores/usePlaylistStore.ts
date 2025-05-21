@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 
-type PlaylistStoreItem = {
+export type PlaylistStoreItem = {
   playlistItemId: string
   trackId: string
   tags: string[]
@@ -10,8 +10,6 @@ type PlaylistStoreItem = {
   author?: string
   location?: string
   references: string[]
-  state?: 'failed' | 'completed'
-  progress?: number
 }
 
 export const usePlaylistStore = defineStore('playlist', () =>{
@@ -24,6 +22,10 @@ export const usePlaylistStore = defineStore('playlist', () =>{
   /* -------------------------------------------------------------------------- */
   /*                                   Actions                                  */
   /* -------------------------------------------------------------------------- */
+
+  function isEmpty() {
+    return items.length === 0
+  }
 
   function setItems(value: PlaylistStoreItem[]) {
     items.length = 0
@@ -48,5 +50,5 @@ export const usePlaylistStore = defineStore('playlist', () =>{
   /*                                  Interface                                 */
   /* -------------------------------------------------------------------------- */
 
-  return { items, setItems, getByTrackId, updateByTrackId }
+  return { items, setItems, getByTrackId, updateByTrackId, isEmpty }
 })

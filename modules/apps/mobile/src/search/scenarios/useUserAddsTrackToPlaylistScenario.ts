@@ -1,8 +1,7 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useDAL, useBucketService, useConfig, useMediaService, useIdGenerator } from '@lectorium/mobile/app'
 import { S3Operation } from '@lectorium/protocol/index'
-import { usePlaylistStore } from '@lectorium/mobile/home/stores/usePlaylistStore'
-import { useSearchResultsStore } from '@lectorium/mobile/app/stores/useSearchResultsStore'
+import { useTrackStateStore } from '@lectorium/mobile/features/trackState'
 
 /**
  * Scenario for adding a track to a playlist.
@@ -17,8 +16,7 @@ export function useUserAddsTrackToPlaylistScenario() {
   const idGenerator = useIdGenerator()
   const mediaService = useMediaService()
   const bucketService = useBucketService()
-  const playlistStore = usePlaylistStore()
-  const searchResultsStore = useSearchResultsStore()
+  const trackStateStore = useTrackStateStore()
 
   /* -------------------------------------------------------------------------- */
   /*                                  Handlers                                  */
@@ -38,7 +36,11 @@ export function useUserAddsTrackToPlaylistScenario() {
 
       // Get track information
       const track = await dal.tracks.getOne(trackId)
-      const trackTitle = track.title[config.appLanguage.value] || track.title['en'] || 'Unknown'
+      const trackTitle = track.title[config.appLanguage.value] 
+        || track.title['en'] 
+        || track.title[Object.keys(track.title)[0]] 
+        || 'No title'
+        || 'Unknown'
 
       // Add track to playlist
       await dal.playlistItems.addOne({
@@ -50,10 +52,6 @@ export function useUserAddsTrackToPlaylistScenario() {
         archivedAt: undefined,
       })
       
-      // Update user interface to show that track is being added and started downloading
-      playlistStore.updateByTrackId(trackId, { progress: 0 })
-      searchResultsStore.updateByTrackId(trackId, { progress: 0, added: true })
-
       const transcripts = Object.values(track.transcripts)
 
       // Sign all urls and prepare download tasks for MediaService
@@ -92,11 +90,7 @@ export function useUserAddsTrackToPlaylistScenario() {
         })
       )
     } catch {
-      // Something wrong happened
-      playlistStore.updateByTrackId(trackId, { 
-        state: 'failed',
-        progress: undefined
-      })
+      trackStateStore.setState(trackId, { isFailed: true })
     }
   }
 
