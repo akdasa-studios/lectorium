@@ -1,5 +1,5 @@
 import { Filesystem, Directory, ProgressStatus } from '@capacitor/filesystem'
-import { Event } from '@lectorium/mobile/app/lib'
+import { Event } from '@lectorium/mobile/features/app.core'
 
 /* -------------------------------------------------------------------------- */
 /*                                   Models                                   */
@@ -8,7 +8,6 @@ import { Event } from '@lectorium/mobile/app/lib'
 export type DownloaderTask = {
   url: string
   destination: string
-  title: string
   progress: number
   meta: any
 }
@@ -19,7 +18,7 @@ export type DownloaderTask = {
 /* -------------------------------------------------------------------------- */
 
 export type DownloaderEnqueueTaskRequest = 
-  Pick<DownloaderTask, 'url' | 'destination' | 'title' | 'meta'>
+  Pick<DownloaderTask, 'url' | 'destination' | 'meta'>
 
 /* -------------------------------------------------------------------------- */
 /*                                 Event Args                                 */

@@ -1,11 +1,11 @@
 import { MediaItemsService } from '@lectorium/dal/index'
-import { DownloaderService, useIdGenerator } from '@lectorium/mobile/app'
+import { DownloaderService } from '@lectorium/mobile/app'
+import { useIdGenerator } from '@lectorium/mobile/features/app.core'
 
 export type GetMediaRequest = {
   trackId: string,
   url: string
   destination: string
-  title: string
 }
 
 /**
@@ -48,7 +48,6 @@ export class MediaService {
     await this.mediaItems.addOne({
       _id: newMediaItemId, 
       type: 'mediaItem',
-      title: request.title,
       remoteUrl: request.url,
       localPath: request.destination,
       trackId: request.trackId,
@@ -60,7 +59,6 @@ export class MediaService {
     await this.downloader.enqueue({
       url: request.url,
       destination: request.destination,
-      title: request.title,
       meta: {
         trackId: request.trackId,
         mediaItemId: newMediaItemId,

@@ -1,7 +1,7 @@
 import { useDAL } from './app/composables/useDAL'
 import { useLogger } from './app/composables/useLogger'
 import { useDownloaderService } from './app/composables/useDownloaderService'
-import { useSyncDownloadingStateTask, useSyncPlaylistStateTask, useTrackStateInitializer } from './features/tracks.state'
+import { useSyncDownloadingStateTask, useSyncPlaylistStateTask, useTracksStateFeature } from './features/tracks.state'
 
 export async function initTrackStateFeature() {
 
@@ -30,8 +30,8 @@ export async function initTrackStateFeature() {
     playlistItemService: dal.playlistItems
   }).start()
 
-  await useTrackStateInitializer({
+  await useTracksStateFeature().init({
     mediaItemsService: dal.mediaItems,
     playlistItemsService: dal.playlistItems,
-  }).init()
+  })
 }

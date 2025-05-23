@@ -20,4 +20,4 @@ export { default as SearchFiltersBar } from './components/SearchFiltersBar.vue'
 /*                                 Composables                                */
 /* -------------------------------------------------------------------------- */
 
-export { useSearchFiltersDictionaryInitializer } from './composables/useSearchFiltersDictionaryInitializer'
+export { useTracksSearchFiltersFeature } from './composables/useSearchFiltersDictionaryInitializer'

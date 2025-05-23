@@ -1,3 +1,4 @@
+import { createSharedComposable } from '@vueuse/core'
 import { useSearchFiltersDictionaryStore } from './useSearchFiltersDictionaryStore'
 import { AuthorsService, DurationsService, LanguagesService, LocationsService, SourcesService } from '@lectorium/dal/index'
 
@@ -12,9 +13,7 @@ export type Options = {
   durationsService: DurationsService
 }
 
-export function useSearchFiltersDictionaryInitializer(
-  options: Options
-) {
+export const useTracksSearchFiltersFeature = createSharedComposable(() => {
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
@@ -25,7 +24,7 @@ export function useSearchFiltersDictionaryInitializer(
   /*                                  Handlers                                  */
   /* -------------------------------------------------------------------------- */
 
-  async function init() {
+  async function init(options: Options) {
     const [
       authors, sources, locations, languages, durations
     ] = await Promise.all([
@@ -69,4 +68,4 @@ export function useSearchFiltersDictionaryInitializer(
   /* -------------------------------------------------------------------------- */
 
   return { init }
-}
+})

@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { IonModal, IonButton } from '@ionic/vue'
 import { ref, toRefs, watch } from 'vue'
-import Content from '@lectorium/mobile/app/components/Content.vue'
+import { Content } from '@lectorium/mobile/features/app.core'
 import SubscriptionActive from '../components/SubscriptionActive.vue'
 import SubscriptionHeader from '../components/SubscriptionHeader.vue'
 import SubscriptionBenefit from '../components/SubscriptionBenefit.vue'

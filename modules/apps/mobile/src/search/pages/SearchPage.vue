@@ -19,27 +19,29 @@
 </template>
 
 <script setup lang="ts">
-import Page from '@lectorium/mobile/app/components/Page.vue'
-import { SearchInput } from '@lectorium/mobile/features/app.core'
+import { Page, SearchInput } from '@lectorium/mobile/features/app.core'
 import { SearchFiltersBar } from '@lectorium/mobile/features/tracks.search.filters'
 import { TrackStateIndicator } from '@lectorium/mobile/features/tracks.state'
 import { SearchResultsSection, useTrackSearchResultsStore } from '@lectorium/mobile/features/tracks.search.results' 
 import { useTracksCountStore } from '@lectorium/mobile/features/tracks.count'
-import { useUserAddsTrackToPlaylistScenario } from '../scenarios/useUserAddsTrackToPlaylistScenario'
+import { useTracksDownloadFeature } from '@lectorium/mobile/features/tracks.download'
+import { usePlaylistFeature } from '@lectorium/mobile/features/playlist'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
 const trackSearchResultsStore = useTrackSearchResultsStore()
-const userAddsTrackToPlaylistScenario = useUserAddsTrackToPlaylistScenario()
 const tracksCountStore = useTracksCountStore()
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-function onTrackClicked(trackId: string) {
-  userAddsTrackToPlaylistScenario.execute(trackId)
+async function onTrackClicked(trackId: string) {
+  const isTrackAdded = await usePlaylistFeature().addTrackToPlaylist(trackId)
+  if (isTrackAdded) {
+    useTracksDownloadFeature().download({ trackId })
+  }
 }
 </script>

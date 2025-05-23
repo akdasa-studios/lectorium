@@ -7,5 +7,5 @@
 export { useTrackStateStore, type TrackState } from './composables/useTrackStateStore'
 export { useSyncDownloadingStateTask } from './composables/useSyncDownloadingStateTask'
 export { useSyncPlaylistStateTask } from './composables/useSyncPlaylistStateTask'
-export { useTrackStateInitializer } from './composables/useTrackStateInitializer'
+export { useTracksStateFeature } from './composables/useTracksStateFeature'
 export { default as TrackStateIndicator } from './components/TrackStateIndicator.vue'

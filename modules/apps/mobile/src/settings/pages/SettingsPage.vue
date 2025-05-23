@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { IonList } from '@ionic/vue'
-import { Page } from '@lectorium/mobile/app'
+import { Page } from '@lectorium/mobile/features/app.core'
 import AppLanguageSettingsItem from '../containers/AppLanguageSettingsItem.vue'
 import SubscriptionSettingsItem from '../containers/SubscriptionSettingsItem.vue'
 import { Capacitor } from '@capacitor/core'

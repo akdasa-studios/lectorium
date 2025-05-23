@@ -47,12 +47,13 @@ import {
   useSentryFeature,
   useDatabase,
   useDAL,
+  useBucketService,
+  useMediaService,
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
   useSetPlayerControlsInfoFeature,
 } from '@lectorium/mobile/player'
-import { useSyncPlaylistStore } from '@lectorium/mobile/home/features/useSyncPlaylistStore'
 import { useArchiveCompletedPlaylistItemsFeature } from './app/features/useArchiveCompletedPlaylistItemsFeature'
 
 /** 
@@ -62,37 +63,22 @@ import PouchDB from 'pouchdb'
 import PouchDBAdapterSqlLite from 'pouchdb-adapter-cordova-sqlite'
 PouchDB.plugin(PouchDBAdapterSqlLite)
 
-import { locale as localeApp } from './app/locale'
-import { locale as localeHome } from './home/locale'
-import { locale as localeSearch } from './search/locale'
-import { locale as localeLibrary } from './library/locale'
-import { locale as localeSettings } from './settings/locale'
 import { useInAppPurchasesFeatures } from './app/features/useInAppPurchasesFeatures'
 import { Device } from '@capacitor/device'
 import { initTrackStateFeature } from './initTrackStateFeature'
 import { initTrackSearchFeature } from './initTrackSearchFeature'
-import { useSearchFiltersDictionaryInitializer } from './features/tracks.search.filters'
+import { useTracksSearchFiltersFeature } from './features/tracks.search.filters'
+import { useTracksCountFeature } from './features/tracks.count'
+import { useTracksDownloadFeature } from './features/tracks.download'
+import { useTrackStateStore } from './features/tracks.state'
+import { locale } from './features/app.localization'
+import { usePlaylistFeature, useSyncPlaylistStoreTask } from './features/playlist'
 
 
 const i18n = createI18n({
   locale: 'ru',
   fallbackLocale: 'en',
-  messages: {
-    en: {
-      app: localeApp.en,
-      home: localeHome.en,
-      search: localeSearch.en,
-      library: localeLibrary.en,
-      settings: localeSettings.en,
-    },
-    ru: {
-      app: localeApp.ru,
-      home: localeHome.ru,
-      search: localeSearch.ru,
-      library: localeLibrary.ru,
-      settings: localeSettings.ru,
-    }
-  }
+  messages: locale
 })
 const pinia = createPinia()
 const app = createApp(App)
@@ -123,13 +109,28 @@ router.isReady().then(async () => {
   initTrackSearchFeature()
 
   const dal = useDAL()
-  await useSearchFiltersDictionaryInitializer({
+  await useTracksSearchFiltersFeature().init({
     authorsService: dal.authors,
     sourcesService: dal.sources,
     locationsService: dal.locations,
     languagesService: dal.languages,
     durationsService: dal.durations,
-  }).init()
+  })
+  await useTracksCountFeature().init({
+    tracksService: dal.tracks
+  })
+  useTracksDownloadFeature().init({
+    tracksService: useDAL().tracks,
+    bucketName: useConfig().bucketName.value,
+    bucketService: useBucketService(),
+    mediaService: useMediaService(),
+    onTrackFailed: (trackId) => {
+      useTrackStateStore().setState(trackId, { isFailed: true })
+    }
+  })
+  usePlaylistFeature().init({
+    playlistService: dal.playlistItems,
+  })
   
 
   // Player //
@@ -159,7 +160,9 @@ router.isReady().then(async () => {
   
 
   // Should be after database.init()
-  await useSyncPlaylistStore().init()
+  await useSyncPlaylistStoreTask({
+    playlistItemService: dal.playlistItems,
+  }).start()
 
   const elapsed = new Date().getTime() - start
   console.log(`Initialization time: ${elapsed}ms`)
