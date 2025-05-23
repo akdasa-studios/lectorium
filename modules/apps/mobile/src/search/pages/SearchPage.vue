@@ -1,44 +1,39 @@
 <template>
   <Page>
-    <Searchbar
+    <!-- Search input text -->
+    <SearchInput
       v-model="trackSearchResultsStore.filters.query"
-      :placeholder="$t('search.search', { count: tracksCount })"
+      :placeholder="$t('search.search', { count: tracksCountStore.totalCount })"
     />
+
+    <!-- Search filter bar with filter chips -->
     <SearchFiltersBar v-model="trackSearchResultsStore.filters" />
-    <SearchResultsSection @click="onTrackClicked" />
+
+    <!-- Found tracks with state indicator -->
+    <SearchResultsSection @click="onTrackClicked">
+      <template #state="{ trackId }">
+        <TrackStateIndicator :track-id="trackId" />
+      </template>
+    </SearchResultsSection>
   </Page>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useDAL } from '@lectorium/mobile/app/composables/useDAL'
 import Page from '@lectorium/mobile/app/components/Page.vue'
-import Searchbar from '@lectorium/mobile/search/components/Searchbar.vue'
-import SearchFiltersBar from '@lectorium/mobile/search/containers/SearchFiltersBar/SearchFiltersBar.vue'
-import { SearchResultsSection, useTrackSearchResultsStore } from '@lectorium/mobile/features/trackSearch' 
+import { SearchInput } from '@lectorium/mobile/features/app.core'
+import { SearchFiltersBar } from '@lectorium/mobile/features/tracks.search.filters'
+import { TrackStateIndicator } from '@lectorium/mobile/features/tracks.state'
+import { SearchResultsSection, useTrackSearchResultsStore } from '@lectorium/mobile/features/tracks.search.results' 
+import { useTracksCountStore } from '@lectorium/mobile/features/tracks.count'
 import { useUserAddsTrackToPlaylistScenario } from '../scenarios/useUserAddsTrackToPlaylistScenario'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const dal = useDAL()
 const trackSearchResultsStore = useTrackSearchResultsStore()
 const userAddsTrackToPlaylistScenario = useUserAddsTrackToPlaylistScenario()
-
-/* -------------------------------------------------------------------------- */
-/*                                    State                                   */
-/* -------------------------------------------------------------------------- */
-
-const tracksCount = ref<number>(0)
-
-/* -------------------------------------------------------------------------- */
-/*                                    Hooks                                   */
-/* -------------------------------------------------------------------------- */
-
-onMounted(async () => {
-  tracksCount.value = await dal.tracks.getCount()
-})
+const tracksCountStore = useTracksCountStore()
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */

@@ -57,7 +57,7 @@ export type DateRange = { from: string, to: string }
 const props = defineProps<{
   open: boolean,
   title: string,
-  value: DateRange
+  value: DateRange|undefined
 }>()
 
 const emit = defineEmits<{
@@ -69,13 +69,22 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const value = ref<DateRange>({ from: props.value.from, to: props.value.to })
+const value = ref<DateRange>({ 
+  from: props.value?.from || '', 
+  to: props.value?.to || ''
+})
 
 /* -------------------------------------------------------------------------- */
 /*                                    Hooks                                   */
 /* -------------------------------------------------------------------------- */
 
-watch(() => props.value, (newValue) => { value.value = newValue })
+watch(() => props.value, (newValue) => { 
+  if (!newValue) {
+    value.value = { from: '', to: '' }
+    return
+  }
+  value.value = newValue 
+})
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */

@@ -1,7 +1,7 @@
 import { useDAL } from './app/composables/useDAL'
 import { useLogger } from './app/composables/useLogger'
 import { useDownloaderService } from './app/composables/useDownloaderService'
-import { useSyncDownloadingStateTask, useSyncPlaylistStateTask, useTrackStateInitializer } from './features/trackState'
+import { useSyncDownloadingStateTask, useSyncPlaylistStateTask, useTrackStateInitializer } from './features/tracks.state'
 
 export async function initTrackStateFeature() {
 

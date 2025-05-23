@@ -12,12 +12,15 @@
     @click="emit('click', item.trackId)"
   >
     <template #state="{ trackId }">
-      <TrackStateIndicator :track-id="trackId" />
+      <slot
+        name="state"
+        :track-id="trackId"
+      />
     </template>
   </TrackListItem>
   
   <SearchSpecifyCriteria 
-    v-if="searchResultsStore.maximumItemsLoaded"
+    v-if="searchResultsStore.pagesLoaded === searchResultsStore.maximumPagesToLoad"
   />
 
   <IonInfiniteScroll
@@ -31,24 +34,17 @@
 
 <script setup lang="ts">
 import { IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/vue'
-import { TrackListItem } from '@lectorium/mobile/features/trackListItem'
-import { TrackStateIndicator } from '@lectorium/mobile/features/trackState'
+import { TrackListItem } from '@lectorium/mobile/features/tracks.view'
+import { useWaiter } from '@lectorium/mobile/features/app.core'
 import { useTrackSearchResultsStore } from '../composables/useTrackSearchResultsStore'
 import SearchSpecifyCriteria from './SearchSpecifyCriteria.vue'
-import { useSearchResultsLoader } from '../composables/useSearchResultsLoader'
-import { useDAL } from '@lectorium/mobile/app'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
 /* -------------------------------------------------------------------------- */
 
-const dal = useDAL() // TODO: remove this dep
 const searchResultsStore = useTrackSearchResultsStore()
-const searchResultsLoader = useSearchResultsLoader({
-  sourcesService: dal.sources,
-  indexService: dal.index,
-  tracksService: dal.tracks
-})
+const waiter = useWaiter()
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -63,14 +59,11 @@ const emit = defineEmits<{
 /* -------------------------------------------------------------------------- */
 
 function onInfiniteSctoll(e: InfiniteScrollCustomEvent) {
-  if (searchResultsStore.maximumItemsLoaded) {
-    e.target.complete()  
-    return
-  }
-
-  searchResultsLoader.load(
-    searchResultsStore.filters,
-    searchResultsStore.items.length
-  ).then(() => e.target.complete())
+  searchResultsStore.loadNextPage()
+  waiter.waitToBeTruthy(
+    () => searchResultsStore.isLoading === false
+  ).then(
+    () => { e.target.complete() }
+  )
 }
 </script>

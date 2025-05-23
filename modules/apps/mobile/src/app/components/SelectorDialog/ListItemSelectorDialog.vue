@@ -6,7 +6,7 @@
     @close="onClose"
   >
     <IonList
-      lines="full"
+      lines="none"
       class="ion-no-margin ion-no-padding"
     >
       <IonRadioGroup

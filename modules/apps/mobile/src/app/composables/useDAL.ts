@@ -3,7 +3,7 @@ import { useDatabase } from '@lectorium/mobile/app'
 import { 
   AuthorsService, LanguagesService, LocationsService, MediaItemsService,
   PlaylistItemsService, SourcesService, IndexService, TracksService,
-  TagsService
+  TagsService, DurationsService
 
 } from '@lectorium/dal/index'
 
@@ -19,6 +19,7 @@ export const useDAL = createGlobalState(() => {
     locations: new LocationsService(database.local.dictionary),
     sources: new SourcesService(database.local.dictionary),
     languages: new LanguagesService(database.local.dictionary),
+    durations: new DurationsService(database.local.dictionary),
     tags: new TagsService(database.local.dictionary),
 
     // Index

@@ -29,8 +29,8 @@
 
 
 <script setup lang="ts">
-import { TrackListItem } from '@lectorium/mobile/features/trackListItem'
-import { TrackStateIndicator } from '@lectorium/mobile/features/trackState'
+import { TrackListItem } from '@lectorium/mobile/features/tracks.view'
+import { TrackStateIndicator } from '@lectorium/mobile/features/tracks.state'
 import { PlaylistStoreItem, usePlaylistStore } from '../stores/usePlaylistStore'
 import WithDeleteAction from '@lectorium/mobile/app/components/WithDeleteAction.vue'
 import { useUserSelectsTrackToPlayScenario } from '../scenarios/useUserSelectsTrackToPlayScenario'

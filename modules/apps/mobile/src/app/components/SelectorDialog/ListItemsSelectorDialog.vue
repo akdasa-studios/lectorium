@@ -2,16 +2,16 @@
   <SelectorDialog
     :title="title"
     :open="open"
-    @select="onSelect"
-    @close="onClose"
+    @select="onSelectDialogButtonClicked"
+    @close="onCloseDialogButtonClicked"
   >
-    <Searchbar
+    <SearchInput
       v-if="items.length > 10"
       v-model="query"
       placeholder="Search"
     />
     <IonList
-      lines="full"
+      lines="none"
       class="ion-no-margin ion-no-padding"
     >
       <IonItem
@@ -19,9 +19,9 @@
         :key="item.id"
       >
         <IonCheckbox
-          v-model="item.checked"
           label-placement="end"
           justify="start"
+          @ion-change="e => onCheckboxClicked(item.id, e.detail.checked)"
         >
           {{ item.title }}
         </IonCheckbox>
@@ -34,7 +34,7 @@
 <script setup lang="ts" generic="T extends Item">
 import { computed, ref } from 'vue'
 import { IonList, IonCheckbox, IonItem } from '@ionic/vue'
-import Searchbar from '@lectorium/mobile/search/components/Searchbar.vue'
+import { SearchInput } from '@lectorium/mobile/features/app.core'
 import SelectorDialog from './SelectorDialog.vue'
 
 /* -------------------------------------------------------------------------- */
@@ -45,7 +45,6 @@ export type ItemId = string
 export type Item = {
   id: ItemId
   title: string
-  checked: boolean
 }
 
 const props = defineProps<{
@@ -65,24 +64,33 @@ const emit = defineEmits<{
 /* -------------------------------------------------------------------------- */
 
 const query = ref('')
+const selectedItemIds = ref<ItemId[]>([])
 
 const filteredItems = computed(() =>
-  props.items.filter((item) => compareStrings(item.title, query.value) || item.checked,
-))
+  props.items.filter((item) => 
+    compareStrings(item.title, query.value) || 
+    selectedItemIds.value.includes(item.id),
+  )
+)
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-function onClose() {
+function onCheckboxClicked(id: ItemId, value: boolean) {
+  if (value) {
+    selectedItemIds.value.push(id)
+  } else {
+    selectedItemIds.value = selectedItemIds.value.filter((itemId) => itemId !== id)
+  }
+}
+
+function onCloseDialogButtonClicked() {
   emit('close')
 }
 
-function onSelect() {
-  const itemIds = props.items
-    .filter((item) => item.checked)
-    .map((item) => item.id)
-  emit('select', itemIds)
+function onSelectDialogButtonClicked() {
+  emit('select', selectedItemIds.value)
 }
 
 /* -------------------------------------------------------------------------- */

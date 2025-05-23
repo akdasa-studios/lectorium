@@ -46,6 +46,7 @@ import {
   useMarkCompletedPlaylistItem,
   useSentryFeature,
   useDatabase,
+  useDAL,
 } from './app'
 import { 
   useSyncAudioPlayerPluginStateFeature, 
@@ -70,6 +71,7 @@ import { useInAppPurchasesFeatures } from './app/features/useInAppPurchasesFeatu
 import { Device } from '@capacitor/device'
 import { initTrackStateFeature } from './initTrackStateFeature'
 import { initTrackSearchFeature } from './initTrackSearchFeature'
+import { useSearchFiltersDictionaryInitializer } from './features/tracks.search.filters'
 
 
 const i18n = createI18n({
@@ -119,6 +121,15 @@ router.isReady().then(async () => {
 
   await initTrackStateFeature()
   initTrackSearchFeature()
+
+  const dal = useDAL()
+  await useSearchFiltersDictionaryInitializer({
+    authorsService: dal.authors,
+    sourcesService: dal.sources,
+    locationsService: dal.locations,
+    languagesService: dal.languages,
+    durationsService: dal.durations,
+  }).init()
   
 
   // Player //

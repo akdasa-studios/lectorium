@@ -1,6 +1,6 @@
 import { useDAL } from './app/composables/useDAL'
 import { useLogger } from './app/composables/useLogger'
-import { useSyncTrackSearchResultsTask } from './features/trackSearch'
+import { useSyncTrackSearchResultsTask } from './features/tracks.search.results'
 
 export async function initTrackSearchFeature() {
 
@@ -21,5 +21,6 @@ export async function initTrackSearchFeature() {
     indexService: dal.index,
     tracksService: dal.tracks,
     sourcesService: dal.sources,
+    durationsService: dal.durations,
   })
 }

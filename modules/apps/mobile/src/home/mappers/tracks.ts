@@ -1,7 +1,7 @@
 import { Track, PlaylistItem } from '@lectorium/dal/models'
 import { useDAL } from '@lectorium/mobile/app'
 // import { PlaylistItemIdentity, PlaylistItemProps, PlaylistItemState } from '../components/Playlist/PlaylistItem.vue'
-import { TrackSearchResultItem } from '@lectorium/mobile/features/trackSearch'
+import { TrackSearchResultItem } from '@lectorium/mobile/features/tracks.search.results'
 
 // TODO: move to @lectorium/mobile
 // TODO: DAL access should be cached

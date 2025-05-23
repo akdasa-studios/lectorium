@@ -1,7 +1,7 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useDAL, useBucketService, useConfig, useMediaService, useIdGenerator } from '@lectorium/mobile/app'
 import { S3Operation } from '@lectorium/protocol/index'
-import { useTrackStateStore } from '@lectorium/mobile/features/trackState'
+import { useTrackStateStore } from '@lectorium/mobile/features/tracks.state'
 
 /**
  * Scenario for adding a track to a playlist.

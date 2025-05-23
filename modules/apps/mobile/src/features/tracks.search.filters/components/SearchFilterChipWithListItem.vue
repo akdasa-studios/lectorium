@@ -2,12 +2,13 @@
   <SearchFilterChip 
     :applied="isApplied"
     @click="setDialogOpen(true)"
-    @remove="modelValue = { from: '', to: '' }"
+    @remove="modelValue = undefined"
   >
     {{ title }}
   </SearchFilterChip> 
-  <DateRangeSelectorDialog
+  <ListItemSelectorDialog
     :title="title"
+    :items="items"
     :open="isDialogOpen"
     :value="modelValue"
     @close="setDialogOpen(false)"
@@ -18,8 +19,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { DateRange, DateRangeSelectorDialog } from '@lectorium/mobile/app'
-import SearchFilterChip from '@lectorium/mobile/search/components/SearchFilterChip.vue'
+import { ListItemSelectorDialog, type ListItemSelectorItem } from '@lectorium/mobile/app'
+import SearchFilterChip from './SearchFilterChip.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -27,16 +28,18 @@ import SearchFilterChip from '@lectorium/mobile/search/components/SearchFilterCh
 
 defineProps<{
   title: string
+  items: ListItemSelectorItem[]
 }>()
 
-const modelValue = defineModel<DateRange>({ required: true, default: { from: '', to: ''} })
+const modelValue = defineModel<string|undefined>({ required: true, default: undefined })
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
 const isDialogOpen = ref(false)
-const isApplied = computed(() => modelValue.value.from !== '' || modelValue.value.to !== '')
+const isApplied = computed(() => modelValue.value !== undefined)
+
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
