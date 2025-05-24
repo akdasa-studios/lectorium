@@ -1,8 +1,8 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
-import { useConfig, useDAL } from '@lectorium/mobile/app'
-import { usePlayer, usePlayerControls, usePlayerTranscript } from '@lectorium/mobile/player'
 import { Filesystem, Directory } from '@capacitor/filesystem'
-
+import { useDAL } from '@lectorium/mobile/features/app.database'
+import { useConfig } from '@lectorium/mobile/features/app.config'
+import { usePlayer, usePlayerControls, usePlayerTranscript } from '../features/player'
 
 export function playTrackOperation() {
 

@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { ListItemSelectorDialog, type ListItemSelectorItem } from '@lectorium/mobile/app'
+import { ListItemSelectorDialog, type ListItemSelectorItem } from '@lectorium/mobile/features/app.ui.selectors'
 import SearchFilterChip from './SearchFilterChip.vue'
 
 /* -------------------------------------------------------------------------- */

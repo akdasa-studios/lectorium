@@ -15,6 +15,8 @@ export { default as SectionHeader } from './components/SectionHeader.vue'
 
 export { useWaiter } from './composables/useWaiter'
 export { useIdGenerator } from './composables/useIdGenerator'
+export { useLogger } from './composables/useLogger'
+export { useSafeOperation } from './composables/useSafeOperation'
 
 /* -------------------------------------------------------------------------- */
 /*                                   Library                                  */

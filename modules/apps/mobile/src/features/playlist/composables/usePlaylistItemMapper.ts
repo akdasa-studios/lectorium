@@ -1,6 +1,6 @@
-import { useDAL } from '@lectorium/mobile/app'
 import { PlaylistItem } from '@lectorium/dal/models'
 import { PlaylistStoreItem } from './usePlaylistStore'
+import { useDAL } from '@lectorium/mobile/features/app.database'
 
 type Options = {
   language: string

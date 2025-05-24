@@ -1,4 +1,4 @@
-import { useDAL } from '@lectorium/mobile/app'
+import { useDAL } from '@lectorium/mobile/features/app.database'
 
 export function archivePlaylistItem() {
   /* -------------------------------------------------------------------------- */

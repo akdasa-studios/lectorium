@@ -1,6 +1,6 @@
 import { Track } from '@lectorium/dal/models'
-import { useDAL } from '@lectorium/mobile/app'
 import { TrackSearchResultItem } from '@lectorium/mobile/features/tracks.search.results'
+import { useDAL } from '@lectorium/mobile/features/app.database'
 
 type Options = {
   language: string

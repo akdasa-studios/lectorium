@@ -33,28 +33,10 @@ import '@ionic/vue/css/display.css'
 /* import '@ionic/vue/css/palettes/dark.system.css' */
 
 /* Theme variables */
-import './app/theme/variables.css'
+import './features/app.ui.kit/styles/variables.css'
 
 import { createI18n } from 'vue-i18n'
-import { 
-  useConfig,
-  useConfigPersistenceFeature,
-  useNavigationBarFeature,
-  useSafeAreaFeature,
-  useCleanupMediaItemsFeature,
-  useCleanupFilesFeature,
-  useMarkCompletedPlaylistItem,
-  useSentryFeature,
-  useDatabase,
-  useDAL,
-  useBucketService,
-  useMediaService,
-} from './app'
-import { 
-  useSyncAudioPlayerPluginStateFeature, 
-  useSetPlayerControlsInfoFeature,
-} from '@lectorium/mobile/player'
-import { useArchiveCompletedPlaylistItemsFeature } from './app/features/useArchiveCompletedPlaylistItemsFeature'
+import { useArchiveCompletedPlaylistItemsFeature } from './features/playlist/composables/useArchiveCompletedPlaylistItemsFeature'
 
 /** 
  * Configure PouchDB to use SQLite adapter for Cordova
@@ -63,16 +45,24 @@ import PouchDB from 'pouchdb'
 import PouchDBAdapterSqlLite from 'pouchdb-adapter-cordova-sqlite'
 PouchDB.plugin(PouchDBAdapterSqlLite)
 
-import { useInAppPurchasesFeatures } from './app/features/useInAppPurchasesFeatures'
+import { useInAppPurchasesFeatures } from './features/app.purchases/composables/useInAppPurchasesFeatures'
 import { Device } from '@capacitor/device'
-import { initTrackStateFeature } from './initTrackStateFeature'
-import { initTrackSearchFeature } from './initTrackSearchFeature'
+import { initTrackStateFeature } from './init/initTrackStateFeature'
+import { initTrackSearchFeature } from './init/initTrackSearchFeature'
 import { useTracksSearchFiltersFeature } from './features/tracks.search.filters'
 import { useTracksCountFeature } from './features/tracks.count'
 import { useTracksDownloadFeature } from './features/tracks.download'
 import { useTrackStateStore } from './features/tracks.state'
 import { locale } from './features/app.localization'
-import { usePlaylistFeature, useSyncPlaylistStoreTask } from './features/playlist'
+import { useCleanupMediaItemsFeature, useMarkCompletedPlaylistItem, usePlaylistFeature, useSyncPlaylistStoreTask } from './features/playlist'
+import { useBucketService } from './features/app.services.bucket'
+import { useMediaService } from './features/app.services.media'
+import { useConfig, useConfigPersistenceTask } from './features/app.config'
+import { useDAL, useDatabase } from './features/app.database'
+import { useSentryFeature } from './features/app.infra.sentry'
+import { useNavigationBarTask, useSafeAreaTask } from './features/app.appearance'
+import { useCleanupFilesFeature } from './features/app.storage'
+import { useSetPlayerControlsInfoFeature, useSyncAudioPlayerPluginStateFeature } from './features/player'
 
 
 const i18n = createI18n({
@@ -94,10 +84,12 @@ router.isReady().then(async () => {
   const start = new Date().getTime()
 
   // App //
-  await useConfigPersistenceFeature()
-  await useNavigationBarFeature()
-  await useSafeAreaFeature()
 
+  await useConfigPersistenceTask().start()
+  await useNavigationBarTask().start()
+  await useSafeAreaTask().start()
+
+  
   useMarkCompletedPlaylistItem()
   useArchiveCompletedPlaylistItemsFeature()
   useCleanupMediaItemsFeature()

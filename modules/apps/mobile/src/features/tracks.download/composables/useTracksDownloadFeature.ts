@@ -1,13 +1,13 @@
 import { createSharedComposable } from '@vueuse/core'
 import { TracksService } from '@lectorium/dal/index'
-import { BucketService, MediaService } from '@lectorium/mobile/app'
 import { S3Operation } from '@lectorium/protocol/s3'
+import { IBucketService, IMediaService } from '@lectorium/mobile/interfaces'
 
 export type Options = {
   bucketName: string
   tracksService: TracksService
-  bucketService: BucketService
-  mediaService: MediaService
+  bucketService: IBucketService
+  mediaService: IMediaService
   onTrackFailed?: (trackId: string) => void
 }
 

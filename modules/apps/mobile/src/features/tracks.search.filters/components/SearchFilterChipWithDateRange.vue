@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { DateRange, DateRangeSelectorDialog } from '@lectorium/mobile/app'
+import { DateRange, DateRangeSelectorDialog } from '@lectorium/mobile/features/app.ui.selectors'
 import SearchFilterChip from './SearchFilterChip.vue'
 
 /* -------------------------------------------------------------------------- */
