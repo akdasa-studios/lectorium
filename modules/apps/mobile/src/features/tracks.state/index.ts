@@ -1,7 +1,7 @@
 /**
  * Track Status Feature
  * 
- * This feature is responsible for tracking the status of tracks. Inc
+ * This feature is responsible for tracking the status of tracks.
  */
 
 export { useTrackStateStore, type TrackState } from './composables/useTrackStateStore'

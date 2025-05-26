@@ -3,7 +3,7 @@ import { SyncService } from '../library/SyncService'
 import { useDatabase } from '@lectorium/mobile/features/app.database'
 
 export const useSyncService = createGlobalState(() => {
-  const database = useDatabase()
+  const database = useDatabase().get()
 
   return new SyncService({
     local: {

@@ -1,22 +1,23 @@
+import { Ref, watch } from 'vue'
 import { PlaylistItemsService } from '@lectorium/dal/index'
 import { usePlaylistStore } from './usePlaylistStore'
 import { usePlaylistItemMapper } from './usePlaylistItemMapper'
 
 export type Options = {
   playlistItemService: PlaylistItemsService
+  language: Ref<string>
 }
 
 export function useSyncPlaylistStoreTask({
-  playlistItemService
+  playlistItemService,
+  language
 }: Options) {
 
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
 
-  const mapper = usePlaylistItemMapper({
-    language: 'en' // TODO: use locale
-  })
+  const mapper = usePlaylistItemMapper()
 
   /* -------------------------------------------------------------------------- */
   /*                                  Handlers                                  */
@@ -36,12 +37,21 @@ export function useSyncPlaylistStoreTask({
     
     // Map them to the view model
     const vmPlaylistItems = await Promise.all(
-      dbPlaylistItems.map(x => mapper.map(x)) // TODO: use locale
+      dbPlaylistItems.map(playlistItem => mapper.map({ 
+        playlistItem, 
+        language: language.value 
+      }))
     )
 
     // Update the store with the new data
     usePlaylistStore().setItems(vmPlaylistItems) 
   }
+
+  /* -------------------------------------------------------------------------- */
+  /*                                    Hooks                                   */
+  /* -------------------------------------------------------------------------- */
+
+  watch(language, async () => { await onSync() })
 
   /* -------------------------------------------------------------------------- */
   /*                                   Actions                                  */
@@ -56,6 +66,5 @@ export function useSyncPlaylistStoreTask({
   /*                                  Interface                                 */
   /* -------------------------------------------------------------------------- */
 
-  return {
-    start  }
+  return { start }
 }

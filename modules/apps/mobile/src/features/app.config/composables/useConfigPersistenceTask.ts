@@ -1,6 +1,7 @@
 import { watch, Ref, toRaw } from 'vue'
 import { Storage } from '@ionic/storage'
 import { useConfig } from './useConfig'
+import { useLogger } from '@lectorium/mobile/features/app.core'
 
 export function useConfigPersistenceTask() {
 
@@ -9,6 +10,7 @@ export function useConfigPersistenceTask() {
   /* -------------------------------------------------------------------------- */
 
   const config = useConfig()
+  const logger = useLogger({ module: 'app.config' })
 
   /* -------------------------------------------------------------------------- */
   /*                                    State                                   */
@@ -21,6 +23,7 @@ export function useConfigPersistenceTask() {
   /* -------------------------------------------------------------------------- */
 
   async function start() {
+    logger.info('Starting config persistence task...')
     await storage.create()
     await bind(config.appLanguage, 'app.language', '??')
   }
@@ -36,9 +39,10 @@ export function useConfigPersistenceTask() {
   ) {
     config.value = await storage.get(key) || defaultValue
     watch(config, async (value) => {
+      logger.debug(`Updating '${key}' => '${value}'`)
       await storage.set(key, toRaw(value))
     }, { deep: true })
-    console.log(`Bound ${key} to storage: ${config.value}`)
+    logger.info(`Bound '${key}' => '${config.value}'`)
   }
 
   /* -------------------------------------------------------------------------- */

@@ -1,41 +1,44 @@
-import { Source } from '@lectorium/dal/models/Source'
+import { Source, Duration } from '@lectorium/dal/models'
 import { DurationsService, IndexService, SourcesService, TracksService } from '@lectorium/dal/index'
 import { TrackSearchFilters } from '../models/TrackSearchFilters'
 import { useTrackToSearchResultMapper } from './useTrackToSearchResultMapper'
-import { useTrackSearchResultsStore } from './useTrackSearchResultsStore'
-import { Duration } from '@lectorium/dal/models'
 
 type Options = {
-  sourcesService: SourcesService
   indexService: IndexService
   tracksService: TracksService
+  sourcesService: SourcesService
   durationsService: DurationsService
 }
 
+type SearchRequest = {
+  filters: TrackSearchFilters
+  language?: string
+  offset?: number
+  limit?: number
+}
+
 export function useSearchResultsLoader({
-  sourcesService,
   indexService,
   tracksService,
+  sourcesService,
   durationsService,
-}:Options) {
+}: Options) {
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
 
-  const trackToSearchResultMapper = useTrackToSearchResultMapper({ language: 'ru' })
-  const trackSearchResultsStore  = useTrackSearchResultsStore()
+  const trackToSearchResultMapper = useTrackToSearchResultMapper()
 
   /* -------------------------------------------------------------------------- */
   /*                                   Actions                                  */
   /* -------------------------------------------------------------------------- */
 
-  async function load(
-    filters: TrackSearchFilters,
-    offset: number = 0,
-    limit: number = 25,
-  ) {
-    trackSearchResultsStore.isLoading = true
-
+  async function load({
+    filters, 
+    offset = 0,
+    limit = 25,
+    language = 'en',
+  }: SearchRequest) {
     let duration: Duration | undefined = undefined
     if (filters.duration) {
       duration = await durationsService.findOne({ _id: 'duration::' + filters.duration })
@@ -72,17 +75,17 @@ export function useSearchResultsLoader({
       sources: filters.sources,
       locations: filters.locations,
       languages: filters.languages,
-      duration: duration ? { min: duration.minDuration, max: duration.maxDuration } : { min: 0, max: Number.MAX_SAFE_INTEGER },
       dates: filters.dates,
+      duration: duration 
+        ? { min: duration.minDuration, max: duration.maxDuration } 
+        : { min: 0, max: Number.MAX_SAFE_INTEGER },
       skip: offset,
       limit: limit,
     })
 
-    const searchResults = await Promise.all(
-      result.map(async x => await trackToSearchResultMapper.map(x))
+    return await Promise.all(
+      result.map(async track => await trackToSearchResultMapper.map({ track, language }))
     )
-    trackSearchResultsStore.setItems(searchResults, { replace: offset == 0 })
-    trackSearchResultsStore.isLoading = false
   }
 
   /* -------------------------------------------------------------------------- */

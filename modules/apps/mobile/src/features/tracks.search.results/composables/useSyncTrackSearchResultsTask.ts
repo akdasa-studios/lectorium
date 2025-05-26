@@ -1,14 +1,15 @@
-import { watch } from 'vue'
+import { watch, Ref } from 'vue'
 import { DurationsService, IndexService, SourcesService, TracksService } from '@lectorium/dal/index'
 import { useTrackSearchResultsStore } from './useTrackSearchResultsStore'
 import { TrackSearchFilters } from '../models/TrackSearchFilters'
 import { useSearchResultsLoader } from './useSearchResultsLoader'
 
 type Options = {
-  sourcesService: SourcesService
   indexService: IndexService
   tracksService: TracksService
+  sourcesService: SourcesService
   durationsService: DurationsService
+  language: Ref<string>
 }
 
 export function useSyncTrackSearchResultsTask(
@@ -38,6 +39,11 @@ export function useSyncTrackSearchResultsTask(
     }
   )
 
+  watch(
+    () => options.language.value,
+    async () => await onFiltersChanged(trackSearchResultsStore.filters),
+  )
+
   /* -------------------------------------------------------------------------- */
   /*                                  Handlers                                  */
   /* -------------------------------------------------------------------------- */
@@ -45,15 +51,33 @@ export function useSyncTrackSearchResultsTask(
   async function onFiltersChanged(
     filters: TrackSearchFilters
   ) {
-    await searchResultsLoader.load(filters, 0)
+    try {
+      trackSearchResultsStore.isLoading = true
+      const searchResults = await searchResultsLoader.load({ 
+        filters, 
+        offset: 0, 
+        language: options.language.value 
+      })
+      trackSearchResultsStore.setItems(searchResults, { replace: true })
+    } finally {
+      trackSearchResultsStore.isLoading = false
+    }
   }
 
   async function onLoadedPagesCountChanged(
     filters: TrackSearchFilters,
     pagesLoaded: number,
   ) {
-    await searchResultsLoader.load(
-      filters, 
-      pagesLoaded * 25)
+    try {
+      trackSearchResultsStore.isLoading = true
+      const searchResults = await searchResultsLoader.load({ 
+        filters, 
+        offset: pagesLoaded * 25,
+        language: options.language.value
+      })
+      trackSearchResultsStore.setItems(searchResults, { replace: false })
+    } finally {
+      trackSearchResultsStore.isLoading = false
+    }
   }
 }
