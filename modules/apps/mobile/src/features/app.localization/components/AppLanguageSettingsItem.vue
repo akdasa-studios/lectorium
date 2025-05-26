@@ -66,11 +66,12 @@ function onSelect(value?: string) {
 async function loadItems() {
   const allItems = await dal.languages.getAll()
   return allItems
+    .sort((a, b) => a.fullName.localeCompare(b.fullName))
     .map((item) => ({
       id: item._id.replace('language::', ''),
-      title: item.fullName + ' ' + item.icon,
+      title: item.icon + ' ' + item.fullName,
       checked: false,
     }))
-    .sort((a, b) => a.title.localeCompare(b.title))
+    
 }
 </script>

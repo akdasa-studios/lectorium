@@ -1,28 +1,24 @@
 import { useDAL } from '../features/app.database/composables/useDAL'
-import { useLogger } from '../features/app.core/composables/useLogger'
 import { useSyncTrackSearchResultsTask } from '../features/tracks.search.results'
 import { useConfig } from '../features/app.config'
+import { useTracksSearchFiltersTask } from '../features/tracks.search.filters'
 
 export async function initTrackSearchFeature() {
 
-  /* -------------------------------------------------------------------------- */
-  /*                                Dependencies                                */
-  /* -------------------------------------------------------------------------- */
-
-  const dal = useDAL()
-  const logger = useLogger({ module: 'init:initTrackSearchFeature' })
-
-  /* -------------------------------------------------------------------------- */
-  /*                                    Steps                                   */
-  /* -------------------------------------------------------------------------- */
-
-  logger.info('Initializing...')
+  useTracksSearchFiltersTask({
+    authorsService: useDAL().authors,
+    sourcesService: useDAL().sources,
+    locationsService: useDAL().locations,
+    languagesService: useDAL().languages,
+    durationsService: useDAL().durations,
+    language: useConfig().appLanguage
+  })
 
   useSyncTrackSearchResultsTask({
-    indexService: dal.index,
-    tracksService: dal.tracks,
-    sourcesService: dal.sources,
-    durationsService: dal.durations,
+    indexService: useDAL().index,
+    tracksService: useDAL().tracks,
+    sourcesService: useDAL().sources,
+    durationsService: useDAL().durations,
     language: useConfig().appLanguage
   })
 }

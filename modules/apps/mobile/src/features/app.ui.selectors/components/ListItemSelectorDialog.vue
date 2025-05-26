@@ -27,7 +27,7 @@
 </template>
 
 
-<script setup lang="ts" generic="T extends Item">
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 import { IonList, IonRadioGroup, IonRadio, IonItem } from '@ionic/vue'
 import SelectorDialog from './SelectorDialog.vue'

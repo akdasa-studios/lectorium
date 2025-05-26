@@ -49,7 +49,6 @@ import { useInAppPurchasesFeatures } from './features/app.purchases/composables/
 import { Device } from '@capacitor/device'
 import { initTrackStateFeature } from './init/initTrackStateFeature'
 import { initTrackSearchFeature } from './init/initTrackSearchFeature'
-import { useTracksSearchFiltersTask } from './features/tracks.search.filters'
 import { useTracksCountFeature } from './features/tracks.count'
 import { useTracksDownloadFeature } from './features/tracks.download'
 import { useTrackStateStore } from './features/tracks.state'
@@ -112,14 +111,6 @@ router.isReady().then(async () => {
   initTrackSearchFeature()
 
   const dal = useDAL()
-  useTracksSearchFiltersTask({
-    authorsService: dal.authors,
-    sourcesService: dal.sources,
-    locationsService: dal.locations,
-    languagesService: dal.languages,
-    durationsService: dal.durations,
-    language: useConfig().appLanguage
-  })
   await useTracksCountFeature().init({
     tracksService: dal.tracks
   })

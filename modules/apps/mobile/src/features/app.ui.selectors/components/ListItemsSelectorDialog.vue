@@ -31,7 +31,7 @@
 </template>
 
 
-<script setup lang="ts" generic="T extends Item">
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 import { IonList, IonCheckbox, IonItem } from '@ionic/vue'
 import { SearchInput } from '@lectorium/mobile/features/app.core'
