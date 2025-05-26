@@ -49,7 +49,7 @@ import { useInAppPurchasesFeatures } from './features/app.purchases/composables/
 import { Device } from '@capacitor/device'
 import { initTrackStateFeature } from './init/initTrackStateFeature'
 import { initTrackSearchFeature } from './init/initTrackSearchFeature'
-import { useTracksSearchFiltersFeature } from './features/tracks.search.filters'
+import { useTracksSearchFiltersTask } from './features/tracks.search.filters'
 import { useTracksCountFeature } from './features/tracks.count'
 import { useTracksDownloadFeature } from './features/tracks.download'
 import { useTrackStateStore } from './features/tracks.state'
@@ -60,9 +60,9 @@ import { useMediaService } from './features/app.services.media'
 import { useConfig, useConfigPersistenceTask } from './features/app.config'
 import { useDAL, useDatabase } from './features/app.database'
 import { useSentryFeature } from './features/app.infra.sentry'
-import { useNavigationBarTask, useSafeAreaTask } from './features/app.appearance'
+import { useNavigationBarAppearanceTask, useSafeAreaTask } from './features/app.appearance'
 import { useCleanupFilesFeature } from './features/app.storage'
-import { useSetPlayerControlsInfoFeature, useSyncAudioPlayerPluginStateFeature } from './features/player'
+import { usePlayerTranscript, useSetPlayerControlsInfoFeature, useSyncAudioPlayerPluginStateFeature } from './features/player'
 
 
 const i18n = createI18n({
@@ -83,11 +83,22 @@ useSentryFeature(app)
 router.isReady().then(async () => {
   const start = new Date().getTime()
 
+  // Core //
+
+  await useDatabase().init({
+    remoteDatabaseUrl: useConfig().databaseUrl.value 
+  })
+
   // App //
 
   await useConfigPersistenceTask().start()
-  await useNavigationBarTask().start()
+
+  // app.appearance //
+  await useNavigationBarAppearanceTask({
+    isTranscriptDialogOpen: usePlayerTranscript().isOpen
+  }).start()
   await useSafeAreaTask().start()
+
 
   
   useMarkCompletedPlaylistItem()
@@ -101,12 +112,13 @@ router.isReady().then(async () => {
   initTrackSearchFeature()
 
   const dal = useDAL()
-  await useTracksSearchFiltersFeature().init({
+  useTracksSearchFiltersTask({
     authorsService: dal.authors,
     sourcesService: dal.sources,
     locationsService: dal.locations,
     languagesService: dal.languages,
     durationsService: dal.durations,
+    language: useConfig().appLanguage
   })
   await useTracksCountFeature().init({
     tracksService: dal.tracks
@@ -145,15 +157,12 @@ router.isReady().then(async () => {
   }
   i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
 
-  // Steps //
-
-  const database = useDatabase()
-  await database.init()
   
 
   // Should be after database.init()
   await useSyncPlaylistStoreTask({
     playlistItemService: dal.playlistItems,
+    language: config.appLanguage
   }).start()
 
   const elapsed = new Date().getTime() - start
