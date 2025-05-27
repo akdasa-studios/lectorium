@@ -32,8 +32,8 @@ export const useTracksStateFeature = createSharedComposable(() => {
     const completedPlaylistItems = await playlistItemsService.getMany({
       selector: {
         completedAt: { $exists: true },
-        archivedAt: { $exists: false }
-      }
+      },
+      limit: 1000, // TODO: Remove limit when pagination is implemented
     })
     completedPlaylistItems.forEach(item => {
       trackStateStore.setState(item.trackId, { isCompleted: true })
