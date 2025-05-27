@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Lectorium</string>
-    <string name="title_activity_main">Lectorium</string>
+    <string name="app_name">Listen to Sadhu</string>
+    <string name="title_activity_main">Listen to Sadhu</string>
     <string name="package_name">studio.akdasa.lectorium</string>
     <string name="custom_url_scheme">studio.akdasa.lectorium</string>
 </resources>
