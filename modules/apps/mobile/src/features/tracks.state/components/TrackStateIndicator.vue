@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useTrackStateStore } from '../composables/useTrackStateStore'
-import StateIndicator from './StateIndicator.vue'
+import { default as StateIndicator, type State } from './StateIndicator.vue'
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
@@ -29,9 +29,13 @@ const trackStateStore = useTrackStateStore()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const state = computed(() => {
-  const inPlaylist = trackStateStore.getState(props.trackId).inPlaylist
-  const state = inPlaylist ? 'added' : 'none'
+const state = computed<State>((): State => {
+  const isInPlaylist = trackStateStore.getState(props.trackId).inPlaylist
+  const isCompleted = trackStateStore.getState(props.trackId).isCompleted
+  
+  let state: State = 'none'
+  if (isInPlaylist) { state = 'added' }
+  if (isCompleted)  { state = 'completed' }
   if (props.ignoreStates && props.ignoreStates.includes(state)) {
     return 'none'
   }

@@ -30,6 +30,12 @@ export function useSyncPlaylistStateTask(
     trackStateStore.setState(event.trackId, { inPlaylist: false })
   }
 
+  function onCompleted(
+    event: { trackId: string }
+  ) {
+    trackStateStore.setState(event.trackId, { isCompleted: true })
+  }
+
   function start() {
     options.playlistItemService.subscribe(async args => {
       if (args.event === 'added') { 
@@ -37,6 +43,9 @@ export function useSyncPlaylistStateTask(
       }
       if (args.event === 'removed') { 
         await onRemoved({ trackId: args.item.trackId }) 
+      }
+      if (args.event === 'updated' && args.item.completedAt !== undefined) {
+        onCompleted({ trackId: args.item.trackId })
       }
       if (args.event === 'updated' && args.item.archivedAt !== undefined) { 
         await onRemoved({ trackId: args.item.trackId }) 

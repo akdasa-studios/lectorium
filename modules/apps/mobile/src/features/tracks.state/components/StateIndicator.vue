@@ -28,7 +28,7 @@ import RadialIndicator from './RadialIndicator.vue'
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
-type State = 'none' | 'failed' | 'added' | 'completed'
+export type State = 'none' | 'failed' | 'added' | 'completed'
 
 const props = defineProps<{
   state: State,

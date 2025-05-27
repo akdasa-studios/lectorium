@@ -28,6 +28,17 @@ export const useTracksStateFeature = createSharedComposable(() => {
   }: Options) {
     const failedStates: MediaItem['state'][] = ['pending', 'failed']
 
+    // Get all tracks that are in the completed state
+    const completedPlaylistItems = await playlistItemsService.getMany({
+      selector: {
+        completedAt: { $exists: true },
+        archivedAt: { $exists: false }
+      }
+    })
+    completedPlaylistItems.forEach(item => {
+      trackStateStore.setState(item.trackId, { isCompleted: true })
+    })
+
     // Get all media items that are in the pending or in failed state
     // and set the download failed status to true for each track
     const failedMediaItems = await mediaItemsService.getInState(failedStates)
