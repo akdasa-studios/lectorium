@@ -1,9 +1,32 @@
 <template>
   <IonApp>
     <IonRouterOutlet />
-    <Player />
-    <Transcript />
-    <NavigationBarHolder />
+
+    <!-- Floating Player -->
+    <FloatingPlayer 
+      v-model:sticked="transcriptStore.open"
+      :playing="player.isPlaying.value"
+      :title="player.title.value"
+      :author="player.author.value"
+      :hidden="!player.trackId.value"
+    />
+
+    <!-- Transcript Dialog -->
+    <TranscriptDialog 
+      v-model:open="transcriptStore.open"
+      v-model:active-languages="transcriptStore.activeLanguages"
+      :allow-multiple-languages="transcriptStore.allowMultipleLanguages"
+      :available-languages="transcriptStore.availableLanguages"
+      :paragraphs="transcriptStore.localizedTranscript"
+      :position="player.position.value"
+      @seek="position => p.seek({ position: position })"
+      @text-selected="onTextSelected"
+    />
+    
+    <!-- Navigation Bar Footer -->
+    <NavigationBarHolder
+      v-if="transcriptStore.open"
+    />
   </IonApp>
 </template>
 
@@ -11,9 +34,11 @@
 import { onMounted } from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { NavigationBarHolder } from '@lectorium/mobile/features/app.appearance'
-import { Player, Transcript } from '@lectorium/mobile/features/player'
+import { FloatingPlayer, usePlayer, usePlayerControls } from '@lectorium/mobile/features/player'
+import { TranscriptDialog, useTranscriptStore } from '@lectorium/mobile/features/transcript'
 import { useSyncService } from './features/app.services.sync'
 import { useSafeOperation } from './features/app.core'
+import { useNotesFeature } from './features/notes'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -21,6 +46,18 @@ import { useSafeOperation } from './features/app.core'
 
 const syncService = useSyncService()
 const safeOperation = useSafeOperation()
+const player = usePlayerControls()
+const p = usePlayer()
+const notesFeature = useNotesFeature()
+const transcriptStore = useTranscriptStore()
+
+function onTextSelected(opts: { text: string, blocks: string[] }) {
+  notesFeature.addNote({
+    trackId: player.trackId.value,
+    text: opts.text,
+    blocks: opts.blocks
+  })
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                    Hooks                                   */

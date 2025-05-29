@@ -61,8 +61,9 @@ import { useDAL, useDatabase } from './features/app.database'
 import { useSentryFeature } from './features/app.infra.sentry'
 import { useNavigationBarAppearanceTask, useSafeAreaTask } from './features/app.appearance'
 import { useCleanupFilesFeature } from './features/app.storage'
-import { usePlayerTranscript, useSetPlayerControlsInfoFeature, useSyncAudioPlayerPluginStateFeature } from './features/player'
-
+import { usePlayerControls, useSetPlayerControlsInfoFeature, useSyncAudioPlayerPluginStateFeature } from './features/player'
+import { useSyncTranscriptTask, useTranscriptStore } from './features/transcript'
+import { useNotesLoader, useNotesStore } from './features/notes'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -94,16 +95,21 @@ router.isReady().then(async () => {
 
   // app.appearance //
   await useNavigationBarAppearanceTask({
-    isTranscriptDialogOpen: usePlayerTranscript().isOpen
+    isTranscriptDialogOpen: useTranscriptStore().isOpen
   }).start()
   await useSafeAreaTask().start()
-
-
   
   useMarkCompletedPlaylistItem()
   useArchiveCompletedPlaylistItemsFeature()
   useCleanupMediaItemsFeature()
   useCleanupFilesFeature()
+  
+  useSyncTranscriptTask({ 
+    trackId: usePlayerControls().trackId,
+    languagesService: useDAL().languages,
+    tracksService: useDAL().tracks,
+    notesService: useDAL().notes,
+  })
 
   // Features //
 
@@ -126,6 +132,11 @@ router.isReady().then(async () => {
   usePlaylistFeature().init({
     playlistService: dal.playlistItems,
   })
+  await useNotesLoader({
+    notesService: useDAL().notes,
+    tracksService: useDAL().tracks,
+    notesStore: useNotesStore()
+  }).load()
   
 
   // Player //
