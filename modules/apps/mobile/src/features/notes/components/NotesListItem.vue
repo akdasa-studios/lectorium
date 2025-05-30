@@ -3,13 +3,17 @@
     lines="none"
     class="note"
   >
-    {{ text }}
+    <HighlightText
+      :text="text"
+    />
   </IonItem>
 </template>
 
 
 <script lang="ts" setup>
 import { IonItem } from '@ionic/vue'
+import { HighlightText } from '@lectorium/mobile/features/app.ui.kit'
+
 
 defineProps<{
   text: string

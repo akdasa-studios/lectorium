@@ -8,7 +8,9 @@
       :playing="player.isPlaying.value"
       :title="player.title.value"
       :author="player.author.value"
-      :hidden="!player.trackId.value"
+      :duration="player.duration.value"
+      :position="player.position.value"
+      :hidden="!player.trackId.value || keyboardVisible.isKeyboardVisible.value"
     />
 
     <!-- Transcript Dialog -->
@@ -37,7 +39,7 @@ import { NavigationBarHolder } from '@lectorium/mobile/features/app.appearance'
 import { FloatingPlayer, usePlayer, usePlayerControls } from '@lectorium/mobile/features/player'
 import { TranscriptDialog, useTranscriptStore } from '@lectorium/mobile/features/transcript'
 import { useSyncService } from './features/app.services.sync'
-import { useSafeOperation } from './features/app.core'
+import { useKeyboardVisible, useSafeOperation } from './features/app.core'
 import { useNotesFeature } from './features/notes'
 
 /* -------------------------------------------------------------------------- */
@@ -50,6 +52,7 @@ const player = usePlayerControls()
 const p = usePlayer()
 const notesFeature = useNotesFeature()
 const transcriptStore = useTranscriptStore()
+const keyboardVisible = useKeyboardVisible()
 
 function onTextSelected(opts: { text: string, blocks: string[] }) {
   notesFeature.addNote({

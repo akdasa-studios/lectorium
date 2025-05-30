@@ -29,7 +29,7 @@ export function useNotesLoader({
         text: note.text,
         blocks: note.blocks,
         trackAuthor: track.author,
-        trackTitle: track.title['ru'] // TODO: lang
+        trackTitle: track.title['ru'], // TODO: lang
       })
     }
   }

@@ -3,6 +3,8 @@
     :playing="playing"
     :title="title"
     :author="author"
+    :duration="duration"
+    :position="position"
     :class="{
       'player': true,
       'floating': !isSticked,
@@ -29,10 +31,12 @@ const { togglePause } = usePlayerControlsPlayerScenario()
 /* -------------------------------------------------------------------------- */
 
 defineProps<{
-  playing: boolean,
-  title: string,
+  playing: boolean
+  title: string
   author: string
   hidden: boolean
+  duration: number
+  position: number
 }>()
 
 const isSticked = defineModel<boolean>('sticked', { default: true, required: true })

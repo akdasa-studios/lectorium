@@ -63,7 +63,7 @@ import { useNavigationBarAppearanceTask, useSafeAreaTask } from './features/app.
 import { useCleanupFilesFeature } from './features/app.storage'
 import { usePlayerControls, useSetPlayerControlsInfoFeature, useSyncAudioPlayerPluginStateFeature } from './features/player'
 import { useSyncTranscriptTask, useTranscriptStore } from './features/transcript'
-import { useNotesLoader, useNotesStore } from './features/notes'
+import { useNotesLoader, useNotesSearchIndex, useNotesSearchTask, useNotesStore } from './features/notes'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -137,7 +137,12 @@ router.isReady().then(async () => {
     tracksService: useDAL().tracks,
     notesStore: useNotesStore()
   }).load()
-  
+  await useNotesSearchIndex().init({
+    notesService: useDAL().notes
+  })
+  useNotesSearchTask({
+    notesStore: useNotesStore()
+  })
 
   // Player //
 

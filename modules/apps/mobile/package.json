@@ -34,6 +34,7 @@
     "capacitor-plugin-safe-area": "^4.0.0",
     "cordova-sqlite-storage": "^7.0.0",
     "events": "^3.3.0",
+    "flexsearch": "^0.8.204",
     "ionicons": "^7.0.0",
     "pinia": "^3.0.2",
     "pouchdb": "^9.0.0",
