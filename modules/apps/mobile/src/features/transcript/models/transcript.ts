@@ -17,5 +17,6 @@ export type TranscriptSentence = {
   speaker: string
   language: string
   highlighted: boolean
+  selected: boolean
   icon: string
 }

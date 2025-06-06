@@ -2,8 +2,8 @@
   <div
     ref="textSelector"
     @touchend="onTouchEnd"
-    @touchstart="onTouchStart"
     @touchmove="onTouchMove"
+    @touchstart="onTouchStart"
   >
     <slot ref="slotRef" />
   </div>
@@ -24,8 +24,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  selected: [items: string[], event: TouchEvent]
   selecting: [items: string[]]
-  selected: [items: string[]]
 }>()
 
 
@@ -35,8 +35,8 @@ const emit = defineEmits<{
 
 const { selectable } = toRefs(props)
 const textSelector = useTemplateRef<HTMLElement>('textSelector')
-const isInSelectionMode = ref<boolean>(false)
 const selectingIds = ref<string[]>([])
+const isInSelectionMode = ref<boolean>(false)
 
 
 /* -------------------------------------------------------------------------- */
@@ -56,9 +56,9 @@ onLongPress(
 function onTouchStart() {
 }
 
-function onTouchEnd() {
+function onTouchEnd(e: any) {
   isInSelectionMode.value = false
-  emit('selected', selectingIds.value)
+  emit('selected', selectingIds.value, e)
   selectingIds.value = []
 }
 

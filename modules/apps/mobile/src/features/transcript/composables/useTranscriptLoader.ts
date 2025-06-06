@@ -57,6 +57,7 @@ export function useTranscriptLoader({
             language: lang, 
             speaker: lang,
             highlighted: highlightedSentences.includes(`${lang}${index}`),
+            selected: false,
             icon: speakerIcons[lang]
           }))
       )

@@ -22,7 +22,8 @@
       :paragraphs="transcriptStore.localizedTranscript"
       :position="player.position.value"
       @seek="position => p.seek({ position: position })"
-      @text-selected="onTextSelected"
+      @selection-action="onTextSelectionAction"
+      @selection-dismissed="onTextSelectionDismissed"
     />
     
     <!-- Navigation Bar Footer -->
@@ -41,6 +42,7 @@ import { TranscriptDialog, useTranscriptStore } from '@lectorium/mobile/features
 import { useSyncService } from './features/app.services.sync'
 import { useKeyboardVisible, useSafeOperation } from './features/app.core'
 import { useNotesFeature } from './features/notes'
+import { Clipboard } from '@capacitor/clipboard'
 
 /* -------------------------------------------------------------------------- */
 /*                                Dependencies                                */
@@ -54,12 +56,24 @@ const notesFeature = useNotesFeature()
 const transcriptStore = useTranscriptStore()
 const keyboardVisible = useKeyboardVisible()
 
-function onTextSelected(opts: { text: string, blocks: string[] }) {
-  notesFeature.addNote({
-    trackId: player.trackId.value,
-    text: opts.text,
-    blocks: opts.blocks
-  })
+async function onTextSelectionAction(
+  opts: { text: string, blocks: string[], action: string }
+) {
+  if (opts.action === 'copy') {
+     await Clipboard.write({ string: opts.text })
+  } else if (opts.action === 'bookmark') {
+    notesFeature.addNote({
+      trackId: player.trackId.value,
+      text: opts.text,
+      blocks: opts.blocks
+    })
+    transcriptStore.highlight(opts.blocks)
+  }
+  transcriptStore.removeSelection()
+}
+
+function onTextSelectionDismissed() {
+  transcriptStore.removeSelection()
 }
 
 /* -------------------------------------------------------------------------- */

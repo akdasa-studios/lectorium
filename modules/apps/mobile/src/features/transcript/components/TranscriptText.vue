@@ -28,6 +28,7 @@
         :class="{
           'current': block.start <= position && block.end >= position,
           'highlighted': block.highlighted,
+          'selected': block.selected,
         }"
         :data-block-id="block.id"
         @click="emit('seek', block.start)"
@@ -52,6 +53,12 @@ import { TranscriptParagraph } from '../models'
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
+export type TextSelectedEvent = {
+  text: string
+  blocks: string[]
+  event: TouchEvent
+}
+
 const props = defineProps<{
   showSpeakerIcons: boolean
   paragraphs: TranscriptParagraph[]
@@ -60,7 +67,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   seek: [position: number]
-  textSelected: [{ text: string, blocks: string[] }]
+  textSelected: [event: TextSelectedEvent]
 }>()
 
 
@@ -78,10 +85,10 @@ function onSelecting(ids: string[]) {
   const selected = props.paragraphs
     .flatMap(x => x.sentences)
     .filter(x => ids.includes(x.id))
-  selected.forEach(x => x.highlighted = true)
+  selected.forEach(x => x.selected = true)
 }
 
-function onSelected(ids: string[]) {
+function onSelected(ids: string[], e: TouchEvent) {
   const selected = props.paragraphs
     .flatMap(x => x.sentences)
     .filter(x => ids.includes(x.id))
@@ -89,7 +96,8 @@ function onSelected(ids: string[]) {
   if (selected.length > 0) {
     emit('textSelected', { 
       text: selected.map(x => x.text).join(' '),
-      blocks: selected.map(x => x.id)
+      blocks: selected.map(x => x.id),
+      event: e
     })
   }
 }
@@ -105,14 +113,15 @@ function onSelected(ids: string[]) {
 }
 
 span {
-  transition: all .5s ease-in-out;
+  transition: all .4s ease-in-out;
 }
 
 .prompter {
   color: white;
-  transition: all 0.5s;
+  transition: all 0.4s;
   transform: scale(0.95);
   opacity: .5;
+  position: relative;
 }
 
 .paragraph {
@@ -122,11 +131,16 @@ span {
 }
 
 .current {
-  transition: all 0.5s;
+  transition: all 0.4s;
   color: #FF6B6B !important;
 }
 
 .highlighted {
   color: #C77DFF;
+}
+
+.selected {
+  color: #FFFFFF !important;
+  background-color: #9D4EDD;
 }
 </style>

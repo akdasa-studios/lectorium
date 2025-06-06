@@ -41,6 +41,26 @@ export const useTranscriptStore = defineStore('transcript', () => {
     open.value = !open.value
   }
 
+  function removeSelection() {
+    transcript.value.flatMap(x => x.sentences).forEach(x => x.selected = false)
+  }
+
+  function highlight(blocks: string[]) {
+    const sentences = transcript.value.flatMap(x => x.sentences)
+    for (const block of blocks) {
+      const sentence = sentences.find(x => x.id === block)
+      if (sentence) { sentence.highlighted = true }
+    }
+  }
+
+  function removeHighlights(blocks: string[]) {
+    const sentences = transcript.value.flatMap(x => x.sentences)
+    for (const block of blocks) {
+      const sentence = sentences.find(x => x.id === block)
+      if (sentence) { sentence.highlighted = false }
+    }
+  }
+
   /* -------------------------------------------------------------------------- */
   /*                                  Interface                                 */
   /* -------------------------------------------------------------------------- */
@@ -54,5 +74,8 @@ export const useTranscriptStore = defineStore('transcript', () => {
     allowMultipleLanguages,
     localizedTranscript,
     toggleTranscriptOpen,
+    removeSelection,
+    highlight,
+    removeHighlights,
   }
 })
