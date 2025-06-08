@@ -48,7 +48,7 @@ export const useNotesSearchIndex = createSharedComposable(() => {
     } else if (event.event === 'updated') {
       index.update(event.item)
     } else if (event.event === 'removed') {
-      index.remove(event.item)
+      index.remove(event.item._id)
     }
   }
 
@@ -64,10 +64,10 @@ export const useNotesSearchIndex = createSharedComposable(() => {
     return result
       .flatMap(sr => 
         sr.result.flatMap(
-          hueta => ({
-            id: hueta.id,
+          i => ({
+            id: i.id,
             field: sr.field!,
-            highlight: hueta.highlight 
+            highlight: i.highlight 
           })
         )
       )

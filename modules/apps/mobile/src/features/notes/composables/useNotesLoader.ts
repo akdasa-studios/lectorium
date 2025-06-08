@@ -21,8 +21,9 @@ export function useNotesLoader({
     const notes = await notesService.getAll()
 
     for (const note of notes) {
+      // TODO: Load all related tracks in one request
       const track = await tracksService.findOne({ _id: note.trackId })
-      if (!track) { return }
+      if (!track) { continue }
       notesStore.items.push({
         id: note._id,
         trackId: note.trackId,
