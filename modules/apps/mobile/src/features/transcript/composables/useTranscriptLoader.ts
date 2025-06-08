@@ -54,6 +54,7 @@ export function useTranscriptLoader({
           .map((block, index) => ({ 
             ...block, 
             id: `${lang}${index}`,
+            sequentalId: 0,
             language: lang, 
             speaker: lang,
             highlighted: highlightedSentences.includes(`${lang}${index}`),
@@ -69,6 +70,9 @@ export function useTranscriptLoader({
       if (a.start > b.start) return 1
       return 0
     })
+
+    // set sequentalId for sentence
+    sentences.forEach((v, i) => v.sequentalId = i)
 
     // convert transcript to sections
     const paragraphs: TranscriptParagraph[] = []

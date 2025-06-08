@@ -32,7 +32,6 @@
         :animated="true"
         :event="lastTextSelectedEvent?.event"
         :arrow="false"
-        mode="ios"
         @did-dismiss="onTextSelectionActionDismissed"
       >
         <SelectionActions @action="onTextSelectionActionClicked" />

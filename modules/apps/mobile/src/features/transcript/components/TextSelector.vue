@@ -10,22 +10,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
+import { ref } from 'vue'
 import { onLongPress } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
+import { Haptics, ImpactStyle } from '@capacitor/haptics'
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  Interface                                 */
 /* -------------------------------------------------------------------------- */
 
 const props = defineProps<{
-  selectable: HTMLElement[]
   datasetField: string
 }>()
 
 const emit = defineEmits<{
-  selected: [items: string[], event: TouchEvent]
-  selecting: [items: string[]]
+  selected: [firstItemId: number, lastItemId: number, event: TouchEvent]
+  selecting: [firstItemId: number, lastItemId: number]
 }>()
 
 
@@ -33,9 +34,9 @@ const emit = defineEmits<{
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const { selectable } = toRefs(props)
 const textSelector = useTemplateRef<HTMLElement>('textSelector')
-const selectingIds = ref<string[]>([])
+const firstSelectedId = ref<number>()
+const lastSelectedId = ref<number>()
 const isInSelectionMode = ref<boolean>(false)
 
 
@@ -53,52 +54,59 @@ onLongPress(
   }
 )
 
-function onTouchStart() {
-}
-
-function onTouchEnd(e: any) {
-  isInSelectionMode.value = false
-  emit('selected', selectingIds.value, e)
-  selectingIds.value = []
+function onTouchStart(event: TouchEvent) {
+  const { clientX: touchX, clientY: touchY } = event.touches[0]
+  const element = document.elementFromPoint(touchX, touchY)
+  const elementId = parseInt(element?.getAttribute(props.datasetField) || '-1')
+  if (element && elementId && elementId !== -1) {
+    firstSelectedId.value = elementId
+  }
 }
 
 function onTouchMove(event: TouchEvent) {
   if (!isInSelectionMode.value) { return }
   if (event.touches.length === 0) { return }
   event.preventDefault()
-  markByCoord(event.touches[0].clientX, event.touches[0].clientY)
-}
 
-function onLongPressed(e: PointerEvent) {
-  isInSelectionMode.value = true
-  markByCoord(e.clientX, e.clientY)
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                   Helpers                                  */
-/* -------------------------------------------------------------------------- */
-
-function markByCoord(
-  touchX: number,
-  touchY: number
-) {
-  selectable.value.forEach(box => {
-    const rect = box.getBoundingClientRect()
-    const isTouchInside = (
-      touchX >= rect.left &&
-      touchX <= rect.right &&
-      touchY >= rect.top &&
-      touchY <= rect.bottom
-    )
-
-    if (isTouchInside) {
-      const blockId = box.dataset[props.datasetField]
-      if (blockId && !selectingIds.value.includes(blockId)) {
-        selectingIds.value.push(blockId)
-      }
-    }
-  })  
+  const { clientX: touchX, clientY: touchY } = event.touches[0]
+  const element = document.elementFromPoint(touchX, touchY)
+  const elementId = parseInt(element?.getAttribute(props.datasetField) || '-1')
   
-  emit('selecting', selectingIds.value)
+  if (element && elementId && elementId !== -1) {
+    lastSelectedId.value = elementId
+  }
+  if (firstSelectedId.value && lastSelectedId.value) {
+    emit(
+      'selecting', 
+      Math.min(firstSelectedId.value, lastSelectedId.value),
+      Math.max(firstSelectedId.value, lastSelectedId.value)
+    )
+  }
+}
+
+function onTouchEnd(event: TouchEvent) {
+  if (firstSelectedId.value && isInSelectionMode.value) {
+    emit(
+      'selected', 
+      firstSelectedId.value, 
+      lastSelectedId.value || firstSelectedId.value, 
+      event
+    )
+  }
+  isInSelectionMode.value = false
+  firstSelectedId.value = undefined
+  lastSelectedId.value = undefined
+}
+
+function onLongPressed() {
+  isInSelectionMode.value = true
+  if (firstSelectedId.value) {
+    emit(
+      'selecting', 
+      Math.min(firstSelectedId.value, lastSelectedId.value || firstSelectedId.value),
+      Math.max(firstSelectedId.value, lastSelectedId.value || firstSelectedId.value)
+    )
+  }
+  Haptics.impact({ style: ImpactStyle.Light })
 }
 </script>

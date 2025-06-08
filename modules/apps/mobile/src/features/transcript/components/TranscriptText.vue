@@ -2,8 +2,7 @@
   <TextSelector
     ref="htmlRefHook"
     class="transcript-text"
-    dataset-field="blockId"
-    :selectable="boxRefs"
+    dataset-field="data-block-id"
     @selecting="onSelecting"
     @selected="onSelected"
   >
@@ -22,7 +21,6 @@
       <component
         :is="'span'"
         v-for="block in section.sentences"
-        ref="boxRefs"
         :key="block.id"
         :lang="block.speaker"
         :class="{
@@ -30,7 +28,7 @@
           'highlighted': block.highlighted,
           'selected': block.selected,
         }"
-        :data-block-id="block.id"
+        :data-block-id="block.sequentalId"
         @click="emit('seek', block.start)"
       >
         <SpeakerLine
@@ -43,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import Timestamp from './Timestamp.vue'
 import TextSelector from './TextSelector.vue'
 import { SpeakerLine } from '@lectorium/mobile/features/transcript'
@@ -72,32 +69,36 @@ const emit = defineEmits<{
 
 
 /* -------------------------------------------------------------------------- */
-/*                                    State                                   */
-/* -------------------------------------------------------------------------- */
-
-const boxRefs = ref<HTMLElement[]>([])
-
-/* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-function onSelecting(ids: string[]) {
-  const selected = props.paragraphs
+function onSelecting(firstItemId: number, lastItemId: number) {
+  // remove selection
+  props.paragraphs
     .flatMap(x => x.sentences)
-    .filter(x => ids.includes(x.id))
-  selected.forEach(x => x.selected = true)
+    .forEach(x => x.selected = false)
+  
+  // add selection
+  props.paragraphs
+    .flatMap(x => x.sentences)
+    .filter(x => x.sequentalId >= firstItemId && x.sequentalId <= lastItemId)
+    .forEach(x => x.selected = true)
 }
 
-function onSelected(ids: string[], e: TouchEvent) {
+function onSelected(
+  firstItemId: number, 
+  lastItemId: number, 
+  event: TouchEvent
+) {
   const selected = props.paragraphs
     .flatMap(x => x.sentences)
-    .filter(x => ids.includes(x.id))
+    .filter(x => x.sequentalId >= firstItemId && x.sequentalId <= lastItemId)
   
   if (selected.length > 0) {
     emit('textSelected', { 
       text: selected.map(x => x.text).join(' '),
       blocks: selected.map(x => x.id),
-      event: e
+      event
     })
   }
 }

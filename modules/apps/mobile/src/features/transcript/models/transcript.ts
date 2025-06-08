@@ -10,6 +10,7 @@ export type TranscriptParagraph = {
 
 export type TranscriptSentence = {
   id: string
+  sequentalId: number,
   type: 'sentence' | 'paragraph'
   text: string
   start: number
