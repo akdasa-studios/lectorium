@@ -27,9 +27,7 @@
     />
     
     <!-- Navigation Bar Footer -->
-    <NavigationBarHolder
-      v-if="transcriptStore.open"
-    />
+    <NavigationBarHolder />
   </IonApp>
 </template>
 
