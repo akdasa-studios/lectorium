@@ -8,6 +8,8 @@ export default {
     description: 'Subscription management',
     choose: 'Support "Listen to Sadhu"',
     subscribe: 'Subscribe',
+    subscribed: 'Subscription completed',
+    thanks: 'Thank you for your subscription and support 🙏 May your heart be filled with happiness, and each day bring you closer to Truth. We are glad that you are with us on this path.',
     benefits: {
       intro: 'We are implementing new features and improvements. Your support helps us continue development and make the product better.',
       benefit0: {
