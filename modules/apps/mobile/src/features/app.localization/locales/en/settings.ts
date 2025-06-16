@@ -31,6 +31,9 @@ export default {
     choose: 'Support "Listen to Sadhu"',
     subscribe: 'Subscribe',
     subscribed: 'Subscription completed',
+    restore: 'Restore',
+    restored: 'Your subscription has been successfully restored!',
+    noSubscriptionFound: 'No active subscription found. Please subscribe to access premium features.',
     thanks: 'Thank you for your subscription and support 🙏 May your heart be filled with happiness, and each day bring you closer to Truth. We are glad that you are with us on this path.',
     benefits: {
       intro: 'We are implementing new features and improvements. Your support helps us continue development and make the product better.',
