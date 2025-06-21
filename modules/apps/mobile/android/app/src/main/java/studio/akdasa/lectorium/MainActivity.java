@@ -2,6 +2,7 @@ package studio.akdasa.lectorium;
 
 import android.os.Bundle;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.getcapacitor.BridgeActivity;
 import com.appsflyer.AppsFlyerLib;
@@ -19,6 +20,7 @@ public class MainActivity extends BridgeActivity {
             null,
             getApplicationContext());
     AppsFlyerLib.getInstance().start(getApplicationContext());
+    Toast.makeText(getApplicationContext(), BuildConfig.APPSFLYER_KEY, Toast.LENGTH_SHORT).show();
 
 
     // Copy the database from assets to the databases folder
