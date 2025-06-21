@@ -93,6 +93,8 @@ jobs:
     
       - name: 👷 Build Android APK (Debug)
         working-directory: modules/apps/mobile/android
+        env:
+          APPSFLYER_KEY: ${{ secrets.APPSFLYER_KEY }}
         run: ./gradlew assembleDebug
 
       # ---------------------------------------------------------------------------- #
