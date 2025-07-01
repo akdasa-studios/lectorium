@@ -1,4 +1,6 @@
+import { watchDebounced } from '@vueuse/core'
 import { useDAL } from '../../app.database'
+import { useTranscriptStore } from '../../transcript'
 import { useAnalytics } from './useAnalytics'
 import { App } from '@capacitor/app'
 
@@ -9,6 +11,7 @@ export function useAnalyticsRecorderTask() {
   
   const analysis = useAnalytics()
   const dal = useDAL()
+  const transcriptStore = useTranscriptStore()
 
   /* -------------------------------------------------------------------------- */
   /*                                   Metrics                                  */
@@ -29,6 +32,11 @@ export function useAnalyticsRecorderTask() {
         length: e.item.text.length,
       })
     }
+  })
+
+  watchDebounced(() => transcriptStore.open, (v) => {
+    if (!v) { return }
+    analysis.track('app.player.transcript.open') 
   })
 
   // watchDebounced(trackSearchResultsStore.filters, (f) => {

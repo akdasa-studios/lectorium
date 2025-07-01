@@ -14,6 +14,9 @@ export const useConfig = createGlobalState(() => {
   const showNotesTab             = ref(true)
   const highlightCurrentSentence = ref(true)
   const savedTracksFilter        = ref<any>({})
+  const userName                 = ref('')
+  const userEmail                = ref('')
+  const userAvatarUrl            = ref('')
 
   return {
     appLanguage,
@@ -25,6 +28,9 @@ export const useConfig = createGlobalState(() => {
     showPlayerProgress,
     showNotesTab,
     highlightCurrentSentence,
-    savedTracksFilter
+    savedTracksFilter,
+    userName,
+    userEmail,
+    userAvatarUrl
   }
 })

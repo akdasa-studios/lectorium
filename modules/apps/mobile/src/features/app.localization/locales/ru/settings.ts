@@ -7,6 +7,14 @@ export default {
     appearance: 'Внешний вид',
     pro: 'Про-функции',
     misc: 'Разное',
+    auth: 'Профиль'
+  },
+  auth: {
+    syncCompleted: 'Синхронизовано',
+    signIn: {
+      title: 'Авторизоваться',
+      description: 'Для синхронизации данных и подписки'
+    }
   },
   player: {
     showProgress: {

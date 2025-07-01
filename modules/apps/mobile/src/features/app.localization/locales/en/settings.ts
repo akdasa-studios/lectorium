@@ -7,6 +7,14 @@ export default {
     appearance: 'Appearance',
     pro: 'Pro Features',
     misc: 'Misc',
+    auth: 'Profile'
+  },
+  auth: {
+    syncCompleted: 'Everything is synced',
+    signIn: {
+      title: 'Sign In',
+      description: 'For data and subscription synchronization'
+    },
   },
   player: {
     showProgress: {
