@@ -1,8 +1,11 @@
 import { Capacitor } from '@capacitor/core'
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor'
 import { ENVIRONMENT } from '@lectorium/mobile/env'
+import { useConfig } from '../../app.config'
 
 export function useInAppPurchasesFeatures() {
+
+  const config = useConfig()
 
   /* -------------------------------------------------------------------------- */
   /*                                    Hooks                                   */
@@ -17,7 +20,10 @@ export function useInAppPurchasesFeatures() {
     }
 
     await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG })
-    await Purchases.configure({ apiKey: ENVIRONMENT.revenueCatKey })
+    await Purchases.configure({ 
+      apiKey: ENVIRONMENT.revenueCatKey,
+      appUserID: config.userEmail.value || null,
+    })
     console.log('RevenueCat SDK configured!')
   }
 

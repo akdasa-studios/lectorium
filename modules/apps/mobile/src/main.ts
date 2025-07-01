@@ -1,6 +1,6 @@
 import { createApp, watch } from 'vue'
 import { createPinia } from 'pinia'
-import App from './App.vue'
+import LectoriumApp from './App.vue'
 import router from './router'
 
 import { IonicVue } from '@ionic/vue'
@@ -72,6 +72,7 @@ import { useMediaSyncTask } from './features/app.services.sync.media'
 import { useIdGenerator } from './features/app.core'
 import { useDownloadingTask } from './features/app.services.download'
 import { initTrackState, useSyncDownloadingStateTask, useSyncPlaylistStateTask } from './features/tracks.state'
+import { useDebounceFn } from '@vueuse/core'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -79,7 +80,7 @@ const i18n = createI18n({
   messages: locale
 })
 const pinia = createPinia()
-const app = createApp(App)
+const app = createApp(LectoriumApp)
   .use(IonicVue)
   .use(router)
   .use(i18n)
@@ -189,7 +190,7 @@ router.isReady().then(async () => {
   /*                                    Sync                                    */
   /* -------------------------------------------------------------------------- */
 
-  Events.syncRequested.subscribe(async ({ userId }) => {
+  const debouncedFn = useDebounceFn(async (userId?: string) => {
     // sync common data
     await useCommonDataSyncTask({
       localDatabasesSource: useDatabase().get().local,
@@ -214,6 +215,10 @@ router.isReady().then(async () => {
       Events.trackDownloadRequested.notify({ trackId })
     })
     Events.syncTaskCompleted.notify({ task: 'media' })
+  }, 5000, { maxWait: 15000 })
+
+  Events.syncRequested.subscribe(async ({ userId }) => {
+    debouncedFn(userId)
   })
 
   Events.syncTaskCompleted.subscribe(async (event) => {
@@ -226,14 +231,13 @@ router.isReady().then(async () => {
   })
 
   useDAL().playlistItems.subscribe(async () => {
-    Events.playlistUpdateRequested.notify({
-      language: useConfig().appLanguage.value
-    })
+    Events.syncRequested.notify({ userId: useConfig().userEmail.value })
   })
 
-  watch(config.appLanguage, (language: string) => {
-    Events.playlistUpdateRequested.notify({ language })
+  useDAL().notes.subscribe(async () => {
+    Events.syncRequested.notify({ userId: useConfig().userEmail.value })
   })
+
 
   /* -------------------------------------------------------------------------- */
   /*                                 Downloader                                 */
@@ -268,7 +272,6 @@ router.isReady().then(async () => {
     }).download(event.trackId)
   })
 
-
   /* -------------------------------------------------------------------------- */
   /*                                Tracks State                                */
   /* -------------------------------------------------------------------------- */
@@ -289,11 +292,10 @@ router.isReady().then(async () => {
     downloaderTaskEnqueuedEvent: Events.downloaderTaskEnqueued,
   })
 
-
   /* -------------------------------------------------------------------------- */
   /*                                    Notes                                   */
   /* -------------------------------------------------------------------------- */
-
+  
   Events.notesUpdateRequestes.subscribe(async () => {
     await useNotesLoader({
       notesService: useDAL().notes,
@@ -303,10 +305,30 @@ router.isReady().then(async () => {
   })
 
   /* -------------------------------------------------------------------------- */
+  /*                                   Screens                                  */
+  /* -------------------------------------------------------------------------- */
+
+  useDAL().playlistItems.subscribe(async () => {
+    Events.playlistUpdateRequested.notify({
+      language: useConfig().appLanguage.value
+    })
+  })
+
+  useDAL().notes.subscribe(async () => {
+    Events.notesUpdateRequestes.notify()
+  })
+
+  watch(config.appLanguage, (language: string) => {
+    Events.playlistUpdateRequested.notify({ language })
+  })
+
+  /* -------------------------------------------------------------------------- */
   /*                             Fire Initial Events                            */
   /* -------------------------------------------------------------------------- */
 
-  Events.syncRequested.notify({})
+  Events.syncRequested.notify({
+    userId: useConfig().userEmail.value
+  })
   Events.playlistUpdateRequested.notify({ language: useConfig().appLanguage.value })
   Events.notesUpdateRequestes.notify()
 

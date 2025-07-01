@@ -39,15 +39,6 @@ export function useAnalyticsRecorderTask() {
     analysis.track('app.player.transcript.open') 
   })
 
-  // watchDebounced(trackSearchResultsStore.filters, (f) => {
-  //   if (f == useConfig().savedTracksFilter.value) {
-  //     return // do not track stored value
-  //   }
-
-  //   alert('TRACKED')
-  //   analysis.track('app.tracks.search', f)
-  // }, { debounce: 1000, maxWait: 3000, immediate: false })
-
   App.addListener('appStateChange', ({ isActive }) => {
     if (isActive) { analysis.track('app.open') }
   })
