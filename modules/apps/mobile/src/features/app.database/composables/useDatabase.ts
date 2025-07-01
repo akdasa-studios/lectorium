@@ -63,7 +63,6 @@ export const useDatabase = createSharedComposable(() => {
         name: remoteDatabaseUrl + '/' + newUrl,
         authToken: remoteDatabaseAuthToken
       }) : undefined
-      alert('Remote user data collection name changed: ' + newUrl)
     })
 
     databases = {

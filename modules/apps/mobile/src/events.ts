@@ -29,7 +29,13 @@ export const Events = {
   /*                                  Playlist                                  */
   /* -------------------------------------------------------------------------- */
   
-  playlistUpdateRequested: new Event<{ language: string }>('playlistUpdateRequested')
+  playlistUpdateRequested: new Event<{ language: string }>('playlistUpdateRequested'),
+
+  /* -------------------------------------------------------------------------- */
+  /*                                    Notes                                   */
+  /* -------------------------------------------------------------------------- */
+
+  notesUpdateRequestes: new Event<void>('notesUpdateRequestes')
 }
 
 export const Slots = {

@@ -144,11 +144,6 @@ router.isReady().then(async () => {
   usePlaylistFeature().init({
     playlistService: dal.playlistItems,
   })
-  await useNotesLoader({
-    notesService: useDAL().notes,
-    tracksService: useDAL().tracks,
-    notesStore: useNotesStore()
-  }).load()
   await useNotesSearchIndex().init({
     notesService: useDAL().notes
   })
@@ -226,6 +221,7 @@ router.isReady().then(async () => {
       await Events.playlistUpdateRequested.notify({ 
         language: useConfig().appLanguage.value
       })
+      await Events.notesUpdateRequestes.notify()
     }
   })
 
@@ -293,12 +289,26 @@ router.isReady().then(async () => {
     downloaderTaskEnqueuedEvent: Events.downloaderTaskEnqueued,
   })
 
+
+  /* -------------------------------------------------------------------------- */
+  /*                                    Notes                                   */
+  /* -------------------------------------------------------------------------- */
+
+  Events.notesUpdateRequestes.subscribe(async () => {
+    await useNotesLoader({
+      notesService: useDAL().notes,
+      tracksService: useDAL().tracks,
+      notesStore: useNotesStore()
+    }).load()
+  })
+
   /* -------------------------------------------------------------------------- */
   /*                             Fire Initial Events                            */
   /* -------------------------------------------------------------------------- */
 
   Events.syncRequested.notify({})
   Events.playlistUpdateRequested.notify({ language: useConfig().appLanguage.value })
+  Events.notesUpdateRequestes.notify()
 
   /* -------------------------------------------------------------------------- */
   /*                          Initialization Analytics                          */
