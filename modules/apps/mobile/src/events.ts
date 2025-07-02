@@ -35,7 +35,13 @@ export const Events = {
   /*                                    Notes                                   */
   /* -------------------------------------------------------------------------- */
 
-  notesUpdateRequestes: new Event<void>('notesUpdateRequestes')
+  notesUpdateRequestes: new Event<void>('notesUpdateRequestes'),
+
+  /* -------------------------------------------------------------------------- */
+  /*                                Subscriptions                               */
+  /* -------------------------------------------------------------------------- */
+
+  restoreSubscriptionPlanRequested: new Event<void>('restoreSubscriptionPlanRequested')
 }
 
 export const Slots = {

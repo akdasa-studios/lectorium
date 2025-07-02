@@ -11,6 +11,7 @@ export default {
   },
   auth: {
     syncCompleted: 'Everything is synced',
+    syncing: 'Syncing...',
     signIn: {
       title: 'Sign In',
       description: 'For data and subscription synchronization'
@@ -41,6 +42,7 @@ export default {
   subscription: {
     title: 'Subscription',
     description: 'Subscription management',
+    yourSubscriptionPlanIs: 'You are a {plan} user!',
     choose: 'Support "Listen to Sadhu"',
     subscribe: 'Subscribe',
     subscribed: 'Subscription completed',

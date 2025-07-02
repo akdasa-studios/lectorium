@@ -11,6 +11,7 @@ export default {
   },
   auth: {
     syncCompleted: 'Синхронизовано',
+    syncing: 'Синхронизация...',
     signIn: {
       title: 'Авторизоваться',
       description: 'Для синхронизации данных и подписки'
@@ -41,6 +42,7 @@ export default {
   subscription: {
     title: 'Подписка',
     description: 'Управление подпиской',
+    yourSubscriptionPlanIs: 'Вы {plan} пользователь!',
     choose: 'Поддержите «Слушай Садху»',
     subscribe: 'Подписаться',
     subscribed: 'Подписка оформлена',

@@ -73,6 +73,7 @@ import { useIdGenerator } from './features/app.core'
 import { useDownloadingTask } from './features/app.services.download'
 import { initTrackState, useSyncDownloadingStateTask, useSyncPlaylistStateTask } from './features/tracks.state'
 import { useDebounceFn } from '@vueuse/core'
+import { useSyncStore } from './features/app.services.sync'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -159,8 +160,7 @@ router.isReady().then(async () => {
 
   // Rest //
 
-  await useInAppPurchasesFeatures().init()
-  await useRestoreSubscriptionPlan().init()
+
   await useTrackSearchFiltersPersistenceTask().start()
 
   await useSocialAuth().init()
@@ -177,6 +177,16 @@ router.isReady().then(async () => {
   i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
 
   /* -------------------------------------------------------------------------- */
+  /*                                Subscriptions                               */
+  /* -------------------------------------------------------------------------- */
+
+  await useInAppPurchasesFeatures().init()
+
+  Events.restoreSubscriptionPlanRequested.subscribe(async () => {
+    await useRestoreSubscriptionPlan().restore()
+  })
+
+  /* -------------------------------------------------------------------------- */
   /*                                  Playlist                                  */
   /* -------------------------------------------------------------------------- */
 
@@ -191,30 +201,37 @@ router.isReady().then(async () => {
   /* -------------------------------------------------------------------------- */
 
   const debouncedFn = useDebounceFn(async (userId?: string) => {
-    // sync common data
-    await useCommonDataSyncTask({
-      localDatabasesSource: useDatabase().get().local,
-      remoteDatabasesSource: useDatabase().get().remote,
-    }).sync()
-    Events.syncTaskCompleted.notify({ task: 'commonData' })
+    try {
+      useSyncStore().isSyncing = true
 
-    // sync user data
-    await useUserDataSyncTask({
-      userId,
-      localDatabasesSource: useDatabase().get().local,
-      remoteDatabasesSource: useDatabase().get().remote,
-    }).sync()
-    Events.syncTaskCompleted.notify({ task: 'userData' })
+      // sync common data
+      await useCommonDataSyncTask({
+        localDatabasesSource: useDatabase().get().local,
+        remoteDatabasesSource: useDatabase().get().remote,
+      }).sync()
+      Events.syncTaskCompleted.notify({ task: 'commonData' })
 
-    // sync media items
-    const result = await useMediaSyncTask({
-      mediaItemsService: useDAL().mediaItems,
-      playlistItemsService: useDAL().playlistItems,
-    }).sync()
-    result.newTrackIds.forEach((trackId) => {
-      Events.trackDownloadRequested.notify({ trackId })
-    })
-    Events.syncTaskCompleted.notify({ task: 'media' })
+      // sync user data
+      await useUserDataSyncTask({
+        userId,
+        localDatabasesSource: useDatabase().get().local,
+        remoteDatabasesSource: useDatabase().get().remote,
+      }).sync()
+      Events.syncTaskCompleted.notify({ task: 'userData' })
+
+      // sync media items
+      const result = await useMediaSyncTask({
+        mediaItemsService: useDAL().mediaItems,
+        playlistItemsService: useDAL().playlistItems,
+      }).sync()
+      result.newTrackIds.forEach((trackId) => {
+        Events.trackDownloadRequested.notify({ trackId })
+      })
+      Events.syncTaskCompleted.notify({ task: 'media' })
+    } finally {
+      useSyncStore().isSyncing = false
+      useSyncStore().lastSyncedAt = new Date().getTime()
+    }
   }, 5000, { maxWait: 15000 })
 
   Events.syncRequested.subscribe(async ({ userId }) => {
@@ -331,6 +348,7 @@ router.isReady().then(async () => {
   })
   Events.playlistUpdateRequested.notify({ language: useConfig().appLanguage.value })
   Events.notesUpdateRequestes.notify()
+  Events.restoreSubscriptionPlanRequested.notify()
 
   /* -------------------------------------------------------------------------- */
   /*                          Initialization Analytics                          */

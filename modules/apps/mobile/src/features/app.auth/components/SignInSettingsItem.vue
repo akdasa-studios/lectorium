@@ -13,7 +13,10 @@
       v-if="config.userAvatarUrl.value"
       slot="end"
     >
-      <img :src="config.userAvatarUrl.value">
+      <img
+        :src="config.userAvatarUrl.value"
+        @error="onAvatarLoadError"
+      >
     </IonAvatar>
     
     <!-- Text -->
@@ -26,7 +29,12 @@
     </IonLabel>
     <IonLabel v-else>
       <h2>{{ config.userName.value }}</h2>
-      <p>{{ $t('settings.auth.syncCompleted') }}</p>
+      <p v-if="syncStore.isSyncing">
+        {{ $t('settings.auth.syncing') }}
+      </p>
+      <p v-else>
+        {{ $t('settings.auth.syncCompleted') }}
+      </p>
     </IonLabel>
   </IonItem>
 
@@ -47,8 +55,10 @@ import { Directory, Filesystem } from '@capacitor/filesystem'
 import { Capacitor } from '@capacitor/core'
 import { Routes } from '@lectorium/protocol/index'
 import { Events } from '@lectorium/mobile/events'
+import { useSyncStore } from '@lectorium/mobile/features/app.services.sync'
 
 const config = useConfig()
+const syncStore = useSyncStore()
 
 /* -------------------------------------------------------------------------- */
 /*                                    State                                   */
@@ -118,12 +128,13 @@ async function onAuthenticate(
       config.userName.value = res.result.profile.name || ''
       config.userEmail.value = res.result.profile.email || ''
       Events.syncRequested.notify({ userId: config.userEmail.value })
+      Events.restoreSubscriptionPlanRequested.notify()
 
       // Download avatar image
       if (res.result.profile.imageUrl) {
         Filesystem.downloadFile({
           url: res.result.profile.imageUrl,
-          path: 'userAvatar.png',
+          path: 'userAvatar.jpg',
           directory: Directory.External,
         }).then(r => {
           if (r.path) {
@@ -134,7 +145,13 @@ async function onAuthenticate(
     }
   } catch (error) {
     console.error('Authentication error:', error)
-    alert('Authentication failed. Please try again.' + JSON.stringify(error))
+    alert('Authentication failed. Please try again.')
   }
+}
+/**
+ * If avatar image fails to load, use placeholder image.
+ */
+function onAvatarLoadError() {
+  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-paceholder.png')
 }
 </script>

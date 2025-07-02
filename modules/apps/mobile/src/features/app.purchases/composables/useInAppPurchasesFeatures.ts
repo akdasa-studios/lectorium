@@ -12,18 +12,16 @@ export function useInAppPurchasesFeatures() {
   /* -------------------------------------------------------------------------- */
   
   async function init() {
-    if (Capacitor.getPlatform() === 'web') {
-      return
-    }
-    if (!ENVIRONMENT.revenueCatKey) {
-      return
-    }
+    if (Capacitor.getPlatform() === 'web') { return }
+    if (!ENVIRONMENT.revenueCatKey) { return }
 
-    await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG })
-    await Purchases.configure({ 
-      apiKey: ENVIRONMENT.revenueCatKey,
-      appUserID: config.userEmail.value || null,
-    })
+    await Promise.all([
+      Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG }),
+      Purchases.configure({ 
+        apiKey: ENVIRONMENT.revenueCatKey,
+        appUserID: config.userEmail.value || null,
+      })
+    ])
     console.log('RevenueCat SDK configured!')
   }
 
