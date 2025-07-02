@@ -71,12 +71,12 @@ const actionSheetButtons = [
       action: 'google',
     },
   },
-  // {
-  //   text: 'Apple',
-  //   data: {
-  //     action: 'apple',
-  //   },
-  // },
+  {
+    text: 'Apple',
+    data: {
+      action: 'apple',
+    },
+  },
   {
     text: 'Cancel',
     role: 'cancel',
@@ -97,15 +97,55 @@ async function onAuthenticate(
     if (!event.detail?.data?.action) { return }
     if (event.detail?.data?.action === 'cancel') { return }
 
-    // authenticate via selected provider
-    const res = await SocialLogin.login<'google'>({
-      provider: event.detail.data.action,
-      options: {}
-    })
 
-    // process response
-    if (res.provider === 'google' && res.result.responseType === 'online') {
-      // Register user via API
+    if (event.detail.data.action === 'apple') {
+      const res = await SocialLogin.login<'apple'>({
+        provider: event.detail.data.action,
+        options: {}
+      })
+
+      // Login/register user and get JWT tokens from backend
+      const response = await fetch(
+        Routes(config.apiUrl.value).auth.signIn('jwt'), 
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            provider: 'apple',
+            jwt: res.result.idToken,
+          }),
+        })
+        
+      // Check if the response is ok and tokens are received
+      const tokens = await response.json()
+      if (!tokens.accessToken) {
+        throw new Error('No access token received from server.')
+      }
+
+      // Update config with user data and tokens
+      const { givenName, familyName, email } = res.result.profile
+      config.authToken.value = tokens.accessToken
+      config.userName.value = `${givenName} ${familyName}`.trim() || 'Unnamed User'
+      config.userEmail.value = email || ''
+
+      // Notify events for sync and subscription restoration
+      Events.syncRequested.notify({ userId: config.userEmail.value })
+      Events.restoreSubscriptionPlanRequested.notify()
+      
+    } else if (event.detail.data.action === 'google') {
+      const res = await SocialLogin.login<'google'>({
+        provider: event.detail.data.action,
+        options: {}
+      })
+
+      // Validate response from Google
+      if (res.provider !== 'google' || res.result.responseType !== 'online') {
+        throw new Error('Invalid response from Google login.')
+      }
+
+      // Login/register user and get JWT tokens from backend
       const response = await fetch(
         Routes(config.apiUrl.value).auth.signIn('jwt'), 
         {
@@ -119,14 +159,18 @@ async function onAuthenticate(
           }),
         })
         
+      // Check if the response is ok and tokens are received
       const tokens = await response.json()
       if (!tokens.accessToken) {
         throw new Error('No access token received from server.')
       }
 
+      // Update config with user data and tokens
       config.authToken.value = tokens.accessToken
-      config.userName.value = res.result.profile.name || ''
+      config.userName.value = res.result.profile.name || 'Unnamed User' // TODO: use a better default
       config.userEmail.value = res.result.profile.email || ''
+
+      // Notify events for sync and subscription restoration
       Events.syncRequested.notify({ userId: config.userEmail.value })
       Events.restoreSubscriptionPlanRequested.notify()
 
@@ -145,7 +189,7 @@ async function onAuthenticate(
     }
   } catch (error) {
     console.error('Authentication error:', error)
-    alert('Authentication failed. Please try again.')
+    alert(`Authentication failed. Please try again. ${JSON.stringify(error)}`)
   }
 }
 /**

@@ -5,6 +5,7 @@ export function useSocialAuth() {
   async function init() {
     try {
       SocialLogin.initialize({
+        apple: {},
         google: {
           webClientId: ENVIRONMENT.googleWebClientId,
           iOSClientId: ENVIRONMENT.iOSClientId,
