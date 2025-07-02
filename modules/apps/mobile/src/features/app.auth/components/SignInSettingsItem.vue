@@ -1,7 +1,7 @@
 <template>
   <IonItem
-    id="open-action-sheet"
     lines="none"
+    @click="onClicked"
   >
     <!-- User avatar -->
     <div
@@ -39,8 +39,8 @@
   </IonItem>
 
   <IonActionSheet
-    :header="$t('settings.auth.signIn.title')"
-    trigger="open-action-sheet"
+    :header="$t('settings.auth.signIn.subtitle')"
+    :is-open="isActionSheetOpen"
     :buttons="actionSheetButtons"
     @did-dismiss="onAuthenticate"
   />
@@ -48,6 +48,7 @@
 
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { IonActionSheet, IonItem, IonLabel, IonAvatar } from '@ionic/vue'
 import { SocialLogin } from '@capgo/capacitor-social-login'
 import { useConfig } from '@lectorium/mobile/features/app.config'
@@ -56,7 +57,9 @@ import { Capacitor } from '@capacitor/core'
 import { Routes } from '@lectorium/protocol/index'
 import { Events } from '@lectorium/mobile/events'
 import { useSyncStore } from '@lectorium/mobile/features/app.services.sync'
+import { useI18n } from 'vue-i18n'
 
+const i18n = useI18n()
 const config = useConfig()
 const syncStore = useSyncStore()
 
@@ -64,27 +67,14 @@ const syncStore = useSyncStore()
 /*                                    State                                   */
 /* -------------------------------------------------------------------------- */
 
-const actionSheetButtons = [
-  {
-    text: 'Google',
-    data: {
-      action: 'google',
-    },
-  },
-  {
-    text: 'Apple',
-    data: {
-      action: 'apple',
-    },
-  },
-  {
-    text: 'Cancel',
-    role: 'cancel',
-    data: {
-      action: 'cancel',
-    },
-  },
-]
+const isActionSheetOpen = ref(false) 
+const googleAction = { text: 'Google', data: { action: 'google' } }
+const appleAction  = { text: 'Apple',  data: { action: 'apple' } }
+const cancelAction = { text: 'Cancel', role: 'cancel', data: { action: 'cancel' } }
+
+const actionSheetButtons = 
+  Capacitor.getPlatform() === 'ios'     ? [appleAction, googleAction, cancelAction] :
+  Capacitor.getPlatform() === 'android' ? [googleAction, cancelAction] : []
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
@@ -93,14 +83,37 @@ const actionSheetButtons = [
 async function onAuthenticate(
   event: CustomEvent
 ) {
+  if (['google', 'apple'].includes(event.detail?.data?.action)) { 
+    authenticate(event.detail.data.action as 'google' | 'apple') 
+  }
+  isActionSheetOpen.value = false
+}
+
+function onClicked() {
+  if (Capacitor.getPlatform() === 'android') {
+    // there is only one action available on Android
+    authenticate('google')
+  } else {
+    isActionSheetOpen.value = true
+  }
+}
+
+/**
+ * If avatar image fails to load, use placeholder image.
+ */
+function onAvatarLoadError() {
+  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-paceholder.png')
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Helpers                                  */
+/* -------------------------------------------------------------------------- */
+
+async function authenticate(provider: 'google' | 'apple') {
   try {
-    if (!event.detail?.data?.action) { return }
-    if (event.detail?.data?.action === 'cancel') { return }
-
-
-    if (event.detail.data.action === 'apple') {
-      const res = await SocialLogin.login<'apple'>({
-        provider: event.detail.data.action,
+    if (provider === 'apple') {
+      const res = await SocialLogin.login({
+        provider: 'apple',
         options: {}
       })
 
@@ -114,10 +127,10 @@ async function onAuthenticate(
           },
           body: JSON.stringify({
             provider: 'apple',
-            jwt: res.result.idToken,
+            jwt: res.result.accessToken?.token,
           }),
         })
-        
+ 
       // Check if the response is ok and tokens are received
       const tokens = await response.json()
       if (!tokens.accessToken) {
@@ -125,18 +138,22 @@ async function onAuthenticate(
       }
 
       // Update config with user data and tokens
+      // TODO: apple provides givenName and family name only for the first time
+      //       for the second time it will be empty. User have to delete the app,
+      //       delete app-account in icloud get the names again. So we have to get
+      //       the names from the another source in case they are missing.
       const { givenName, familyName, email } = res.result.profile
       config.authToken.value = tokens.accessToken
-      config.userName.value = `${givenName} ${familyName}`.trim() || 'Unnamed User'
+      config.userName.value = `${givenName} ${familyName}`.trim() || i18n.t('settings.auth.signedIn')
       config.userEmail.value = email || ''
 
       // Notify events for sync and subscription restoration
       Events.syncRequested.notify({ userId: config.userEmail.value })
       Events.restoreSubscriptionPlanRequested.notify()
       
-    } else if (event.detail.data.action === 'google') {
-      const res = await SocialLogin.login<'google'>({
-        provider: event.detail.data.action,
+    } else if (provider === 'google') {
+      const res = await SocialLogin.login({
+        provider: 'google',
         options: {}
       })
 
@@ -187,15 +204,17 @@ async function onAuthenticate(
         })
       }
     }
-  } catch (error) {
+  } catch (error: any) {
+    // apple: user canceled the login. 1001 is the error code in the text
+    if (error?.errorMessage?.includes('1001')) { return }
+    // google: user canceled the login.
+    // NOTE: looks like @capgo/capacitor-social-login has a bug, because
+    //       cancellation code is 16, and you can see it in the logs. But it returns
+    //       nothing to define the reason of the error. Asume this will work.
+    if (!error?.code) { return }
+
     console.error('Authentication error:', error)
     alert(`Authentication failed. Please try again. ${JSON.stringify(error)}`)
   }
-}
-/**
- * If avatar image fails to load, use placeholder image.
- */
-function onAvatarLoadError() {
-  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-paceholder.png')
 }
 </script>

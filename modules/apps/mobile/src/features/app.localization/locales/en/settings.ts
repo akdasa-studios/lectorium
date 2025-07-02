@@ -12,8 +12,10 @@ export default {
   auth: {
     syncCompleted: 'Everything is synced',
     syncing: 'Syncing...',
+    signedIn: 'You are signed in',
     signIn: {
       title: 'Sign In',
+      subtitle: 'Sign In With',
       description: 'For data and subscription synchronization'
     },
   },

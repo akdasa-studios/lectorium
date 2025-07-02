@@ -12,8 +12,10 @@ export default {
   auth: {
     syncCompleted: 'Синхронизовано',
     syncing: 'Синхронизация...',
+    signedIn: 'Вы авторизованы',
     signIn: {
       title: 'Авторизоваться',
+      subtitle: 'Войти с помощью',
       description: 'Для синхронизации данных и подписки'
     }
   },
