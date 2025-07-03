@@ -1,4 +1,4 @@
 /**
- * Feature: User Data Syncronization
+ * Feature: User Data Synchronization
  */
 export * from './composables/useUserDataSyncTask'
