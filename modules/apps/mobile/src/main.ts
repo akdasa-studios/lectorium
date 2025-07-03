@@ -285,7 +285,6 @@ router.isReady().then(async () => {
       const shouldUpdateAuthToken = authTokenIsAboutToExpire && config.refreshToken.value 
 
       if (shouldUpdateAuthToken) {
-        alert('Refreshing auth token...')
         const response = await fetch(
           Routes(config.apiUrl.value).auth.tokens.refresh(), 
           {
@@ -357,7 +356,7 @@ router.isReady().then(async () => {
       await Events.playlistUpdateRequested.notify({ 
         language: useConfig().appLanguage.value
       })
-      await Events.notesUpdateRequestes.notify()
+      await Events.notesUpdateRequested.notify()
     }
   })
 
@@ -427,7 +426,7 @@ router.isReady().then(async () => {
   /*                                    Notes                                   */
   /* -------------------------------------------------------------------------- */
   
-  Events.notesUpdateRequestes.subscribe(async () => {
+  Events.notesUpdateRequested.subscribe(async () => {
     await useNotesLoader({
       notesService: useDAL().notes,
       tracksService: useDAL().tracks,
@@ -446,7 +445,7 @@ router.isReady().then(async () => {
   })
 
   useDAL().notes.subscribe(async () => {
-    Events.notesUpdateRequestes.notify()
+    Events.notesUpdateRequested.notify()
   })
 
   watch(config.appLanguage, (language: string) => {
@@ -459,7 +458,7 @@ router.isReady().then(async () => {
 
   Events.syncRequested.notify()
   Events.playlistUpdateRequested.notify({ language: useConfig().appLanguage.value })
-  Events.notesUpdateRequestes.notify()
+  Events.notesUpdateRequested.notify()
   Events.restoreSubscriptionPlanRequested.notify()
 
   /* -------------------------------------------------------------------------- */

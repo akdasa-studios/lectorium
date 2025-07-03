@@ -14,6 +14,7 @@ export default {
     syncCompleted: 'Синхронизовано',
     syncing: 'Синхронизация...',
     signedIn: 'Вы авторизованы',
+    signOut: 'Выйти',
     signIn: {
       title: 'Авторизоваться',
       subtitle: 'Войти с помощью',

@@ -35,7 +35,7 @@ export const Events = {
   /*                                    Notes                                   */
   /* -------------------------------------------------------------------------- */
 
-  notesUpdateRequestes: new Event<void>('notesUpdateRequestes'),
+  notesUpdateRequested: new Event<void>('notesUpdateRequested'),
 
   /* -------------------------------------------------------------------------- */
   /*                                Subscriptions                               */

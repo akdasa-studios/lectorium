@@ -14,6 +14,7 @@ export default {
     syncCompleted: 'Everything is synced',
     syncing: 'Syncing...',
     signedIn: 'You are signed in',
+    signOut: 'Sign Out',
     signIn: {
       title: 'Sign In',
       subtitle: 'Sign In With',

@@ -49,12 +49,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { IonActionSheet, IonItem, IonLabel, IonAvatar } from '@ionic/vue'
 import { useConfig } from '@lectorium/mobile/features/app.config'
 import { Capacitor } from '@capacitor/core'
 import { Events } from '@lectorium/mobile/events'
 import { useSyncStore } from '@lectorium/mobile/features/app.services.sync'
 
+const { t } = useI18n()
 const config = useConfig()
 const syncStore = useSyncStore()
 
@@ -66,9 +68,10 @@ const isActionSheetOpen = ref(false)
 const isAuthenticated = computed(() => config.userEmail.value !== '')
 const googleAction = { text: 'Google',  data: { action: 'google' } }
 const appleAction  = { text: 'Apple',   data: { action: 'apple' } }
-const logoutAction = { text: 'Log Out', data: { action: 'logout' } }
-const cancelAction = { text: 'Cancel',  role: 'cancel', data: { action: 'cancel' } }
+const logoutAction = { text: t('settings.auth.signOut'), data: { action: 'logout' } }
+const cancelAction = { text: t('app.cancel'),  role: 'cancel', data: { action: 'cancel' } }
 
+// TODO: logoutAction and cancelAction don't automatically translate because they are not reactive. 
 const actionSheetButtons = 
   Capacitor.getPlatform() === 'ios'     ? [appleAction, googleAction, cancelAction] :
   Capacitor.getPlatform() === 'android' ? [googleAction, cancelAction] : []
