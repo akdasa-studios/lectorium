@@ -23,7 +23,7 @@ export class BucketService {
         `with payload ${JSON.stringify(request)}`)
       if (response.status !== 200) {
         const errorResponse = await response.json()
-        console.error('Filed to sign url', response.status, errorResponse, this.token)
+        console.error('Failed to sign URL', response.status, errorResponse, this.token)
         throw new Error(`Failed to get signed URL: ${response.statusText}`)
       }
       const responseData = await response.json() as S3SignedUrlResponse
