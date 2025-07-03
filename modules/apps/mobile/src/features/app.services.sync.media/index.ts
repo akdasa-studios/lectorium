@@ -1,4 +1,4 @@
 /**
- * Feature: Media Syncronization
+ * Feature: Media Synchronization
  */
 export * from './composables/useMediaSyncTask'
