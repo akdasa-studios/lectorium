@@ -133,7 +133,7 @@ async function authenticate(provider: 'google' | 'apple') {
  
       // Check if the response is ok and tokens are received
       const tokens = await response.json()
-      if (!tokens.accessToken) {
+      if (!tokens.accessToken || !tokens.refreshToken) {
         throw new Error('No access token received from server.')
       }
 
@@ -144,6 +144,7 @@ async function authenticate(provider: 'google' | 'apple') {
       //       the names from the another source in case they are missing.
       const { givenName, familyName, email } = res.result.profile
       config.authToken.value = tokens.accessToken
+      config.refreshToken.value = tokens.refreshToken
       config.userName.value = `${givenName} ${familyName}`.trim() || i18n.t('settings.auth.signedIn')
       config.userEmail.value = email || ''
 
@@ -178,12 +179,13 @@ async function authenticate(provider: 'google' | 'apple') {
         
       // Check if the response is ok and tokens are received
       const tokens = await response.json()
-      if (!tokens.accessToken) {
+      if (!tokens.accessToken || !tokens.refreshToken) {
         throw new Error('No access token received from server.')
       }
 
       // Update config with user data and tokens
       config.authToken.value = tokens.accessToken
+      config.refreshToken.value = tokens.refreshToken
       config.userName.value = res.result.profile.name || 'Unnamed User' // TODO: use a better default
       config.userEmail.value = res.result.profile.email || ''
 
@@ -202,6 +204,16 @@ async function authenticate(provider: 'google' | 'apple') {
             config.userAvatarUrl.value = Capacitor.convertFileSrc(r.path)
           }
         })
+      }
+    }
+
+    // Parse JWT token to get expiration time
+    if (config.authToken.value) {
+      const parts = config.authToken.value.split('.')
+      const payload = JSON.parse(atob(parts[1]))
+      if (payload.exp) { 
+        // convert to milliseconds
+        config.authTokenExpiresAt.value = payload.exp * 1000
       }
     }
   } catch (error: any) {

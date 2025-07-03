@@ -37,6 +37,8 @@ export function useConfigPersistenceTask() {
       bind(config.userEmail, 'app.user.email', ''),
       bind(config.userAvatarUrl, 'app.user.avatar', ''),
       bind(config.authToken, 'app.auth.authToken', ENVIRONMENT.readonlyAuthToken),
+      bind(config.authTokenExpiresAt, 'app.auth.authToken.expiresAt', 0),
+      bind(config.refreshToken, 'app.auth.refreshToken', ''),
     ])
   }
 
