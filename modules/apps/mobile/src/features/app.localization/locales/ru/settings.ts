@@ -10,6 +10,7 @@ export default {
     auth: 'Профиль'
   },
   auth: {
+    actions: 'Действия',
     syncCompleted: 'Синхронизовано',
     syncing: 'Синхронизация...',
     signedIn: 'Вы авторизованы',

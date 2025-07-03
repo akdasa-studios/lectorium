@@ -10,6 +10,7 @@ export default {
     auth: 'Profile'
   },
   auth: {
+    actions: 'Actions',
     syncCompleted: 'Everything is synced',
     syncing: 'Syncing...',
     signedIn: 'You are signed in',

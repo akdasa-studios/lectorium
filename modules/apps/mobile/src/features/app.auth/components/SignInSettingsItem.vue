@@ -39,16 +39,16 @@
   </IonItem>
 
   <IonActionSheet
-    :header="$t('settings.auth.signIn.subtitle')"
+    :header="isAuthenticated ? $t('settings.auth.actions') : $t('settings.auth.signIn.subtitle')"
     :is-open="isActionSheetOpen"
-    :buttons="actionSheetButtons"
-    @did-dismiss="onAuthenticate"
+    :buttons="config.userEmail.value ? signedInUserActionButtons : actionSheetButtons"
+    @did-dismiss="onActionClicked"
   />
 </template>
 
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { IonActionSheet, IonItem, IonLabel, IonAvatar } from '@ionic/vue'
 import { useConfig } from '@lectorium/mobile/features/app.config'
 import { Capacitor } from '@capacitor/core'
@@ -63,48 +63,45 @@ const syncStore = useSyncStore()
 /* -------------------------------------------------------------------------- */
 
 const isActionSheetOpen = ref(false) 
-const googleAction = { text: 'Google', data: { action: 'google' } }
-const appleAction  = { text: 'Apple',  data: { action: 'apple' } }
-const cancelAction = { text: 'Cancel', role: 'cancel', data: { action: 'cancel' } }
+const isAuthenticated = computed(() => config.userEmail.value !== '')
+const googleAction = { text: 'Google',  data: { action: 'google' } }
+const appleAction  = { text: 'Apple',   data: { action: 'apple' } }
+const logoutAction = { text: 'Log Out', data: { action: 'logout' } }
+const cancelAction = { text: 'Cancel',  role: 'cancel', data: { action: 'cancel' } }
 
 const actionSheetButtons = 
   Capacitor.getPlatform() === 'ios'     ? [appleAction, googleAction, cancelAction] :
   Capacitor.getPlatform() === 'android' ? [googleAction, cancelAction] : []
+const signedInUserActionButtons = [logoutAction, cancelAction]
 
 /* -------------------------------------------------------------------------- */
 /*                                  Handlers                                  */
 /* -------------------------------------------------------------------------- */
 
-async function onAuthenticate(
-  event: CustomEvent
-) {
-  if (['google', 'apple'].includes(event.detail?.data?.action)) { 
-    authenticate(event.detail.data.action as 'google' | 'apple') 
-  }
-  isActionSheetOpen.value = false
-}
-
 function onClicked() {
-  if (Capacitor.getPlatform() === 'android') {
-    // there is only one action available on Android
-    authenticate('google')
+  if (!isAuthenticated.value && Capacitor.getPlatform() === 'android') {
+    // On android there is onlu Google sign-in available, so where is no
+    // need to show action sheet with only one option.
+    Events.authenticationRequestedEvent.notify({ provider: 'google' })
   } else {
     isActionSheetOpen.value = true
   }
 }
 
-/**
- * If avatar image fails to load, use placeholder image.
- */
-function onAvatarLoadError() {
-  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-paceholder.png')
+async function onActionClicked(
+  event: CustomEvent
+) {
+  const action = event.detail?.data?.action
+  if (['google', 'apple'].includes(action)) { 
+    Events.authenticationRequestedEvent.notify({ provider: action })
+  } else if (action === 'logout') {
+    Events.logOutRequestedEvent.notify()
+  }
+  isActionSheetOpen.value = false
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   Helpers                                  */
-/* -------------------------------------------------------------------------- */
-
-async function authenticate(provider: 'google' | 'apple') {
-  Events.authenticationRequestedEvent.notify({ provider })
+function onAvatarLoadError() {
+ // If avatar image fails to load, use placeholder image.
+  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-paceholder.png')
 }
 </script>

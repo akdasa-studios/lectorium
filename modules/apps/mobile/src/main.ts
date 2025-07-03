@@ -46,6 +46,8 @@ import PouchDBAdapterSqlLite from 'pouchdb-adapter-cordova-sqlite'
 PouchDB.plugin(PouchDBAdapterSqlLite)
 
 import { useInAppPurchasesFeatures } from './features/app.purchases/composables/useInAppPurchasesFeatures'
+import * as amplitude from '@amplitude/analytics-browser'
+import { Purchases } from '@revenuecat/purchases-capacitor'
 import { Device } from '@capacitor/device'
 import { initTrackSearchFeature } from './init/initTrackSearchFeature'
 import { useTracksCountFeature } from './features/tracks.count'
@@ -217,6 +219,18 @@ router.isReady().then(async () => {
       const avatar = await useUserAvatarDownloader().download(results.avatarUrl)
       config.userAvatarUrl.value = avatar || ''
     }
+  })
+
+  Events.logOutRequestedEvent.subscribe(async () => {
+    config.authToken.value = ENVIRONMENT.readonlyAuthToken
+    config.refreshToken.value = ''
+    config.userName.value = ''
+    config.userEmail.value = ''
+    config.userAvatarUrl.value = ''
+    config.subscriptionPlan.value = ''
+    config.authTokenExpiresAt.value = 0
+    await Purchases.logOut()
+    amplitude.setUserId(undefined)
   })
 
   /* -------------------------------------------------------------------------- */

@@ -47,7 +47,8 @@ export const Events = {
   /*                               Authentication                               */
   /* -------------------------------------------------------------------------- */
 
-  authenticationRequestedEvent: new Event<{ provider: string }>('authenticationRequestedEvent')
+  authenticationRequestedEvent: new Event<{ provider: string }>('authenticationRequestedEvent'),
+  logOutRequestedEvent: new Event<void>('logOutRequestedEvent'),
 }
 
 export const Slots = {
