@@ -78,6 +78,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { useSyncStore } from './features/app.services.sync'
 import { Routes } from '@lectorium/protocol/index'
 import { ENVIRONMENT } from './env'
+import { useUserInfo } from './features/app.user.info'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -180,6 +181,14 @@ router.isReady().then(async () => {
   i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
 
   /* -------------------------------------------------------------------------- */
+  /*                                Dependencies                                */
+  /* -------------------------------------------------------------------------- */
+
+  const databases = useDatabase().get()
+  const userInfo = useUserInfo({ database: databases.local.userData })
+
+
+  /* -------------------------------------------------------------------------- */
   /*                               Authentication                               */
   /* -------------------------------------------------------------------------- */
 
@@ -210,15 +219,22 @@ router.isReady().then(async () => {
       if (payload.exp) { config.authTokenExpiresAt.value = payload.exp * 1000 }
     }
 
-    // Sync data and restore subscription plan
-    Events.syncRequested.notify()
-    Events.restoreSubscriptionPlanRequested.notify()
-    
     // download avatar image if available
-    if (results && results.avatarUrl) {
+    if (results.avatarUrl) {
       const avatar = await useUserAvatarDownloader().download(results.avatarUrl)
       config.userAvatarUrl.value = avatar || ''
     }
+
+    // persist user info in database for further use
+    await userInfo.save({
+      name: config.userName.value,
+      email: config.userEmail.value,
+      avatarUrl: results.avatarUrl || undefined,
+    })
+    
+    // Sync data and restore subscription plan
+    Events.syncRequested.notify()
+    Events.restoreSubscriptionPlanRequested.notify()
   })
 
   Events.logOutRequestedEvent.subscribe(async () => {
@@ -316,6 +332,16 @@ router.isReady().then(async () => {
         Events.trackDownloadRequested.notify({ trackId })
       })
       Events.syncTaskCompleted.notify({ task: 'media' })
+
+      // sync user info
+      const res = await userInfo.load()
+      if (res && res.name)  { config.userName.value = res.name }
+      // if (res && res.email) { config.userEmail.value = res.email }
+      if (res?.avatarUrl) {
+        const avatar = await useUserAvatarDownloader().download(res.avatarUrl)
+        config.userAvatarUrl.value = avatar || ''
+      }
+
     } finally {
       useSyncStore().isSyncing = false
       useSyncStore().lastSyncedAt = new Date().getTime()

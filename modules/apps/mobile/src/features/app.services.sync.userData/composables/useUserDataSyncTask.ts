@@ -49,7 +49,7 @@ export function useUserDataSyncTask(options: Options) {
 
     // Document filters
     const userDocumentsToSync = (doc: any) => {
-      return doc?.type && ['playlistItem', 'note'].includes(doc.type) 
+      return doc?.type && ['playlistItem', 'note', 'system'].includes(doc.type) 
     }
 
     // Sync user data
