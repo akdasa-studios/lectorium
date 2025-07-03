@@ -105,6 +105,6 @@ async function onActionClicked(
 
 function onAvatarLoadError() {
  // If avatar image fails to load, use placeholder image.
-  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-paceholder.png')
+  config.userAvatarUrl.value = Capacitor.convertFileSrc('avatar-placeholder.png')
 }
 </script>
