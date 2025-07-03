@@ -6,7 +6,6 @@ type SyncDatabases = {
 }
 
 export type Options = {
-  userId: string | undefined
   localDatabasesSource: SyncDatabases
   remoteDatabasesSource: SyncDatabases
 }
@@ -27,7 +26,6 @@ export function useUserDataSyncTask(options: Options) {
   /* -------------------------------------------------------------------------- */
 
   async function sync() {
-    if (!options.userId) { return }
     try {
       logger.info('Sync started...')
       await onSync()

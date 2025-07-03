@@ -64,7 +64,7 @@ import { useNotesLoader, useNotesSearchIndex, useNotesSearchTask, useNotesStore 
 import { useRestoreSubscriptionPlan } from './features/app.purchases'
 import { useTrackSearchFiltersPersistenceTask } from './features/tracks.search.results'
 import { useAnalytics, useAnalyticsRecorderTask } from './features/app.analytics'
-import { useSocialAuth } from './features/app.auth'
+import { AuthenticationResponse, initSocialAuth, useAppleAuthentication, useGoogleAuthentication, useUserAvatarDownloader } from './features/app.auth'
 import { useCommonDataSyncTask } from './features/app.services.sync.commonData'
 import { Events, Slots } from './events'
 import { useUserDataSyncTask } from './features/app.services.sync.userData'
@@ -74,6 +74,8 @@ import { useDownloadingTask } from './features/app.services.download'
 import { initTrackState, useSyncDownloadingStateTask, useSyncPlaylistStateTask } from './features/tracks.state'
 import { useDebounceFn } from '@vueuse/core'
 import { useSyncStore } from './features/app.services.sync'
+import { Routes } from '@lectorium/protocol/index'
+import { ENVIRONMENT } from './env'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -163,7 +165,6 @@ router.isReady().then(async () => {
 
   await useTrackSearchFiltersPersistenceTask().start()
 
-  await useSocialAuth().init()
 
   const config = useConfig()
   if (config.appLanguage.value === '??') {
@@ -175,6 +176,48 @@ router.isReady().then(async () => {
     }
   }
   i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
+
+  /* -------------------------------------------------------------------------- */
+  /*                               Authentication                               */
+  /* -------------------------------------------------------------------------- */
+
+  await initSocialAuth({
+    googleOAuthClientId: ENVIRONMENT.googleWebClientId,
+    appleOAuthClientId: ENVIRONMENT.iOSClientId,
+  })
+
+  Events.authenticationRequestedEvent.subscribe(async (event) => {
+    const authenticateUrl = Routes(config.apiUrl.value).auth.signIn('jwt')
+    let results: AuthenticationResponse|null = null
+    if (event.provider === 'google') {
+      results = await useGoogleAuthentication({ authenticateUrl }).authenticate()
+    } else if (event.provider === 'apple') {
+      results = await useAppleAuthentication({ authenticateUrl }).authenticate()
+    }
+    if (results === null) { return } // user canceled the login
+
+    // update config with user data and tokens
+    config.authToken.value = results?.accessToken || ''
+    config.refreshToken.value = results?.refreshToken || ''
+    config.userName.value = `${results?.userFirstName} ${results?.userLastName}`.trim()
+    config.userEmail.value = results?.userEmail || ''
+   
+    if (config.authToken.value) {
+      const parts = config.authToken.value.split('.')
+      const payload = JSON.parse(atob(parts[1]))
+      if (payload.exp) { config.authTokenExpiresAt.value = payload.exp * 1000 }
+    }
+
+    // Sync data and restore subscription plan
+    Events.syncRequested.notify()
+    Events.restoreSubscriptionPlanRequested.notify()
+    
+    // download avatar image if available
+    if (results && results.avatarUrl) {
+      const avatar = await useUserAvatarDownloader().download(results.avatarUrl)
+      config.userAvatarUrl.value = avatar || ''
+    }
+  })
 
   /* -------------------------------------------------------------------------- */
   /*                                Subscriptions                               */
@@ -200,9 +243,39 @@ router.isReady().then(async () => {
   /*                                    Sync                                    */
   /* -------------------------------------------------------------------------- */
 
-  const debouncedFn = useDebounceFn(async (userId?: string) => {
+  const debouncedFn = useDebounceFn(async () => {
     try {
       useSyncStore().isSyncing = true
+
+      // refresh authToken
+      const now = Date.now()
+      const authTokenExpiresAt = useConfig().authTokenExpiresAt.value
+      const authTokenTTL = authTokenExpiresAt - now
+      const authTokenIsAboutToExpire = authTokenTTL < 15 * 60 * 1000 // 15 minutes
+      const shouldUpdateAuthToken = authTokenIsAboutToExpire && config.refreshToken.value 
+
+      if (shouldUpdateAuthToken) {
+        alert('Refreshing auth token...')
+        const response = await fetch(
+          Routes(config.apiUrl.value).auth.tokens.refresh(), 
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              refreshToken: config.refreshToken.value
+            }),
+          })
+
+        if (response.ok) {
+          const tokens = await response.json()
+          config.authToken.value = tokens.accessToken
+          config.refreshToken.value = tokens.refreshToken
+        } else {
+          // TODO: logout user if unable to refresh token and it is expired
+        }
+      }
 
       // sync common data
       await useCommonDataSyncTask({
@@ -212,12 +285,13 @@ router.isReady().then(async () => {
       Events.syncTaskCompleted.notify({ task: 'commonData' })
 
       // sync user data
-      await useUserDataSyncTask({
-        userId,
-        localDatabasesSource: useDatabase().get().local,
-        remoteDatabasesSource: useDatabase().get().remote,
-      }).sync()
-      Events.syncTaskCompleted.notify({ task: 'userData' })
+      if (useDatabase().get().remote) {
+        await useUserDataSyncTask({
+          localDatabasesSource: useDatabase().get().local,
+          remoteDatabasesSource: useDatabase().get().remote,
+        }).sync()
+        Events.syncTaskCompleted.notify({ task: 'userData' })
+      }
 
       // sync media items
       const result = await useMediaSyncTask({
@@ -234,8 +308,8 @@ router.isReady().then(async () => {
     }
   }, 5000, { maxWait: 15000 })
 
-  Events.syncRequested.subscribe(async ({ userId }) => {
-    debouncedFn(userId)
+  Events.syncRequested.subscribe(async () => {
+    debouncedFn()
   })
 
   Events.syncTaskCompleted.subscribe(async (event) => {
@@ -248,11 +322,11 @@ router.isReady().then(async () => {
   })
 
   useDAL().playlistItems.subscribe(async () => {
-    Events.syncRequested.notify({ userId: useConfig().userEmail.value })
+    Events.syncRequested.notify()
   })
 
   useDAL().notes.subscribe(async () => {
-    Events.syncRequested.notify({ userId: useConfig().userEmail.value })
+    Events.syncRequested.notify()
   })
 
 
@@ -343,9 +417,7 @@ router.isReady().then(async () => {
   /*                             Fire Initial Events                            */
   /* -------------------------------------------------------------------------- */
 
-  Events.syncRequested.notify({
-    userId: useConfig().userEmail.value
-  })
+  Events.syncRequested.notify()
   Events.playlistUpdateRequested.notify({ language: useConfig().appLanguage.value })
   Events.notesUpdateRequestes.notify()
   Events.restoreSubscriptionPlanRequested.notify()

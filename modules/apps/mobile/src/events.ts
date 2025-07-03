@@ -5,7 +5,7 @@ export const Events = {
   /*                                    Sync                                    */
   /* -------------------------------------------------------------------------- */
 
-  syncRequested: new Event<{ userId?: string }>('syncRequested'),
+  syncRequested: new Event<void>('syncRequested'),
   syncTaskCompleted: new Event<{ task: 'commonData' | 'userData' | 'media' }>('syncTaskCompleted'),
   
   /* -------------------------------------------------------------------------- */
@@ -41,7 +41,13 @@ export const Events = {
   /*                                Subscriptions                               */
   /* -------------------------------------------------------------------------- */
 
-  restoreSubscriptionPlanRequested: new Event<void>('restoreSubscriptionPlanRequested')
+  restoreSubscriptionPlanRequested: new Event<void>('restoreSubscriptionPlanRequested'),
+
+  /* -------------------------------------------------------------------------- */
+  /*                               Authentication                               */
+  /* -------------------------------------------------------------------------- */
+
+  authenticationRequestedEvent: new Event<{ provider: string }>('authenticationRequestedEvent')
 }
 
 export const Slots = {
