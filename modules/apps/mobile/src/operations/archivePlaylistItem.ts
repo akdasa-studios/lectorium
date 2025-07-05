@@ -12,7 +12,7 @@ export function archivePlaylistItem() {
   /* -------------------------------------------------------------------------- */
 
   async function execute(playlistItemId: string) {
-    await dal.playlistItems.archiveOne(playlistItemId)
+    await dal.archiveService.archiveOne(playlistItemId)
   }
   
   /* -------------------------------------------------------------------------- */

@@ -1,14 +1,14 @@
-import { Transcript } from '@lectorium/dal/models'
+import { Language, Note, Track, Transcript } from '@lectorium/dal/models'
 import { useTranscriptStore } from './useTranscriptStore'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
 import { TranscriptParagraph, TranscriptSentence } from '../models'
 import { useSpeakerIcons } from './useSpeakerIcons'
-import { LanguagesService, NotesService, TracksService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 
 export type Options = {
-  tracksService: TracksService
-  languagesService: LanguagesService
-  notesService: NotesService
+  tracksService: IRepository<Track>
+  languagesService: IRepository<Language>
+  notesService: IRepository<Note>
 }
 
 export function useTranscriptLoader({

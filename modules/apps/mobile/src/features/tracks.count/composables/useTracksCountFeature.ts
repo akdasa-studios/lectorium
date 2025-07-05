@@ -1,9 +1,10 @@
 import { createSharedComposable } from '@vueuse/core'
-import { TracksService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { useTracksCountStore } from './useTracksCountStore'
+import { Track } from '@lectorium/dal/models'
 
 export type Options = {
-  tracksService: TracksService
+  tracksRepo: IRepository<Track>
 }
 
 export const useTracksCountFeature = createSharedComposable(() => {
@@ -18,7 +19,7 @@ export const useTracksCountFeature = createSharedComposable(() => {
   /* -------------------------------------------------------------------------- */
   
   async function init(options: Options) {
-    tracksCountStore.totalCount = await options.tracksService.getCount()
+    tracksCountStore.totalCount = await options.tracksRepo.getCount()
   }
 
   /* -------------------------------------------------------------------------- */

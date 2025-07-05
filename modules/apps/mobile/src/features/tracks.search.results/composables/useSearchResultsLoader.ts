@@ -1,13 +1,13 @@
 import { Source, Duration } from '@lectorium/dal/models'
-import { DurationsService, IndexService, SourcesService, TracksService } from '@lectorium/dal/index'
+import { IRepository, IndexService, TracksSearchService } from '@lectorium/dal/index'
 import { TrackSearchFilters } from '../models/TrackSearchFilters'
 import { useTrackToSearchResultMapper } from './useTrackToSearchResultMapper'
 
 type Options = {
   indexService: IndexService
-  tracksService: TracksService
-  sourcesService: SourcesService
-  durationsService: DurationsService
+  tracksService: TracksSearchService
+  sourcesService: IRepository<Source>
+  durationsService: IRepository<Duration>
 }
 
 type SearchRequest = {

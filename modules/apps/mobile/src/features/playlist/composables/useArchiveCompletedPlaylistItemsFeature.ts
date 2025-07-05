@@ -33,7 +33,7 @@ export function useArchiveCompletedPlaylistItemsFeature() {
 
     // Archive all completed items
     await Promise.all(
-      completedPlaylistItems.map(async x => await dal.playlistItems.archiveOne(x._id))
+      completedPlaylistItems.map(async x => await dal.archiveService.archiveOne(x._id))
     )
   }
 

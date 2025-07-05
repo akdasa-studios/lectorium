@@ -1,13 +1,14 @@
 import { Ref, watch } from 'vue'
 import { useTranscriptLoader } from './useTranscriptLoader'
-import { LanguagesService, NotesService, TracksService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
+import { Language, Note, Track } from '@lectorium/dal/models'
 
 
 type Options = {
   trackId: Ref<string>
-  tracksService: TracksService
-  languagesService: LanguagesService
-  notesService: NotesService
+  tracksService: IRepository<Track>
+  languagesService: IRepository<Language>
+  notesService: IRepository<Note>
 }
 
 export function useSyncTranscriptTask({

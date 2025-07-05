@@ -1,13 +1,14 @@
 import { useLogger } from '@lectorium/mobile/features/app.core'
-import { MediaItemsService, PlaylistItemsService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
+import { MediaItem, PlaylistItem } from '@lectorium/dal/models'
 
 export type MediaSyncTaskResult = {
   newTrackIds: string[]
 }
 
 export type Options = {
-  mediaItemsService: MediaItemsService
-  playlistItemsService: PlaylistItemsService
+  mediaItemsService: IRepository<MediaItem>
+  playlistItemsService: IRepository<PlaylistItem>
 }
 
 /**
@@ -45,10 +46,10 @@ export function useMediaSyncTask(options: Options) {
     const result = []
 
     // check non archived playlist items for missing media items
-    const playlistItems = await options.playlistItemsService.getMany({ 
+    const playlistItems = (await options.playlistItemsService.getMany({ 
       selector: { archivedAt: { $exists: false } },
       limit: 1000 // TODO: paginate
-    })
+    })).sort((a, b) => a.addedAt - b.addedAt)
 
     // check media items for playlist items
     for (const item of playlistItems) {

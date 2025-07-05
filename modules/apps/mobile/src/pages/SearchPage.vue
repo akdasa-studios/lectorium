@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { Page, SearchInput } from '@lectorium/mobile/features/app.core'
 import { SearchFiltersBar } from '@lectorium/mobile/features/tracks.search.filters'
-import { TrackStateIndicator } from '@lectorium/mobile/features/tracks.state'
+import { TrackStateIndicator } from '@lectorium/mobile/features/app.tracks.state'
 import { SearchResultsSection, useTrackSearchResultsStore } from '@lectorium/mobile/features/tracks.search.results' 
 import { useTracksCountStore } from '@lectorium/mobile/features/tracks.count'
 import { usePlaylistFeature } from '@lectorium/mobile/features/playlist'
@@ -39,9 +39,7 @@ const tracksCountStore = useTracksCountStore()
 /* -------------------------------------------------------------------------- */
 
 async function onTrackClicked(trackId: string) {
-  const isTrackAdded = await usePlaylistFeature().addTrackToPlaylist(trackId)
-  if (isTrackAdded) {
-    Events.trackDownloadRequested.notify({ trackId })
-  }
+  await usePlaylistFeature().addTrackToPlaylist(trackId)
+  Events.trackDownload.notify({ trackId: [trackId] })
 }
 </script>

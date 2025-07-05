@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/capacitor'
+
 export type LoggerOptions = {
   module: string
 }
@@ -16,8 +18,14 @@ export function useLogger({ module }: LoggerOptions) {
     console.debug(`[LCT] ${module}: ${message}`)
   }
 
-  function error(message: string) {
+  function error(message: string, error?: any) {
     console.error(`[LCT] ${module}: ${message}`)
+    if (error) {
+      const errorDetails = error.message || error.msg || '' 
+      Sentry.captureException(
+        new Error(message + (errorDetails ? `: ${errorDetails}` : ''), { cause: error }),
+      )
+    }
   }
 
   /* -------------------------------------------------------------------------- */

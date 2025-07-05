@@ -10,7 +10,8 @@
       'player': true,
       'floating': !sticked,
       'stick': sticked,
-      'hidden': hidden
+      'hidden': hidden,
+      'pulsing': pulsing,
     }"
     @play="emit('playClicked')"
   />
@@ -33,6 +34,7 @@ defineProps<{
   position: number
   showProgress: boolean
   sticked: boolean
+  pulsing: boolean
 }>()
 
 const emit = defineEmits<{
@@ -45,6 +47,7 @@ const emit = defineEmits<{
   z-index: 10000;
   position: fixed;
   transition: all .5s ease-in-out;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, .25);
 }
 
 .floating {
@@ -70,5 +73,27 @@ const emit = defineEmits<{
   opacity: 0;
   bottom: 0;
   pointer-events: none;
+}
+
+.pulsing {
+  animation: inviteClick 3s ease-in-out infinite;
+}
+
+@keyframes inviteClick {
+  0%, 100% {
+      transform: scale(1);
+  }
+  10% {
+      transform: scale(0.98);
+  }
+  20% {
+      transform: scale(1.01);
+  }
+  30% {
+      transform: scale(0.99);
+  }
+  40% {
+      transform: scale(1);
+  }
 }
 </style>

@@ -8,7 +8,7 @@
       <p>{{ $t('settings.social.stayConnected') }}</p>
     </IonLabel>
     <div slot="end">
-      <a href="https://t.me/akd_studios">
+      <a href="https://t.me/listentosadhuapp">
         <IconTelegram class="icon" />
       </a>
       <a href="https://www.facebook.com/groups/akd.studios/">

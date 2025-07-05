@@ -1,6 +1,6 @@
 import type { Duration } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 /**
  * Schema of the Duration documents in the Library collection.
@@ -21,7 +21,7 @@ const sourceDeserializer = (document: DurationsDBSchema): Duration => document
 /**
  * Service for managing Sources
  */
-export class DurationsService extends DatabaseService<Duration, DurationsDBSchema> {
+export class DurationsRepository extends PouchRepository<Duration, DurationsDBSchema> {
   constructor(database: Database) {
     super(database, sourceSerializer, sourceDeserializer, { type: "duration" })
   }

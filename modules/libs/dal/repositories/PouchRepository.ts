@@ -1,34 +1,11 @@
 import { Database } from '../persistence'
+import { FindOneRequest, GetAllRequest, GetManyRequest, IRepository, Identifiable, ItemChangedEvent, ItemChangedEventHandler } from './IRepository'
 
-export type Identifiable = { _id: string }
 
-export type ItemChangedEvent<TItem> = {
-  item: TItem,
-  event: "added" | "removed" | "updated"
-}
-
-export type ItemChangedEventHandler<TItem> = (event: ItemChangedEvent<TItem>) => Promise<void>
-
-export type FindOneRequest<TItem> = Partial<TItem>
-
-export type GetAllRequest = {
-  limit?: number
-  skip?: number
-  sort?: string[]
-}
-
-export type GetManyRequest = {
-  selector?: any
-  limit?: number
-  skip?: number
-  sort?: string[]
-  fields?: string[]
-}
-
-export abstract class DatabaseService<
+export abstract class PouchRepository<
   TItem extends Identifiable,
   TDbScheme extends Identifiable,
-> {
+> implements IRepository<TItem, TDbScheme> {
   protected _database: Database
   private _changeEventHandlers: ItemChangedEventHandler<TItem>[] = []
   private _deserializer: (document: TDbScheme) => TItem
@@ -69,7 +46,6 @@ export abstract class DatabaseService<
     this._changeEventHandlers.push(handler)
   }
 
-
   /**
    * Notifies all subscribers of a change event.
    * @param event The event to be broadcasted to all subscribers.
@@ -95,6 +71,8 @@ export abstract class DatabaseService<
   async getOne(
     id: string
   ): Promise<TItem> {
+    console.debug(`[LCT] db.${this._database.db.name}.getOne(${id})`)
+
     const response = await this._database.db.find({
       selector: { _id: id, ...this._scope },
       limit: 1
@@ -113,6 +91,8 @@ export abstract class DatabaseService<
   async findOne(
     request: FindOneRequest<TDbScheme>
   ): Promise<TItem | undefined> {
+    console.debug(`[LCT] db.${this._database.db.name}.findOne(${JSON.stringify(request)})`)
+
     const response = await this._database.db.find({
       selector: { ...request, ...this._scope },
       limit: 1
@@ -132,6 +112,8 @@ export abstract class DatabaseService<
   async getAll(
     request?: GetAllRequest
   ): Promise<TItem[]> {
+    console.debug(`[LCT] db.${this._database.db.name}.getAll(${JSON.stringify(request)})`)
+
     const r = {
       selector: {
         ...this._scope,
@@ -150,6 +132,8 @@ export abstract class DatabaseService<
   async getMany(
     request: GetManyRequest
   ): Promise<TItem[]> {
+    console.debug(`[LCT] db.${this._database.db.name}.getMany(${JSON.stringify(request)})`)
+
     const r = {
       selector: {
         ...this._scope,
@@ -172,6 +156,8 @@ export abstract class DatabaseService<
   async getIds(
     request: GetManyRequest
   ): Promise<string[]> {
+    console.debug(`[LCT] db.${this._database.db.name}.getIds(${JSON.stringify(request)})`)
+
     const r = {
       selector: {
         ...this._scope,
@@ -194,6 +180,7 @@ export abstract class DatabaseService<
    * @returns A promise that resolves to the count of items in the database.
    */
   async getCount(): Promise<number> {
+    console.debug(`[LCT] db.${this._database.db.name}.getCount()`)
     const info = await this._database.db.info()
     return info.doc_count
   }
@@ -206,6 +193,7 @@ export abstract class DatabaseService<
   async addOne(
     item: TItem
   ): Promise<void> {
+    console.debug(`[LCT] db.${this._database.db.name}.addOne(${JSON.stringify(item)})`)
     try {
       await this._database.db.put({
         ...this._serializer(item)
@@ -226,6 +214,7 @@ export abstract class DatabaseService<
     id: string,
     item: TItem
   ): Promise<void> {
+    console.debug(`[LCT] db.${this._database.db.name}.updateOne(${id}, ${JSON.stringify(item)})`)
     const document = await this._database.db.get<TDbScheme>(id)
     const updatedDocument = { ...document, ...this._serializer(item) }
     const updatedItem = this._deserializer(updatedDocument)
@@ -237,6 +226,8 @@ export abstract class DatabaseService<
     id: string,
     item: Partial<TItem>
   ): Promise<void> {
+    console.debug(`[LCT] db.${this._database.db.name}.patchOne(${id}, ${JSON.stringify(item)})`)
+
     const document = await this._database.db.get<TDbScheme>(id)
     const updatedItem = { ...this._deserializer(document), ...item }
     const updatedDocument = this._serializer(updatedItem)
@@ -253,6 +244,8 @@ export abstract class DatabaseService<
   async removeOne(
     id: string
   ): Promise<void> {
+    console.debug(`[LCT] db.${this._database.db.name}.removeOne(${id})`)
+    
     const document = await this._database.db.get<TDbScheme>(id)
     const item = this._deserializer(document)
     await this._database.db.remove(document)

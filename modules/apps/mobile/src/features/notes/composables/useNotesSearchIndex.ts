@@ -1,11 +1,10 @@
-import { NotesService } from '@lectorium/dal/index'
+import { IRepository, ItemChangedEvent } from '@lectorium/dal/index'
 import { Note } from '@lectorium/dal/models'
-import { ItemChangedEvent } from '@lectorium/dal/services/DatabaseService'
 import { createSharedComposable } from '@vueuse/core'
 import FlexSearch from 'flexsearch'
 
 type Options = {
-  notesService: NotesService
+  notesRepo: IRepository<Note>
 }
 
 export const useNotesSearchIndex = createSharedComposable(() => {
@@ -30,12 +29,12 @@ export const useNotesSearchIndex = createSharedComposable(() => {
   /*                                    Hooks                                   */
   /* -------------------------------------------------------------------------- */
 
-  async function init({ notesService }: Options) {
+  async function init({ notesRepo }: Options) {
     // TODO: it might take long for big amount of notes.
     // FIX: use .import / .export methods to load baked search index 
-    const items = await notesService.getAll({ limit: 1000 })
+    const items = await notesRepo.getAll({ limit: 1000 })
     for (const i of items) { index.add(i) }
-    notesService.subscribe(onNotesChange)
+    notesRepo.subscribe(onNotesChange)
   } 
 
   /* -------------------------------------------------------------------------- */

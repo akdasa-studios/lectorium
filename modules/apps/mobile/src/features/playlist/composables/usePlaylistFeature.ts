@@ -1,9 +1,10 @@
 import { createSharedComposable } from '@vueuse/core'
-import { PlaylistItemsService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { useIdGenerator } from '@lectorium/mobile/features/app.core'
+import { PlaylistItem } from '@lectorium/dal/models'
 
 export type Options = {
-  playlistService: PlaylistItemsService
+  playlistService: IRepository<PlaylistItem>
 }
 
 export const usePlaylistFeature = createSharedComposable(() => {
