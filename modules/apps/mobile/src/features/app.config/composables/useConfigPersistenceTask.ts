@@ -40,6 +40,7 @@ export function useConfigPersistenceTask() {
       bind(config.authTokenExpiresAt, 'app.auth.authToken.expiresAt', 0),
       bind(config.refreshToken, 'app.auth.refreshToken', ''),
       bind(config.openTranscriptAutomatically, 'app.transcript.openAutomatically', true),
+      bind(config.tutorialStepsCompleted, 'app.tutorial.stepsCompleted', []),
     ])
   }
 

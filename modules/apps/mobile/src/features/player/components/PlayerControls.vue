@@ -81,7 +81,6 @@ const playButtonIcon = computed(() => {
 .player {
   background-color: var(--ion-color-primary-tint);
   color: var(--ion-color-primary-contrast);
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
   display: flex;
   align-items: center;
   justify-content: center;

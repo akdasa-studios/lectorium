@@ -12,7 +12,8 @@
       :position="player.position.value"
       :hidden="!player.trackId.value || keyboardVisible.isKeyboardVisible.value"
       :show-progress="config.showPlayerProgress.value"
-      @click="transcriptStore.toggleTranscriptOpen"
+      :pulsing="!config.tutorialStepsCompleted.value.includes('transcript:open')"
+      @click="onFloatingPlayerClicked"
       @play-clicked="onPlayButtonClicked"
     />
 
@@ -84,6 +85,13 @@ async function onPlayButtonClicked() {
   await p.togglePause()
   if (player.isPlaying.value && config.openTranscriptAutomatically.value) {
     transcriptStore.open = true
+  }
+}
+
+function onFloatingPlayerClicked() {
+  transcriptStore.toggleTranscriptOpen()
+  if (!config.tutorialStepsCompleted.value.includes('transcript:open')) {
+    config.tutorialStepsCompleted.value.push('transcript:open')
   }
 }
 </script>
