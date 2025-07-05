@@ -1,34 +1,11 @@
 import { Database } from '../persistence'
+import { FindOneRequest, GetAllRequest, GetManyRequest, IDatabaseService, Identifiable, ItemChangedEvent, ItemChangedEventHandler } from './IDatabaseService'
 
-export type Identifiable = { _id: string }
-
-export type ItemChangedEvent<TItem> = {
-  item: TItem,
-  event: "added" | "removed" | "updated"
-}
-
-export type ItemChangedEventHandler<TItem> = (event: ItemChangedEvent<TItem>) => Promise<void>
-
-export type FindOneRequest<TItem> = Partial<TItem>
-
-export type GetAllRequest = {
-  limit?: number
-  skip?: number
-  sort?: string[]
-}
-
-export type GetManyRequest = {
-  selector?: any
-  limit?: number
-  skip?: number
-  sort?: string[]
-  fields?: string[]
-}
 
 export abstract class DatabaseService<
   TItem extends Identifiable,
   TDbScheme extends Identifiable,
-> {
+> implements IDatabaseService<TItem, TDbScheme> {
   protected _database: Database
   private _changeEventHandlers: ItemChangedEventHandler<TItem>[] = []
   private _deserializer: (document: TDbScheme) => TItem

@@ -120,6 +120,29 @@ router.isReady().then(async () => {
     }
   })
 
+  /* -------------------------------------------------------------------------- */
+  /*                                Dependencies                                */
+  /* -------------------------------------------------------------------------- */
+
+  const dal = useDAL()
+  const player = usePlayer()
+  const playerControls = usePlayerControls()
+  const databases = useDatabase().get()
+  const userInfo = useUserInfo({ database: databases.local.userData })
+  const transcriptStore = useTranscriptStore()
+  const trackStateStore = useTrackStateStore()
+
+
+  await Promise.all([
+    dal.tags.getAll({ limit: 1000 }),
+    dal.authors.getAll({ limit: 1000 }),
+    dal.sources.getAll({ limit: 1000 }),
+    dal.locations.getAll({ limit: 1000 }),
+    dal.languages.getAll({ limit: 1000 }),
+    dal.durations.getAll({ limit: 1000 }),
+    dal.sortMethods.getAll({ limit: 1000 }),
+  ])
+
   // App //
 
   useAnalyticsRecorderTask()
@@ -146,18 +169,8 @@ router.isReady().then(async () => {
 
   initTrackSearchFeature()
 
-  /* -------------------------------------------------------------------------- */
-  /*                                Dependencies                                */
-  /* -------------------------------------------------------------------------- */
 
-  const dal = useDAL()
-  const player = usePlayer()
-  const playerControls = usePlayerControls()
-  const databases = useDatabase().get()
-  const userInfo = useUserInfo({ database: databases.local.userData })
-  const transcriptStore = useTranscriptStore()
-  const trackStateStore = useTrackStateStore()
-
+  
   await useTracksCountFeature().init({
     tracksService: dal.tracks
   })

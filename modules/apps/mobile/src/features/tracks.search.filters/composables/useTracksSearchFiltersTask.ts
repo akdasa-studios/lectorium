@@ -1,15 +1,16 @@
 import { Ref, watch } from 'vue'
 import { createSharedComposable } from '@vueuse/core'
 import { useSearchFiltersDictionaryStore } from './useSearchFiltersDictionaryStore'
-import { AuthorsService, DurationsService, LanguagesService, LocationsService, SourcesService, SortMethodsService } from '@lectorium/dal/index'
+import { IDatabaseService } from '@lectorium/dal/index'
+import { Author, Source, Location, Language, Duration, SortMethod } from '@lectorium/dal/models'
 
 export type Options = {
-  authorsService: AuthorsService,
-  sourcesService: SourcesService,
-  locationsService: LocationsService,
-  languagesService: LanguagesService,
-  durationsService: DurationsService,
-  sortMethodsService: SortMethodsService,
+  authorsService: IDatabaseService<Author>
+  sourcesService: IDatabaseService<Source>
+  locationsService: IDatabaseService<Location>
+  languagesService: IDatabaseService<Language>
+  durationsService: IDatabaseService<Duration>
+  sortMethodsService: IDatabaseService<SortMethod>
   language: Ref<string>
 }
 

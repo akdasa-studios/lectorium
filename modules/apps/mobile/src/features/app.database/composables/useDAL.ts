@@ -5,6 +5,7 @@ import {
   TagsService, DurationsService, NotesService, SortMethodsService
 } from '@lectorium/dal/index'
 import { useDatabase } from './useDatabase'
+import { CachingDatabaseService } from '@lectorium/dal/services/CachingDatabaseService'
 
 export const useDAL = createSharedComposable(() => {
   const database = useDatabase().get()
@@ -13,13 +14,13 @@ export const useDAL = createSharedComposable(() => {
     tracks: new TracksService(database.local.tracks),
     
     // Dictionary
-    tags: new TagsService(database.local.dictionary),
-    authors: new AuthorsService(database.local.dictionary),
-    sources: new SourcesService(database.local.dictionary),
-    locations: new LocationsService(database.local.dictionary),
-    languages: new LanguagesService(database.local.dictionary),
-    durations: new DurationsService(database.local.dictionary),
-    sortMethods: new SortMethodsService(database.local.dictionary),
+    tags: new CachingDatabaseService(new TagsService(database.local.dictionary)),
+    authors: new CachingDatabaseService(new AuthorsService(database.local.dictionary)),
+    sources: new CachingDatabaseService(new SourcesService(database.local.dictionary)),
+    locations: new CachingDatabaseService(new LocationsService(database.local.dictionary)),
+    languages: new CachingDatabaseService(new LanguagesService(database.local.dictionary)),
+    durations: new CachingDatabaseService(new DurationsService(database.local.dictionary)),
+    sortMethods: new CachingDatabaseService(new SortMethodsService(database.local.dictionary)),
 
     // Index
     index: new IndexService(database.local.index),

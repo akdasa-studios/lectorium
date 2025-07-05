@@ -1,11 +1,10 @@
-import { NotesService } from '@lectorium/dal/index'
+import { IDatabaseService, ItemChangedEvent } from '@lectorium/dal/index'
 import { Note } from '@lectorium/dal/models'
-import { ItemChangedEvent } from '@lectorium/dal/services/DatabaseService'
 import { createSharedComposable } from '@vueuse/core'
 import FlexSearch from 'flexsearch'
 
 type Options = {
-  notesService: NotesService
+  notesService: IDatabaseService<Note>
 }
 
 export const useNotesSearchIndex = createSharedComposable(() => {
