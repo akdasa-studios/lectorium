@@ -12,19 +12,8 @@ export const Events = {
   /*                               Track Downloads                              */
   /* -------------------------------------------------------------------------- */
   
-  trackDownloadRequested: new Event<{ trackId: string }>('trackDownloadRequested'),
-  trackDownloadFailed: new Event<{ trackId: string }>('trackDownloadFailed'),
+  trackDownload: new Event<{ trackId: string[] }>('trackDownload'),
 
-  /* -------------------------------------------------------------------------- */
-  /*                                 Downloader                                 */
-  /* -------------------------------------------------------------------------- */
-
-  downloaderTaskEnqueueRequested: new Event<{ url: string, destination: string, meta: any}>('downloaderTaskEnqueueRequested'),
-  downloaderTaskEnqueued: new Event<{ url: string, destination: string, meta: any}>('downloaderTaskEnqueued'),
-  downloaderTaskFailed: new Event<{ url: string, destination: string, progress: number, meta: any }>('downloaderTaskFailed'),
-  downloaderTaskStatus: new Event<{url: string, destination: string, progress: number, meta: any}>('downloaderTaskStatus'),
-  downloaderTaskCompleted: new Event<{ url: string, destination: string, progress: number, meta: any }>('downloaderTaskCompleted'),
-  
   /* -------------------------------------------------------------------------- */
   /*                                  Playlist                                  */
   /* -------------------------------------------------------------------------- */

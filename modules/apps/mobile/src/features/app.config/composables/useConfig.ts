@@ -19,7 +19,7 @@ export const useConfig = createGlobalState(() => {
   const userName                 = ref('')
   const userEmail                = ref('')
   const userAvatarUrl            = ref('')
-  const openTranscriptAutomatically = ref(true)
+  const openTranscriptAutomatically = ref(false)
   const tutorialStepsCompleted = ref<string[]>([])
 
   return {

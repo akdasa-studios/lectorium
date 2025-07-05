@@ -5,6 +5,7 @@ import { Event, useLogger } from '@lectorium/mobile/features/app.core'
 
 type Options = {
   mediaItemsService: MediaItemsService
+  maxConcurrentDownloads?: number
 }
 
 export type DownloadingMediaItem = MediaItem & {
@@ -18,6 +19,7 @@ export function useTrackMediaItemsDownloader(options: Options) {
   /* -------------------------------------------------------------------------- */
 
   const logger = useLogger({ module: 'app.tracks.mediaItems.downloader' })
+  const maxConcurrentDownloads = options.maxConcurrentDownloads || 3
 
   /* -------------------------------------------------------------------------- */
   /*                                    Hooks                                   */
@@ -30,6 +32,8 @@ export function useTrackMediaItemsDownloader(options: Options) {
   /* -------------------------------------------------------------------------- */ 
 
   const tasks: Record<string, DownloadingMediaItem> = {}
+  const queue: MediaItem[] = []
+  const activeDownloads = new Set<string>()
   const status = new Event<DownloadingMediaItem>('status')
   const failed = new Event<DownloadingMediaItem>('failed')
   const complete = new Event<DownloadingMediaItem>('complete')
@@ -44,7 +48,31 @@ export function useTrackMediaItemsDownloader(options: Options) {
 
   async function enqueue(mediaItem: MediaItem) {
     tasks[mediaItem.remoteUrl] = { ...mediaItem, progress: 0 }
+    queue.push(mediaItem)
+    await processQueue()
+  }
 
+  async function processQueue() {
+    // If we're at max capacity or queue is empty, return
+    if (activeDownloads.size >= maxConcurrentDownloads || queue.length === 0) {
+      return
+    }
+
+    // Get the next item from queue
+    const mediaItem = queue.shift()
+    if (!mediaItem) return
+
+    // Add to active downloads
+    activeDownloads.add(mediaItem.remoteUrl)
+
+    // Start the download
+    await startDownload(mediaItem)
+
+    // Try to process more items from queue
+    await processQueue()
+  }
+
+  async function startDownload(mediaItem: MediaItem) {
     // localPath contains file name, so we need to remove 
     // it to get the folder
     const folder = mediaItem.localPath.substring(
@@ -80,25 +108,54 @@ export function useTrackMediaItemsDownloader(options: Options) {
 
   function onProgressUpdate(progressStatus: ProgressStatus) {
     const progress = progressStatus.bytes / progressStatus.contentLength * 100
-    tasks[progressStatus.url].progress = progress
-    status.notify(tasks[progressStatus.url])
+    if (tasks[progressStatus.url]) {
+      tasks[progressStatus.url].progress = progress
+      status.notify(tasks[progressStatus.url])
+    }
   }
 
   async function onDownloadFailed(mediaItem: MediaItem) {
     await options.mediaItemsService.patchOne(mediaItem._id, { state: 'failed' })
     failed.notify(mediaItem)
+    
+    // Remove from active downloads and tasks
+    activeDownloads.delete(mediaItem.remoteUrl)
     delete tasks[mediaItem.remoteUrl]
+    
+    // Process next item in queue
+    await processQueue()
   }
 
   async function onDownloadComplete(mediaItem: MediaItem) {
     await options.mediaItemsService.patchOne(mediaItem._id, { state: 'ready' })
     complete.notify(mediaItem)
+    
+    // Remove from active downloads and tasks
+    activeDownloads.delete(mediaItem.remoteUrl)
     delete tasks[mediaItem.remoteUrl]
+    
+    // Process next item in queue
+    await processQueue()
+  }
+
+  function getQueueStatus() {
+    return {
+      queued: queue.length,
+      active: activeDownloads.size,
+      total: Object.keys(tasks).length
+    }
   }
 
   /* -------------------------------------------------------------------------- */
   /*                                  Interface                                 */
   /* -------------------------------------------------------------------------- */
 
-  return { enqueue, status, complete, failed, getTasksByTrackId }
+  return { 
+    enqueue, 
+    status, 
+    complete, 
+    failed, 
+    getTasksByTrackId,
+    getQueueStatus 
+  }
 }

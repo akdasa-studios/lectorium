@@ -31,35 +31,36 @@ export async function initTrackDownloadingFeature(
   /*                                    Hooks                                   */
   /* -------------------------------------------------------------------------- */
 
-  Events.trackDownloadRequested.subscribe(async (event) => {
+  Events.trackDownload.subscribe(async (event) => {
     logger.info(`Track download requested: ${event.trackId}`)
 
-    // Check if the track is already being downloaded
-    const downloadingTasks = tracksDownloader.getTasksByTrackId(event.trackId)
-    if (downloadingTasks.length > 0) { return }
+    for (const trackId of event.trackId) {
+      // Check if the track is already being downloaded
+      const downloadingTasks = tracksDownloader.getTasksByTrackId(trackId)
+      if (downloadingTasks.length > 0) { continue }
 
-    // Start downloading the track
-    const { trackId } = event
-    try { 
-      // Create media items for the track and start downloading them
-      logger.info(`Creating media items for track: ${trackId}`)
-      const mediaItems = await trackMediaItems.createMediaItems(trackId)
-      if (mediaItems.length === 0) { return }
+      // Start downloading the track
+      try { 
+        // Create media items for the track and start downloading them
+        logger.info(`Creating media items for track: ${trackId}`)
+        const mediaItems = await trackMediaItems.createMediaItems(trackId)
+        if (mediaItems.length === 0) { continue }
 
-      // Update track state to indicate that the download has started
-      trackState.setState(trackId, { 
-        downloadProgress: 0, 
-        isFailed: undefined 
-      })
+        // Update track state to indicate that the download has started
+        trackState.setState(trackId, { 
+          downloadProgress: 0, 
+          isFailed: undefined 
+        })
 
-      // Enqueue media items for download
-      logger.info(`Enqueuing media items for download: ${mediaItems.length} items`)      
-      for (const mediaItem of mediaItems) {
-        tracksDownloader.enqueue(mediaItem)
+        // Enqueue media items for download
+        logger.info(`Enqueuing media items for download: ${mediaItems.length} items`)      
+        for (const mediaItem of mediaItems) {
+          tracksDownloader.enqueue(mediaItem)
+        }
+      } catch (error) {
+        trackState.setState(trackId, { isFailed: true })
+        logger.error(`Failed to download track ${trackId}: `, error)
       }
-    } catch (error) {
-      trackState.setState(trackId, { isFailed: true })
-      logger.error(`Failed to download track ${trackId}: `, error)
     }
   })
 

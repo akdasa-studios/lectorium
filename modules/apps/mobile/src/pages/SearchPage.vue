@@ -40,6 +40,6 @@ const tracksCountStore = useTracksCountStore()
 
 async function onTrackClicked(trackId: string) {
   await usePlaylistFeature().addTrackToPlaylist(trackId)
-  Events.trackDownloadRequested.notify({ trackId })
+  Events.trackDownload.notify({ trackId: [trackId] })
 }
 </script>

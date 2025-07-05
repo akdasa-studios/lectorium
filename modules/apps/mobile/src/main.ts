@@ -281,7 +281,7 @@ router.isReady().then(async () => {
 
     const trackState = trackStateStore.getState(playlistItem.trackId)
     if (trackState.isFailed) {
-      Events.trackDownloadRequested.notify({ trackId: track._id })
+      Events.trackDownload.notify({ trackId: [track._id] })
       return
     }
 
@@ -383,9 +383,7 @@ router.isReady().then(async () => {
         mediaItemsService: useDAL().mediaItems,
         playlistItemsService: useDAL().playlistItems,
       }).sync()
-      result.newTrackIds.forEach((trackId) => {
-        Events.trackDownloadRequested.notify({ trackId })
-      })
+      Events.trackDownload.notify({ trackId: result.newTrackIds })
       Events.syncTaskCompleted.notify({ task: 'media' })
 
       // sync user info
@@ -428,17 +426,6 @@ router.isReady().then(async () => {
   /* -------------------------------------------------------------------------- */
   /*                                 Downloader                                 */
   /* -------------------------------------------------------------------------- */
-
-  // Events.downloaderTaskEnqueueRequested.subscribe(async (event) => {
-  //   const task = await useDownloadingTask({
-  //     downloaderTaskFailedEvent: Events.downloaderTaskFailed,
-  //     downloaderTaskStatusEvent: Events.downloaderTaskStatus,
-  //     downloaderTaskEnqueuedEvent: Events.downloaderTaskEnqueued,
-  //     downloaderTaskCompletedEvent: Events.downloaderTaskCompleted,
-  //     getDownloaderTasksSlot: Slots.getDownloaderTasks
-  //   })
-  //   task.enqueue(event)
-  // })
 
   await initTrackDownloadingFeature({
     bucketName: useConfig().bucketName.value,
