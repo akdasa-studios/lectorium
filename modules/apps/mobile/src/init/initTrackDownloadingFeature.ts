@@ -1,16 +1,17 @@
-import { MediaItemsService, TracksService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { useTrackMediaItems } from '@lectorium/mobile/features/app.tracks.mediaItems'
 import { useTrackMediaItemsDownloader } from '@lectorium/mobile/features/app.tracks.mediaItems.downloader'
 import { IBucketService } from '../interfaces'
 import { useTrackStateStore } from '../features/app.tracks.state'
 import { Events } from '../events'
 import { useLogger } from '../features/app.core'
+import { MediaItem, Track } from '@lectorium/dal/models'
 
 type Options = {
   bucketName: string
   bucketService: IBucketService
-  tracksService: TracksService
-  mediaItemsService: MediaItemsService
+  tracksService: IRepository<Track>
+  mediaItemsService: IRepository<MediaItem>
   uniqueIdGenerator: () => string
 }
 

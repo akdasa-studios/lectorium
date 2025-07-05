@@ -1,6 +1,6 @@
 import type { Note } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 export type NoteDbScheme = {
   _id: string
@@ -14,7 +14,7 @@ export type NoteDbScheme = {
 const noteSerializer   = (item: Note): NoteDbScheme => item
 const noteDeserializer = (document: NoteDbScheme): Note => document
 
-export class NotesService extends DatabaseService<Note, NoteDbScheme> {
+export class NotesRepository extends PouchRepository<Note, NoteDbScheme> {
   constructor(database: Database) {
     super(
       database,

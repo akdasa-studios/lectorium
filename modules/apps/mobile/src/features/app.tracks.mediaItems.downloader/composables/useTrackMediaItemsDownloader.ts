@@ -1,10 +1,10 @@
 import { Filesystem, Directory, ProgressStatus } from '@capacitor/filesystem'
-import { MediaItemsService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { MediaItem } from '@lectorium/dal/models'
 import { Event, useLogger } from '@lectorium/mobile/features/app.core'
 
 type Options = {
-  mediaItemsService: MediaItemsService
+  mediaItemsService: IRepository<MediaItem>
   maxConcurrentDownloads?: number
 }
 

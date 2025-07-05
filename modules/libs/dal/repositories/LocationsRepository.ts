@@ -1,6 +1,6 @@
 import { type Location } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 /**
  * Schema of the Location documents in the Dictionary collection.
@@ -16,7 +16,7 @@ const locationSerializer   = (item: Location): LocationsDBSchema => item
 const locationDeserializer = (document: LocationsDBSchema): Location => document
 
 
-export class LocationsService extends DatabaseService<
+export class LocationsRepository extends PouchRepository<
   Location,
   LocationsDBSchema
 > {

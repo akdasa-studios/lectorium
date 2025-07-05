@@ -3,12 +3,12 @@ import { useTranscriptStore } from './useTranscriptStore'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
 import { TranscriptParagraph, TranscriptSentence } from '../models'
 import { useSpeakerIcons } from './useSpeakerIcons'
-import { IDatabaseService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 
 export type Options = {
-  tracksService: IDatabaseService<Track>
-  languagesService: IDatabaseService<Language>
-  notesService: IDatabaseService<Note>
+  tracksService: IRepository<Track>
+  languagesService: IRepository<Language>
+  notesService: IRepository<Note>
 }
 
 export function useTranscriptLoader({

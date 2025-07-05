@@ -1,14 +1,14 @@
-import { MediaItemsService, TracksService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { IBucketService } from '@lectorium/mobile/interfaces'
 import { useTrackMediaItemsUrlSigner } from './useTrackMediaItemsUrlSigner'
 import { useTrackMediaItemsCreator } from './useTrackMediaItemsCreator'
-import { MediaItem } from '@lectorium/dal/models'
+import { MediaItem, Track } from '@lectorium/dal/models'
 
 type Options = {
   bucketName: string
   bucketService: IBucketService
-  tracksService: TracksService
-  mediaItemsService: MediaItemsService
+  tracksService: IRepository<Track>
+  mediaItemsService: IRepository<MediaItem>
   uniqueIdGenerator: () => string
 }
 
@@ -19,7 +19,7 @@ export function useTrackMediaItems(options: Options) {
     tracksService: options.tracksService,
   })
   const trackMediaItemCreator = useTrackMediaItemsCreator({
-    mediaItemsService: options.mediaItemsService,
+    mediaItemsRepo: options.mediaItemsService,
     uniqueIdGenerator: options.uniqueIdGenerator,
   })
 

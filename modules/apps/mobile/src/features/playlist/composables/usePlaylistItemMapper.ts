@@ -1,10 +1,10 @@
-import { PlaylistItem } from '@lectorium/dal/models'
+import { PlaylistItem, Track } from '@lectorium/dal/models'
 import { PlaylistStoreItem } from './usePlaylistStore'
-import { useDAL } from '@lectorium/mobile/features/app.database'
 import { mapAuthorFullNameById, mapLocationFullNameById, mapReference, mapTagFullNameById, mapTrackDate, mapTrackTitle } from '@lectorium/mobile/features/app.tracks'
 
 type Options = {
   playlistItem: PlaylistItem
+  track: Track,
   language: string
 }
 
@@ -12,10 +12,9 @@ export function usePlaylistItemMapper() {
 
   async function map({
     playlistItem,
+    track,
     language = 'en',
   }: Options): Promise<PlaylistStoreItem> {
-    const dal = useDAL()
-    const track = await dal.tracks.getOne(playlistItem.trackId)
     return {
       playlistItemId: playlistItem._id,
       trackId: track._id,

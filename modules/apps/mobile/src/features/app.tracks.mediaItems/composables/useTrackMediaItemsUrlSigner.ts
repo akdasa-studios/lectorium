@@ -1,12 +1,13 @@
+import { Track } from '@lectorium/dal/models'
 import { S3Operation } from '@lectorium/protocol/s3'
-import { TracksService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { IBucketService } from '@lectorium/mobile/interfaces'
 import { TrackMediaSignedUrl } from '../models/TrackMediaSignedUrl'
 
 type Options = {
   bucketName: string
   bucketService: IBucketService
-  tracksService: TracksService
+  tracksService: IRepository<Track>
 }
 
 export function useTrackMediaItemsUrlSigner(options: Options) {

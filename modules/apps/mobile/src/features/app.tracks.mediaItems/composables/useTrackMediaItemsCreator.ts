@@ -1,14 +1,14 @@
-import { MediaItemsService } from '@lectorium/dal/index'
-import { TrackMediaSignedUrl } from '../models/TrackMediaSignedUrl'
+import { IRepository, MediaItemDBSchema } from '@lectorium/dal/index'
 import { MediaItem } from '@lectorium/dal/models'
+import { TrackMediaSignedUrl } from '../models/TrackMediaSignedUrl'
 
 type Options = {
-  mediaItemsService: MediaItemsService
+  mediaItemsRepo: IRepository<MediaItem, MediaItemDBSchema>
   uniqueIdGenerator: () => string
 }
 
 export function useTrackMediaItemsCreator(options: Options) {
-  const { mediaItemsService, uniqueIdGenerator } = options
+  const { mediaItemsRepo, uniqueIdGenerator } = options
 
   /**
    * Downloads media files for a track.
@@ -23,12 +23,12 @@ export function useTrackMediaItemsCreator(options: Options) {
     
     // Download all files using MediaService and prepared task infos from above
     for (const task of media) {
-      const mediaItem = await mediaItemsService.findOne({ 
+      const mediaItem = await mediaItemsRepo.findOne({ 
         localPath: task.path,
       })
       if (mediaItem && ['failed', 'pending'].includes(mediaItem.state)) {
         // Media item failed, remove it and start download again
-        await mediaItemsService.removeOne(mediaItem._id)
+        await mediaItemsRepo.removeOne(mediaItem._id)
       } else if (mediaItem) {
         // Media item already exists and is ready, skip download
         continue
@@ -43,7 +43,7 @@ export function useTrackMediaItemsCreator(options: Options) {
         trackId: trackId,
         state: 'pending'
       } as MediaItem
-      await options.mediaItemsService.addOne(newMediaItem)
+      await options.mediaItemsRepo.addOne(newMediaItem)
       result.push(newMediaItem)
     }
 

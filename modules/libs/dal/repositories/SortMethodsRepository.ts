@@ -1,6 +1,6 @@
 import type { SortMethod } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 /**
  * Schema of the SortMethod documents in the Library collection.
@@ -16,10 +16,7 @@ const sortMethodSerializer = (item: SortMethod): SortMethodDBSchema => item
 const sortMethodDeserializer = (document: SortMethodDBSchema): SortMethod => document
 
 
-/**
- * Service for managing Sources
- */
-export class SortMethodsService extends DatabaseService<SortMethod, SortMethodDBSchema> {
+export class SortMethodsRepository extends PouchRepository<SortMethod, SortMethodDBSchema> {
   constructor(database: Database) {
     super(database, sortMethodSerializer, sortMethodDeserializer, { type: "sort" })
   }

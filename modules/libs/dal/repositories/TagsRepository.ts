@@ -1,6 +1,6 @@
 import { type Tag } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 /**
  * Schema of the Tag documents in the Dictionary collection.
@@ -16,7 +16,7 @@ const tagSerializer   = (item: Tag): TagsDBSchema => item
 const tagDeserializer = (document: TagsDBSchema): Tag => document
 
 
-export class TagsService extends DatabaseService<
+export class TagsRepository extends PouchRepository<
   Tag,
   TagsDBSchema
 > {

@@ -1,5 +1,5 @@
 import { watch, Ref } from 'vue'
-import { IDatabaseService, IndexService, TracksService } from '@lectorium/dal/index'
+import { IRepository, IndexService, TracksSearchService } from '@lectorium/dal/index'
 import { useTrackSearchResultsStore } from './useTrackSearchResultsStore'
 import { TrackSearchFilters } from '../models/TrackSearchFilters'
 import { useSearchResultsLoader } from './useSearchResultsLoader'
@@ -7,9 +7,9 @@ import { Duration, Source } from '@lectorium/dal/models'
 
 type Options = {
   indexService: IndexService
-  tracksService: TracksService
-  sourcesService: IDatabaseService<Source>
-  durationsService: IDatabaseService<Duration>
+  tracksService: TracksSearchService
+  sourcesService: IRepository<Source>
+  durationsService: IRepository<Duration>
   language: Ref<string>
 }
 

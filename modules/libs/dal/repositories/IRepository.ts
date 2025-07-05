@@ -24,7 +24,7 @@ export type GetManyRequest = {
   fields?: string[]
 }
 
-export interface IDatabaseService<
+export interface IRepository<
   TItem extends Identifiable, 
   TDbScheme extends Identifiable = Identifiable
 > {

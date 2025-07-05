@@ -1,13 +1,14 @@
 import { useLogger } from '@lectorium/mobile/features/app.core'
-import { MediaItemsService, PlaylistItemsService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
+import { MediaItem, PlaylistItem } from '@lectorium/dal/models'
 
 export type MediaSyncTaskResult = {
   newTrackIds: string[]
 }
 
 export type Options = {
-  mediaItemsService: MediaItemsService
-  playlistItemsService: PlaylistItemsService
+  mediaItemsService: IRepository<MediaItem>
+  playlistItemsService: IRepository<PlaylistItem>
 }
 
 /**

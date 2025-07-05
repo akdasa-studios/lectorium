@@ -1,33 +1,40 @@
 import { createSharedComposable } from '@vueuse/core'
-import { 
-  AuthorsService, LanguagesService, LocationsService, MediaItemsService,
-  PlaylistItemsService, SourcesService, IndexService, TracksService,
-  TagsService, DurationsService, NotesService, SortMethodsService
-} from '@lectorium/dal/index'
 import { useDatabase } from './useDatabase'
-import { CachingDatabaseService } from '@lectorium/dal/services/CachingDatabaseService'
+import { 
+  ArchiveService,
+  AuthorsRepository, CachingRepository, DurationsRepository, IndexService, 
+  LanguagesRepository, LocationsRepository, MediaItemsRepository, NotesRepository, 
+  PlaylistItemsRepository, SortMethodsRepository, SourcesRepository, TagsRepository,
+  TracksRepository,
+  TracksSearchService
+} from '@lectorium/dal/index'
 
 export const useDAL = createSharedComposable(() => {
   const database = useDatabase().get()
+  const tracksRepo = new CachingRepository(new TracksRepository(database.local.tracks))
+  const playlistItemsRepo = new PlaylistItemsRepository(database.local.userData)
 
   return {
-    tracks: new TracksService(database.local.tracks),
+    tracks: tracksRepo,
+    tracksSearchService: new TracksSearchService(tracksRepo),
     
     // Dictionary
-    tags: new CachingDatabaseService(new TagsService(database.local.dictionary)),
-    authors: new CachingDatabaseService(new AuthorsService(database.local.dictionary)),
-    sources: new CachingDatabaseService(new SourcesService(database.local.dictionary)),
-    locations: new CachingDatabaseService(new LocationsService(database.local.dictionary)),
-    languages: new CachingDatabaseService(new LanguagesService(database.local.dictionary)),
-    durations: new CachingDatabaseService(new DurationsService(database.local.dictionary)),
-    sortMethods: new CachingDatabaseService(new SortMethodsService(database.local.dictionary)),
+    tags: new CachingRepository(new TagsRepository(database.local.dictionary)),
+    authors: new CachingRepository(new AuthorsRepository(database.local.dictionary)),
+    sources: new CachingRepository(new SourcesRepository(database.local.dictionary)),
+    locations: new CachingRepository(new LocationsRepository(database.local.dictionary)),
+    languages: new CachingRepository(new LanguagesRepository(database.local.dictionary)),
+    durations: new CachingRepository(new DurationsRepository(database.local.dictionary)),
+    sortMethods: new CachingRepository(new SortMethodsRepository(database.local.dictionary)),
 
     // Index
     index: new IndexService(database.local.index),
     
     // User data
-    mediaItems: new MediaItemsService(database.local.userData),
-    playlistItems: new PlaylistItemsService(database.local.userData),
-    notes: new NotesService(database.local.userData)
+    mediaItems: new MediaItemsRepository(database.local.userData),
+    playlistItems: playlistItemsRepo,
+    notes: new NotesRepository(database.local.userData),
+
+    archiveService: new ArchiveService(playlistItemsRepo),
   }
 })

@@ -1,16 +1,17 @@
-import { NotesService, TracksService } from '@lectorium/dal/index'
+import { Note, Track } from '@lectorium/dal/models'
+import { IRepository } from '@lectorium/dal/index'
 import { NotesStore } from './useNotesStore'
 import { useLogger } from '../../app.core'
 
 export type Options = {
-  notesService: NotesService
-  tracksService: TracksService
+  notesRepo: IRepository<Note>
+  tracksRepo: IRepository<Track>
   notesStore: NotesStore
 }
 
 export function useNotesLoader({
-  notesService,
-  tracksService,
+  notesRepo: notesService,
+  tracksRepo: tracksService,
   notesStore,
 }: Options) {
   /* -------------------------------------------------------------------------- */
@@ -26,11 +27,17 @@ export function useNotesLoader({
 
   async function load() {
     notesStore.items = []
-    const notes = await notesService.getAll()
+    const notes = await notesService.getAll({
+      limit: 1000 // TODO: add pagination
+    })
+
+    const relatedTracks = await tracksService.getMany({
+      selector: { _id: { $in: notes.map(note => note.trackId) } },
+      limit: 1000 // TODO: add pagination
+    })
 
     for (const note of notes) {      
-      // TODO: Load all related tracks in one request
-      const track = await tracksService.findOne({ _id: note.trackId })
+      const track = relatedTracks.find(t => t._id === note.trackId)
       if (!track) {
         logger.error(`Track not found for note ${note._id} with trackId ${note.trackId}`)
         continue

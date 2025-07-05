@@ -1,6 +1,6 @@
 import type { Author } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 export type AuthorDbScheme = {
   _id: string
@@ -12,7 +12,7 @@ export type AuthorDbScheme = {
 const authorSerializer   = (item: Author): AuthorDbScheme => item
 const authorDeserializer = (document: AuthorDbScheme): Author => document
 
-export class AuthorsService extends DatabaseService<Author, AuthorDbScheme> {
+export class AuthorsRepository extends PouchRepository<Author, AuthorDbScheme> {
   constructor(database: Database) {
     super(
       database,

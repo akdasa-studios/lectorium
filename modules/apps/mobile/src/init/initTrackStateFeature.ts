@@ -1,10 +1,11 @@
-import { MediaItemsService, PlaylistItemsService } from '@lectorium/dal/index'
-import { initTrackStateStore, useUpdateTrackStateFromPlaylistStateTask } from '@lectorium/mobile/features/app.tracks.state'
+import { IRepository } from '@lectorium/dal/index'
+import { useUpdateTrackStateStore, useUpdateTrackStateFromPlaylistStateTask } from '@lectorium/mobile/features/app.tracks.state'
 import { Events, Slots } from '../events'
+import { MediaItem, PlaylistItem } from '@lectorium/dal/models'
 
 type Options = {
-  mediaItemsService: MediaItemsService,
-  playlistItemsService: PlaylistItemsService,
+  mediaItemsService: IRepository<MediaItem>,
+  playlistItemsService: IRepository<PlaylistItem>,
   events: typeof Events,
   slots: typeof Slots,
 }
@@ -12,10 +13,17 @@ type Options = {
 export async function initTrackStateFeature(
   options: Options
 ) {
-  await initTrackStateStore({
+  const updater = useUpdateTrackStateStore({
     mediaItemsService: options.mediaItemsService,
     playlistItemsService: options.playlistItemsService,
   })
+
+  Promise.all([
+    updater.setInPlaylistFlag(),
+    updater.setIsCompletedFlag(),
+    updater.setIsFailedFlagIfMediaItemsFailed(),
+    updater.setIsFailedFlagIfNoMediaItemsFound(),
+  ])
   
   useUpdateTrackStateFromPlaylistStateTask({
     playlistItemService: options.playlistItemsService

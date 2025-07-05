@@ -1,6 +1,6 @@
 import type { Source } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 /**
  * Schema of the Source documents in the Library collection.
@@ -20,7 +20,7 @@ const sourceDeserializer = (document: SourcesDBSchema): Source => document
 /**
  * Service for managing Sources
  */
-export class SourcesService extends DatabaseService<Source, SourcesDBSchema> {
+export class SourcesRepository extends PouchRepository<Source, SourcesDBSchema> {
   constructor(database: Database) {
     super(database, sourceSerializer, sourceDeserializer, { type: "source" })
   }

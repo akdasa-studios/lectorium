@@ -71,7 +71,7 @@ import { useCommonDataSyncTask } from './features/app.services.sync.commonData'
 import { Events, Slots } from './events'
 import { useUserDataSyncTask } from './features/app.services.sync.userData'
 import { useMediaSyncTask } from './features/app.services.sync.media'
-import { useTrackStateStore } from './features/app.tracks.state'
+import { useTrackStateStore, useUpdateTrackStateStore } from './features/app.tracks.state'
 import { useDebounceFn } from '@vueuse/core'
 import { useSyncStore } from './features/app.services.sync'
 import { Routes } from '@lectorium/protocol/index'
@@ -172,13 +172,13 @@ router.isReady().then(async () => {
 
   
   await useTracksCountFeature().init({
-    tracksService: dal.tracks
+    tracksRepo: dal.tracks
   })
   usePlaylistFeature().init({
     playlistService: dal.playlistItems,
   })
   await useNotesSearchIndex().init({
-    notesService: useDAL().notes
+    notesRepo: useDAL().notes
   })
   useNotesSearchTask({
     notesStore: useNotesStore()
@@ -334,7 +334,8 @@ router.isReady().then(async () => {
 
   Events.playlistUpdateRequested.subscribe(async (event) => {
     useSyncPlaylistStoreTask({
-      playlistItemService: dal.playlistItems,
+      playlistItemRepo: dal.playlistItems,
+      tracksRepo: dal.tracks,
     }).sync(event.language)
   })
 
@@ -399,6 +400,16 @@ router.isReady().then(async () => {
       Events.trackDownload.notify({ trackId: result.newTrackIds })
       Events.syncTaskCompleted.notify({ task: 'media' })
 
+      const updater = useUpdateTrackStateStore({
+        mediaItemsService: dal.mediaItems,
+        playlistItemsService: dal.playlistItems,
+      })
+      await Promise.all([
+        updater.setIsDownloadingFlagFor(result.newTrackIds),
+        updater.setInPlaylistFlag(),
+        updater.setIsCompletedFlag()
+      ])
+
       // sync user info
       const res = await userInfo.load()
       if (res && res.name)  { config.userName.value = res.name }
@@ -460,8 +471,8 @@ router.isReady().then(async () => {
   
   Events.notesUpdateRequested.subscribe(async () => {
     await useNotesLoader({
-      notesService: useDAL().notes,
-      tracksService: useDAL().tracks,
+      notesRepo: useDAL().notes,
+      tracksRepo: useDAL().tracks,
       notesStore: useNotesStore()
     }).load()
   })

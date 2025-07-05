@@ -17,7 +17,7 @@ export async function initTrackSearchFeature() {
 
   useSyncTrackSearchResultsTask({
     indexService: useDAL().index,
-    tracksService: useDAL().tracks,
+    tracksService: useDAL().tracksSearchService,
     sourcesService: useDAL().sources,
     durationsService: useDAL().durations,
     language: useConfig().appLanguage

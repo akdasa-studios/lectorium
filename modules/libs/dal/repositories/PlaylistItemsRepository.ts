@@ -1,6 +1,6 @@
 import { type PlaylistItem } from '../models'
 import { Database } from '../persistence'
-import { DatabaseService } from './DatabaseService'
+import { PouchRepository } from './PouchRepository'
 
 /**
  * Schema of the Location documents in the Dictionary collection.
@@ -18,7 +18,7 @@ const playlistItemSerializer   = (item: PlaylistItem): PlaylistItemDBSchema => i
 const playlistItemDeserializer = (document: PlaylistItemDBSchema): PlaylistItem => document
 
 
-export class PlaylistItemsService extends DatabaseService<
+export class PlaylistItemsRepository extends PouchRepository<
   PlaylistItem,
   PlaylistItemDBSchema
 > {
@@ -28,14 +28,5 @@ export class PlaylistItemsService extends DatabaseService<
       playlistItemSerializer,
       playlistItemDeserializer, { type: "playlistItem" },
     )
-  }
-
-  /**
-   * Archives a playlist item by setting its archivedAt 
-   * property to the current timestamp.
-   * @param id The ID of the playlist item to archive. 
-   */
-  async archiveOne(id: string): Promise<void> {
-    await this.patchOne(id, { archivedAt: Date.now() })
   }
 }

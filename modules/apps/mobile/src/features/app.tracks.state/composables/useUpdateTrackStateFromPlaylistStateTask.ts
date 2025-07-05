@@ -1,8 +1,9 @@
-import { PlaylistItemsService } from '@lectorium/dal/index'
+import { IRepository } from '@lectorium/dal/index'
 import { useTrackStateStore } from './useTrackStateStore'
+import { PlaylistItem } from '@lectorium/dal/models'
 
 export type Options = {
-  playlistItemService: PlaylistItemsService
+  playlistItemService: IRepository<PlaylistItem>
 }
 
 export function useUpdateTrackStateFromPlaylistStateTask(
