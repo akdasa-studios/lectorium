@@ -10,7 +10,7 @@ export type Options = {
   playlistItemsService: PlaylistItemsService
 }
 
-export async function initTrackState(options: Options) {
+export async function initTrackStateStore(options: Options) {
   /* -------------------------------------------------------------------------- */
   /*                                Dependencies                                */
   /* -------------------------------------------------------------------------- */
@@ -46,7 +46,8 @@ export async function initTrackState(options: Options) {
 
   // Set inPlaylist for each track
   const activePlaylistItems = await options.playlistItemsService.getMany({ 
-    selector: { archivedAt: { $exists: false } } 
+    selector: { archivedAt: { $exists: false } },
+    limit: 1000, // TODO: Remove limit when pagination is implemented
   })
   activePlaylistItems.forEach(item => {
     trackStateStore.setState(item.trackId, { inPlaylist: true })

@@ -1,7 +1,7 @@
 <template>
   <Page>
     <PlaylistSection
-      @click="playlistItemId => Events.playTrackRequested.notify({ playlistItemId })"
+      @click="onPlaylistItemClicked"
       @delete="playlistItemId => archivePlaylistItem().execute(playlistItemId)"
     />
   </Page>
@@ -13,4 +13,12 @@ import { Page } from '@lectorium/mobile/features/app.core'
 import { PlaylistSection } from '@lectorium/mobile/features/playlist'
 import { archivePlaylistItem } from '@lectorium/mobile/operations'
 import { Events } from '@lectorium/mobile/events'
+
+/* -------------------------------------------------------------------------- */
+/*                                  Handlers                                  */
+/* -------------------------------------------------------------------------- */
+
+function onPlaylistItemClicked(playlistItemId: string) {
+  Events.playTrackRequested.notify({ playlistItemId })
+}
 </script>

@@ -4,8 +4,7 @@
  * This feature is responsible for tracking the status of tracks.
  */
 
+export { initTrackStateStore } from './composables/initTrackStateStore'
 export { useTrackStateStore, type TrackState } from './composables/useTrackStateStore'
-export { useSyncDownloadingStateTask } from './composables/useSyncDownloadingStateTask'
-export { useSyncPlaylistStateTask } from './composables/useSyncPlaylistStateTask'
-export { initTrackState } from './composables/initTrackState'
+export { useUpdateTrackStateFromPlaylistStateTask } from './composables/useUpdateTrackStateFromPlaylistStateTask'
 export { default as TrackStateIndicator } from './components/TrackStateIndicator.vue'

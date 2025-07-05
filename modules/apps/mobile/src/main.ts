@@ -53,10 +53,8 @@ import { Purchases } from '@revenuecat/purchases-capacitor'
 import { Device } from '@capacitor/device'
 import { initTrackSearchFeature } from './init/initTrackSearchFeature'
 import { useTracksCountFeature } from './features/tracks.count'
-import { useTracksDownloadTask } from './features/tracks.download'
 import { locale } from './features/app.localization'
 import { useCleanupMediaItemsFeature, useMarkCompletedPlaylistItem, usePlaylistFeature, useSyncPlaylistStoreTask } from './features/playlist'
-import { useBucketService } from './features/app.services.bucket'
 import { useConfig, useConfigPersistenceTask } from './features/app.config'
 import { useDAL, useDatabase } from './features/app.database'
 import { useSentryFeature } from './features/app.infra.sentry'
@@ -73,14 +71,16 @@ import { useCommonDataSyncTask } from './features/app.services.sync.commonData'
 import { Events, Slots } from './events'
 import { useUserDataSyncTask } from './features/app.services.sync.userData'
 import { useMediaSyncTask } from './features/app.services.sync.media'
-import { useIdGenerator } from './features/app.core'
-import { useDownloadingTask } from './features/app.services.download'
-import { initTrackState, useSyncDownloadingStateTask, useSyncPlaylistStateTask } from './features/tracks.state'
+import { useTrackStateStore } from './features/app.tracks.state'
 import { useDebounceFn } from '@vueuse/core'
 import { useSyncStore } from './features/app.services.sync'
 import { Routes } from '@lectorium/protocol/index'
 import { ENVIRONMENT } from './env'
 import { useUserInfo } from './features/app.user.info'
+import { initTrackStateFeature } from './init/initTrackStateFeature'
+import { initTrackDownloadingFeature } from './init/initTrackDownloadingFeature'
+import { useBucketService } from './features/app.services.bucket'
+import { useIdGenerator } from './features/app.core'
 
 const i18n = createI18n({
   locale: 'ru',
@@ -146,7 +146,18 @@ router.isReady().then(async () => {
 
   initTrackSearchFeature()
 
+  /* -------------------------------------------------------------------------- */
+  /*                                Dependencies                                */
+  /* -------------------------------------------------------------------------- */
+
   const dal = useDAL()
+  const player = usePlayer()
+  const playerControls = usePlayerControls()
+  const databases = useDatabase().get()
+  const userInfo = useUserInfo({ database: databases.local.userData })
+  const transcriptStore = useTranscriptStore()
+  const trackStateStore = useTrackStateStore()
+
   await useTracksCountFeature().init({
     tracksService: dal.tracks
   })
@@ -182,15 +193,7 @@ router.isReady().then(async () => {
   }
   i18n.global.locale = config.appLanguage.value as 'en' | 'ru'
 
-  /* -------------------------------------------------------------------------- */
-  /*                                Dependencies                                */
-  /* -------------------------------------------------------------------------- */
 
-  const player = usePlayer()
-  const playerControls = usePlayerControls()
-  const databases = useDatabase().get()
-  const userInfo = useUserInfo({ database: databases.local.userData })
-  const transcriptStore = useTranscriptStore()
 
 
   /* -------------------------------------------------------------------------- */
@@ -275,6 +278,12 @@ router.isReady().then(async () => {
     const playlistItem = await dal.playlistItems.getOne(event.playlistItemId)
     const track = await dal.tracks.getOne(playlistItem.trackId)
     const author = await dal.authors.getOne('author::' + track.author)
+
+    const trackState = trackStateStore.getState(playlistItem.trackId)
+    if (trackState.isFailed) {
+      Events.trackDownloadRequested.notify({ trackId: track._id })
+      return
+    }
 
     // open track with Audio Player plugin and
     // pass required information for media session widget
@@ -420,53 +429,29 @@ router.isReady().then(async () => {
   /*                                 Downloader                                 */
   /* -------------------------------------------------------------------------- */
 
-  Events.downloaderTaskEnqueueRequested.subscribe(async (event) => {
-    const task = await useDownloadingTask({
-      downloaderTaskFailedEvent: Events.downloaderTaskFailed,
-      downloaderTaskStatusEvent: Events.downloaderTaskStatus,
-      downloaderTaskEnqueuedEvent: Events.downloaderTaskEnqueued,
-      downloaderTaskCompletedEvent: Events.downloaderTaskCompleted,
-      getDownloaderTasksSlot: Slots.getDownloaderTasks
-    })
-    task.enqueue(event)
-  })
+  // Events.downloaderTaskEnqueueRequested.subscribe(async (event) => {
+  //   const task = await useDownloadingTask({
+  //     downloaderTaskFailedEvent: Events.downloaderTaskFailed,
+  //     downloaderTaskStatusEvent: Events.downloaderTaskStatus,
+  //     downloaderTaskEnqueuedEvent: Events.downloaderTaskEnqueued,
+  //     downloaderTaskCompletedEvent: Events.downloaderTaskCompleted,
+  //     getDownloaderTasksSlot: Slots.getDownloaderTasks
+  //   })
+  //   task.enqueue(event)
+  // })
 
-  /* -------------------------------------------------------------------------- */
-  /*                               Tracks Download                              */
-  /* -------------------------------------------------------------------------- */
-
-  Events.trackDownloadRequested.subscribe(async (event) => {
-    useTracksDownloadTask({
-      trackDownloadFailedEvent: Events.trackDownloadFailed,
-      downloaderTaskFailedEvent: Events.downloaderTaskFailed,
-      downloaderTaskCompletedEvent: Events.downloaderTaskCompleted,
-      downloaderTaskEnqueueRequestedEvent: Events.downloaderTaskEnqueueRequested,
-      bucketName: () => useConfig().bucketName.value,
-      bucketService: () => useBucketService(),
-      tracksService: () => useDAL().tracks,
-      mediaItemsService: () => useDAL().mediaItems,
-      uniqueIdGenerator: () => useIdGenerator().generateId(22)
-    }).download(event.trackId)
-  })
-
-  /* -------------------------------------------------------------------------- */
-  /*                                Tracks State                                */
-  /* -------------------------------------------------------------------------- */
-
-  await initTrackState({
+  await initTrackDownloadingFeature({
+    bucketName: useConfig().bucketName.value,
+    bucketService: useBucketService(),
+    tracksService: useDAL().tracks,
     mediaItemsService: useDAL().mediaItems,
-    playlistItemsService: useDAL().playlistItems
+    uniqueIdGenerator: () => useIdGenerator().generateId(24)
   })
-  
-  useSyncPlaylistStateTask({
-    playlistItemService: dal.playlistItems
-  })
-
-  useSyncDownloadingStateTask({
-    downloaderGetTasksSlot: Slots.getDownloaderTasks,
-    downloaderTaskFailedEvent: Events.downloaderTaskFailed,
-    downloaderTaskStatusEvent: Events.downloaderTaskStatus,
-    downloaderTaskEnqueuedEvent: Events.downloaderTaskEnqueued,
+  await initTrackStateFeature({
+    mediaItemsService: useDAL().mediaItems,
+    playlistItemsService: useDAL().playlistItems,
+    events: Events,
+    slots: Slots
   })
 
   /* -------------------------------------------------------------------------- */

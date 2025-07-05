@@ -5,7 +5,7 @@ export type Options = {
   playlistItemService: PlaylistItemsService
 }
 
-export function useSyncPlaylistStateTask(
+export function useUpdateTrackStateFromPlaylistStateTask(
   options: Options
 ) {
   /* -------------------------------------------------------------------------- */
